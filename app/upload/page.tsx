@@ -138,8 +138,8 @@ export default function UploadPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Info */}
-              <div className="space-y-4">
-                <div>
+              <div className="space-y-6">
+                <div className="space-y-2">
                   <Label htmlFor="title">כותרת *</Label>
                   <Input
                     id="title"
@@ -150,7 +150,7 @@ export default function UploadPage() {
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="body">תוכן *</Label>
                   <Textarea
                     id="body"
@@ -162,7 +162,7 @@ export default function UploadPage() {
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
                   <Textarea
                     id="explanation"
@@ -176,7 +176,7 @@ export default function UploadPage() {
 
               {/* Uploader Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="uploaderName">שם מעלה</Label>
                   <Input
                     id="uploaderName"
@@ -185,7 +185,7 @@ export default function UploadPage() {
                     placeholder="ד״ר שם משפחה"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="hospital">בית חולים</Label>
                   <Select
                     value={formData.hospital}
@@ -211,7 +211,7 @@ export default function UploadPage() {
 
               {/* Chapter and Aid Type */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="chapter">פרק *</Label>
                   <Select
                     value={formData.chapter}
@@ -240,7 +240,7 @@ export default function UploadPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="aidType">סוג עזר למידה *</Label>
                   <Select
                     value={formData.mediaType}
