@@ -1,0 +1,384 @@
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { ArrowRight, Upload, X, Image as ImageIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { CHAPTERS } from '@/lib/chapters'
+import { AID_TYPES } from '@/lib/aid-types'
+
+export default function UploadPage() {
+  const router = useRouter()
+  const [uploading, setUploading] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  const [formData, setFormData] = useState({
+    title: '',
+    body: '',
+    explanation: '',
+    uploaderName: '',
+    hospital: '',
+    chapter: '',
+    mediaType: '' as any,
+    tags: [] as Array<{ category: string; value: string; value_he: string }>
+  })
+
+  const [currentTag, setCurrentTag] = useState({
+    category: '',
+    value: '',
+    value_he: ''
+  })
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const addTag = () => {
+    if (currentTag.category && currentTag.value) {
+      setFormData({
+        ...formData,
+        tags: [...formData.tags, currentTag]
+      })
+      setCurrentTag({ category: '', value: '', value_he: '' })
+    }
+  }
+
+  const removeTag = (index: number) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags.filter((_, i) => i !== index)
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setUploading(true)
+
+    try {
+      let mediaUrl = null
+
+      // Upload image if selected
+      if (selectedFile) {
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', selectedFile)
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData
+        })
+
+        const uploadData = await uploadResponse.json()
+        mediaUrl = uploadData.url
+      }
+
+      // Create learning aid
+      const response = await fetch('/api/aids', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          media_url: mediaUrl,
+          media_type: selectedFile ? formData.mediaType : 'text-only'
+        })
+      })
+
+      if (response.ok) {
+        router.push('/')
+      } else {
+        alert('שגיאה בשמירת העזר למידה')
+      }
+    } catch (error) {
+      console.error('Error uploading:', error)
+      alert('שגיאה בהעלאה')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <ArrowRight className="h-5 w-5" />
+              <span>חזרה לפיד</span>
+            </Link>
+            <h1 className="text-xl font-bold">העלאת עזר למידה</h1>
+          </div>
+        </div>
+      </header>
+
+      {/* Form */}
+      <main className="container mx-auto px-4 py-8 max-w-2xl">
+        <Card>
+          <CardHeader>
+            <CardTitle>פרטי עזר הלמידה</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Info */}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">כותרת *</Label>
+                  <Input
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="למשל: 5 P's של Lichen Planus"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="body">תוכן *</Label>
+                  <Textarea
+                    id="body"
+                    value={formData.body}
+                    onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+                    placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
+                    rows={4}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
+                  <Textarea
+                    id="explanation"
+                    value={formData.explanation}
+                    onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
+                    placeholder="הסבר למה זה עובד, מתי להשתמש..."
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              {/* Uploader Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="uploaderName">שם מעלה</Label>
+                  <Input
+                    id="uploaderName"
+                    value={formData.uploaderName}
+                    onChange={(e) => setFormData({ ...formData, uploaderName: e.target.value })}
+                    placeholder="ד״ר שם משפחה"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="hospital">בית חולים</Label>
+                  <Select
+                    value={formData.hospital}
+                    onValueChange={(value) => setFormData({ ...formData, hospital: value || '' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue>
+                        {formData.hospital || 'בחר בית חולים'}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="איכילוב">איכילוב</SelectItem>
+                      <SelectItem value="הדסה">הדסה</SelectItem>
+                      <SelectItem value="שיבא">שיבא</SelectItem>
+                      <SelectItem value="רמב״ם">רמב״ם</SelectItem>
+                      <SelectItem value="בילינסון">בילינסון</SelectItem>
+                      <SelectItem value="סורוקה">סורוקה</SelectItem>
+                      <SelectItem value="אחר">אחר</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Chapter and Aid Type */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="chapter">פרק *</Label>
+                  <Select
+                    value={formData.chapter}
+                    onValueChange={(value) => setFormData({ ...formData, chapter: value || '' })}
+                    required
+                  >
+                    <SelectTrigger className="whitespace-normal h-auto min-h-8">
+                      <SelectValue>
+                        {formData.chapter
+                          ? CHAPTERS.find(c => c.value === formData.chapter)?.label
+                          : 'בחר פרק'}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[400px] max-w-[300px]">
+                      {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => (
+                        <SelectItem
+                          key={chapter.value}
+                          value={chapter.value}
+                          className="whitespace-normal h-auto py-2 leading-tight"
+                        >
+                          <span className="block whitespace-normal break-words">
+                            {chapter.label}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="aidType">סוג עזר למידה *</Label>
+                  <Select
+                    value={formData.mediaType}
+                    onValueChange={(value) => setFormData({ ...formData, mediaType: value || '' })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue>
+                        {formData.mediaType
+                          ? AID_TYPES.find(t => t.value === formData.mediaType)?.label
+                          : 'בחר סוג'}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {AID_TYPES.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <Label>תמונה (אופציונלי)</Label>
+                <div className="mt-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+                  >
+                    {imagePreview ? (
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={imagePreview}
+                          alt="Preview"
+                          fill
+                          className="object-contain p-2"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">לחץ להעלאת תמונה</span>
+                      </div>
+                    )}
+                  </label>
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <Label>תגיות</Label>
+                <div className="flex gap-2 mt-2">
+                  <Select
+                    value={currentTag.category}
+                    onValueChange={(value) => setCurrentTag({ ...currentTag, category: value || '' })}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue>
+                        {currentTag.category === 'diagnosis' && 'אבחנה'}
+                        {currentTag.category === 'sign' && 'סימן קליני'}
+                        {currentTag.category === 'pathology' && 'פתולוגיה'}
+                        {currentTag.category === 'treatment' && 'טיפול'}
+                        {currentTag.category === 'risk_factors' && 'גורמי סיכון'}
+                        {!currentTag.category && 'קטגוריה'}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="diagnosis">אבחנה</SelectItem>
+                      <SelectItem value="sign">סימן קליני</SelectItem>
+                      <SelectItem value="pathology">פתולוגיה</SelectItem>
+                      <SelectItem value="treatment">טיפול</SelectItem>
+                      <SelectItem value="risk_factors">גורמי סיכון</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    placeholder="ערך (באנגלית)"
+                    value={currentTag.value}
+                    onChange={(e) => setCurrentTag({ ...currentTag, value: e.target.value })}
+                  />
+                  <Input
+                    placeholder="ערך (בעברית)"
+                    value={currentTag.value_he}
+                    onChange={(e) => setCurrentTag({ ...currentTag, value_he: e.target.value })}
+                  />
+                  <Button type="button" onClick={addTag} variant="outline">
+                    הוסף
+                  </Button>
+                </div>
+
+                {formData.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {formData.tags.map((tag, index) => (
+                      <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        <span className="text-xs">
+                          {tag.value_he || tag.value} ({tag.category})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeTag(index)}
+                          className="hover:bg-destructive/20 rounded-full p-0.5"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Submit */}
+              <div className="flex gap-3">
+                <Button
+                  type="submit"
+                  disabled={uploading || !formData.title || !formData.body || !formData.chapter || !formData.mediaType}
+                  className="flex-1"
+                >
+                  {uploading ? 'מעלה...' : 'פרסם עזר למידה'}
+                </Button>
+                <Link href="/">
+                  <Button type="button" variant="outline">
+                    ביטול
+                  </Button>
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  )
+}

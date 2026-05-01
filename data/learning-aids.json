@@ -1,0 +1,264 @@
+{
+  "aids": [
+    {
+      "title": "sweet dx",
+      "body": "melel",
+      "explanation": "",
+      "uploaderName": "עומרי",
+      "hospital": "אחר",
+      "chapter": "33",
+      "mediaType": "text-only",
+      "tags": [],
+      "media_url": "/uploads/1777643039216-WhatsApp_Image_2026-05-01_at_14.32.06.jpeg",
+      "media_type": "text-only",
+      "id": "7",
+      "created_at": "2026-05-01T13:43:59.226Z",
+      "uploader": {
+        "id": "local-user",
+        "display_name": "עומרי",
+        "hospital": "אחר",
+        "role": "contributor"
+      },
+      "stats": {
+        "rating_avg": 0,
+        "rating_count": 0,
+        "reaction_count": 0,
+        "comment_count": 0,
+        "save_count": 0
+      }
+    },
+    {
+      "title": "עומרי בדיקה",
+      "body": "בידקה",
+      "explanation": "יס",
+      "uploaderName": "עומרי",
+      "hospital": "בילינסון",
+      "chapter": "33",
+      "mediaType": "photo",
+      "tags": [
+        {
+          "category": "sign",
+          "value": "mono",
+          "value_he": "מונו"
+        }
+      ],
+      "media_url": "/uploads/1777640713484-WhatsApp_Image_2026-05-01_at_14.32.06.jpeg",
+      "media_type": "photo",
+      "id": "6",
+      "created_at": "2026-05-01T13:05:13.491Z",
+      "uploader": {
+        "id": "local-user",
+        "display_name": "עומרי",
+        "hospital": "בילינסון",
+        "role": "contributor"
+      },
+      "stats": {
+        "rating_avg": 0,
+        "rating_count": 0,
+        "reaction_count": 0,
+        "comment_count": 0,
+        "save_count": 0
+      }
+    },
+    {
+      "id": "1",
+      "uploader_id": "user1",
+      "title": "Sweet's Syndrome - קריטריונים דיאגנוסטיים",
+      "body": "Major: Abrupt onset + Histopathology consistent\nMinor: Preceded by infection/vaccination/malignancy + Fever + Leukocytosis + Excellent response to corticosteroids",
+      "explanation": "צריך שני קריטריונים מז'וריים ושני קריטריונים מינוריים לאבחון Sweet's syndrome. זכור: MAJOR vs minor - כמו בתמונה!",
+      "media_url": "/uploads/WhatsApp Image 2026-05-01 at 14.32.06.jpeg",
+      "media_type": "summary-table",
+      "chapter": "25",
+      "pinned": false,
+      "created_at": "2026-05-01T12:00:00Z",
+      "uploader": {
+        "id": "user1",
+        "display_name": "ד״ר מאיה כהן",
+        "hospital": "איכילוב",
+        "role": "verified_contributor"
+      },
+      "tags": [
+        {
+          "category": "diagnosis",
+          "value": "sweet-syndrome",
+          "value_he": "Sweet's Syndrome"
+        },
+        {
+          "category": "pathology",
+          "value": "neutrophilic-infiltrate",
+          "value_he": "חדירה נויטרופילית"
+        },
+        {
+          "category": "treatment",
+          "value": "corticosteroids",
+          "value_he": "קורטיקוסטרואידים"
+        },
+        {
+          "category": "aid_type",
+          "value": "table",
+          "value_he": "טבלה"
+        }
+      ],
+      "stats": {
+        "rating_avg": 4.9,
+        "rating_count": 34,
+        "reaction_count": 67,
+        "comment_count": 12,
+        "save_count": 45
+      }
+    },
+    {
+      "id": "2",
+      "uploader_id": "user1",
+      "title": "Blueberry Muffin DDX - דיפרנציאל",
+      "body": "Hemolytic (כדוריות דם אדומות), Hemangiomas (המנגיומות), PP65 (CMV), Twin hemangiomas",
+      "explanation": "דיפרנציאל לתסמונת Blueberry Muffin Baby - זכור את הממלכה של המאפינס! התמונה עוזרת לזכור את כל הגורמים.",
+      "media_url": "/uploads/WhatsApp Image 2026-05-01 at 14.34.24.jpeg",
+      "media_type": "illustration",
+      "chapter": "34",
+      "pinned": true,
+      "created_at": "2026-05-01T11:00:00Z",
+      "uploader": {
+        "id": "user1",
+        "display_name": "ד״ר מאיה כהן",
+        "hospital": "איכילוב",
+        "role": "verified_contributor"
+      },
+      "tags": [
+        {
+          "category": "diagnosis",
+          "value": "blueberry-muffin",
+          "value_he": "Blueberry Muffin"
+        },
+        {
+          "category": "sign",
+          "value": "purpura",
+          "value_he": "פורפורה"
+        },
+        {
+          "category": "aid_type",
+          "value": "illustration",
+          "value_he": "איור"
+        }
+      ],
+      "stats": {
+        "rating_avg": 5,
+        "rating_count": 56,
+        "reaction_count": 92,
+        "comment_count": 18,
+        "save_count": 78
+      }
+    },
+    {
+      "id": "3",
+      "uploader_id": "user2",
+      "title": "כרטיסי לימוד ויזואליים - דוגמאות",
+      "body": "שתי דוגמאות למנמוניקים ויזואליים יצירתיים: עיפרון + דבורה + קלף + כריש, ואננס במצוקה",
+      "explanation": "הדוגמאות מראות איך אפשר להשתמש בדמויות וויזואליזציה כדי לזכור מושגים מורכבים. כל דמות מייצגת רעיון או סימן קליני.",
+      "media_url": "/uploads/WhatsApp Image 2026-05-01 at 14.37.04.jpeg",
+      "media_type": "character",
+      "pinned": false,
+      "created_at": "2026-05-01T10:00:00Z",
+      "uploader": {
+        "id": "user2",
+        "display_name": "יוסי לוי",
+        "hospital": "הדסה",
+        "year_of_residency": 3,
+        "role": "contributor"
+      },
+      "tags": [
+        {
+          "category": "aid_type",
+          "value": "character",
+          "value_he": "דמויות"
+        },
+        {
+          "category": "aid_type",
+          "value": "mnemonic",
+          "value_he": "מנמוניק"
+        }
+      ],
+      "stats": {
+        "rating_avg": 4.3,
+        "rating_count": 28,
+        "reaction_count": 45,
+        "comment_count": 9,
+        "save_count": 32
+      }
+    },
+    {
+      "id": "4",
+      "uploader_id": "user3",
+      "title": "Morbus - גישה שיטתית לפי גיל",
+      "body": "טוב יש לי ציור מורכב, חישוב שתדי''ק בפרטים. כשאני אומר על משהו שהוא קלאסי - הוא יחסוב מהראש ואז גם MCI/MI. לקחתי את כולן ושמתי בפורמאלדהיד.",
+      "explanation": "גישה שיטתית לאבחון דיפרנציאלי של נגעים עוריים בילדים לפי גיל. כולל התייחסות ל-HIV, WAX, PSOR ועוד. התמונה מציגה התקדמות לפי גילאים.",
+      "media_url": "/uploads/WhatsApp Image 2026-05-01 at 14.39.01.jpeg",
+      "media_type": "text-only",
+      "pinned": false,
+      "created_at": "2026-05-01T09:00:00Z",
+      "uploader": {
+        "id": "user3",
+        "display_name": "ד״ר שרה אברהם",
+        "hospital": "שיבא",
+        "role": "verified_contributor"
+      },
+      "tags": [
+        {
+          "category": "diagnosis",
+          "value": "pediatric-dermatology",
+          "value_he": "דרמטולוגיה ילדים"
+        },
+        {
+          "category": "aid_type",
+          "value": "mnemonic",
+          "value_he": "מנמוניק"
+        }
+      ],
+      "stats": {
+        "rating_avg": 4.7,
+        "rating_count": 42,
+        "reaction_count": 68,
+        "comment_count": 15,
+        "save_count": 54
+      }
+    },
+    {
+      "id": "5",
+      "uploader_id": "user2",
+      "title": "Morbus - המשך הטקסט",
+      "body": "המבוגר הלא קלאסי יראה קצת כמו זדק, ויהיה מקריח. במוכר חור סחור ונופל מקבל פצעים בברכיים ומרפקים. אבל ילד באמת לא קלאסי פוצע כפות ידיים ורגליים.",
+      "explanation": "המשך למנמוניק Morbus - התייחסות לגילאים שונים ומצגים קליניים. שימושי במיוחד למבחני בחינה.",
+      "media_url": "/uploads/WhatsApp Image 2026-05-01 at 14.39.01 (1).jpeg",
+      "media_type": "text-only",
+      "pinned": false,
+      "created_at": "2026-05-01T09:05:00Z",
+      "uploader": {
+        "id": "user2",
+        "display_name": "יוסי לוי",
+        "hospital": "הדסה",
+        "year_of_residency": 3,
+        "role": "contributor"
+      },
+      "tags": [
+        {
+          "category": "diagnosis",
+          "value": "pediatric-dermatology",
+          "value_he": "דרמטולוגיה ילדים"
+        },
+        {
+          "category": "aid_type",
+          "value": "mnemonic",
+          "value_he": "מנמוניק"
+        }
+      ],
+      "stats": {
+        "rating_avg": 4.5,
+        "rating_count": 19,
+        "reaction_count": 31,
+        "comment_count": 7,
+        "save_count": 24
+      }
+    }
+  ],
+  "nextId": 8
+}

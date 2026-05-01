@@ -1,0 +1,83 @@
+{
+  "app": {
+    "name": "Dermnemonic",
+    "tagline": "Learning Platform for Dermatology Residents"
+  },
+  "nav": {
+    "feed": "Feed",
+    "upload": "Upload",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "sets": "Collections",
+    "live": "Live",
+    "curator": "Curator"
+  },
+  "feed": {
+    "title": "Learning Aids",
+    "viewMode": {
+      "list": "List",
+      "cards": "Cards"
+    },
+    "filters": {
+      "all": "All",
+      "verified": "Verified",
+      "diagnosis": "Diagnosis",
+      "sign": "Clinical Sign",
+      "pathology": "Pathology",
+      "treatment": "Treatment",
+      "aidType": "Aid Type"
+    },
+    "sort": {
+      "newest": "Newest",
+      "rated": "Top Rated",
+      "thanked": "Most Loved"
+    },
+    "empty": {
+      "title": "No content yet",
+      "description": "Real content coming soon, starting May 15",
+      "cta": "Want to be the first to upload?"
+    }
+  },
+  "card": {
+    "verified": "Verified by doctor",
+    "pending": "Pending verification",
+    "uploadedBy": "Uploaded by",
+    "reactions": "Reactions",
+    "saved": "Saved",
+    "comments": "Comments"
+  },
+  "upload": {
+    "title": "Upload Learning Aid",
+    "type": {
+      "image": "Image",
+      "video": "Video",
+      "audio": "Audio",
+      "text": "Text",
+      "sketch": "Sketch"
+    },
+    "fields": {
+      "title": "Title",
+      "titlePlaceholder": "e.g., 5 P's of Lichen Planus",
+      "body": "Content",
+      "bodyPlaceholder": "Pruritic, Purple, Polygonal, Planar, Papules",
+      "explanation": "Detailed explanation (optional)",
+      "explanationPlaceholder": "Explain why this works...",
+      "source": "Source",
+      "sourcePlaceholder": "e.g., Bolognia 5th ed, p. 188",
+      "tags": "Tags",
+      "tagsPlaceholder": "Select tags"
+    },
+    "submit": "Publish",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "share": "Share",
+    "invite": "Invite colleague"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "app": {
+    "name": "Dermasociations",
+    "tagline": "פלטפורמת עזרי הלמידה לרופאי עור"
+  },
+  "nav": {
+    "feed": "עזרי למידה",
+    "upload": "העלה",
+    "study": "מצב לימוד",
+    "leaderboard": "לוח מובילים",
+    "profile": "פרופיל",
+    "sets": "אוספים",
+    "live": "Live",
+    "curator": "אוצר"
+  },
+  "feed": {
+    "title": "עזרי למידה",
+    "viewMode": {
+      "list": "רשימה",
+      "cards": "כרטיסים"
+    },
+    "filters": {
+      "all": "הכל",
+      "verified": "מאומתים",
+      "diagnosis": "אבחנה",
+      "sign": "סימן קליני",
+      "pathology": "פתולוגיה",
+      "treatment": "טיפול",
+      "aidType": "סוג עזר"
+    },
+    "sort": {
+      "newest": "חדשים",
+      "rated": "מדורגים",
+      "thanked": "הכי אהובים"
+    },
+    "empty": {
+      "title": "עוד אין כאן תוכן",
+      "description": "תכנים אמיתיים בדרך, החל מ-15 במאי",
+      "cta": "רוצה להיות הראשון להעלות?"
+    }
+  },
+  "card": {
+    "verified": "נבדק על ידי רופא",
+    "pending": "ממתין לאימות",
+    "uploadedBy": "הועלה על ידי",
+    "reactions": "תגובות",
+    "saved": "נשמר",
+    "comments": "תגובות"
+  },
+  "upload": {
+    "title": "העלאת עזר למידה",
+    "type": {
+      "image": "תמונה",
+      "video": "וידאו",
+      "audio": "אודיו",
+      "text": "טקסט",
+      "sketch": "ציור"
+    },
+    "fields": {
+      "title": "כותרת",
+      "titlePlaceholder": "למשל: 5 P's של Lichen Planus",
+      "body": "תוכן",
+      "bodyPlaceholder": "Pruritic, Purple, Polygonal, Planar, Papules",
+      "explanation": "הסבר מפורט (אופציונלי)",
+      "explanationPlaceholder": "הסבר למה זה עובד...",
+      "source": "מקור",
+      "sourcePlaceholder": "למשל: Bolognia 5th ed, p. 188",
+      "tags": "תגיות",
+      "tagsPlaceholder": "בחר תגיות"
+    },
+    "submit": "פרסם",
+    "cancel": "ביטול"
+  },
+  "common": {
+    "loading": "טוען...",
+    "error": "שגיאה",
+    "save": "שמור",
+    "cancel": "ביטול",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "share": "שתף",
+    "invite": "הזמן עמית"
+  }
+}
