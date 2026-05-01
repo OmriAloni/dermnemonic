@@ -34,6 +34,7 @@ async function insertLearningAid(supabase: any, newAid: any, userId: string) {
       explanation: newAid.explanation || null,
       media_url: newAid.media_url || null,
       media_type: newAid.media_type || 'text-only',
+      chapter: newAid.chapter || null,
       verified: false,
       pinned: false
     })
