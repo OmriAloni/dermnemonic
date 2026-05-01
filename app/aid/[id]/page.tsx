@@ -13,6 +13,9 @@ import { RatingStars } from '@/components/rating-stars'
 import { CommentsSection } from '@/components/comments-section'
 import {
   ArrowRight,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   MessageCircle,
   Bookmark,
@@ -30,16 +33,28 @@ export default function AidDetailPage() {
   const [aid, setAid] = useState<LearningAid | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [allAids, setAllAids] = useState<LearningAid[]>([])
+  const [currentIndex, setCurrentIndex] = useState(-1)
 
   useEffect(() => {
-    async function fetchAid() {
+    async function fetchData() {
       try {
-        const response = await fetch(`/api/aids/${id}`)
-        if (!response.ok) {
+        // Fetch current aid
+        const aidResponse = await fetch(`/api/aids/${id}`)
+        if (!aidResponse.ok) {
           throw new Error('Failed to fetch learning aid')
         }
-        const data = await response.json()
-        setAid(data)
+        const aidData = await aidResponse.json()
+        setAid(aidData)
+
+        // Fetch all aids for navigation
+        const allResponse = await fetch('/api/aids')
+        if (allResponse.ok) {
+          const allData = await allResponse.json()
+          setAllAids(allData)
+          const index = allData.findIndex((a: LearningAid) => a.id === id)
+          setCurrentIndex(index)
+        }
       } catch (err) {
         setError('שגיאה בטעינת עזר הלמידה')
         console.error(err)
@@ -48,7 +63,7 @@ export default function AidDetailPage() {
       }
     }
 
-    fetchAid()
+    fetchData()
   }, [id])
 
   if (loading) {
@@ -80,15 +95,69 @@ export default function AidDetailPage() {
     .join('')
     .toUpperCase() || '?'
 
+  const hasPrevious = currentIndex > 0
+  const hasNext = currentIndex < allAids.length - 1
+  const previousAid = hasPrevious ? allAids[currentIndex - 1] : null
+  const nextAid = hasNext ? allAids[currentIndex + 1] : null
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Side Navigation - Carousel Style */}
+      {hasPrevious && (
+        <Link
+          href={`/aid/${previousAid?.id}`}
+          className="fixed right-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </Link>
+      )}
+      {hasNext && (
+        <Link
+          href={`/aid/${nextAid?.id}`}
+          className="fixed left-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </Link>
+      )}
+
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80">
-              <ArrowRight className="h-5 w-5" />
-              <span>חזרה לפיד</span>
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+                <ArrowRight className="h-5 w-5" />
+                <span>חזרה לפיד</span>
+              </Link>
+
+              {/* Top Navigation Arrows */}
+              <div className="flex items-center gap-2 border-r pr-4">
+                <Link
+                  href={hasPrevious ? `/aid/${previousAid?.id}` : '#'}
+                  className={`p-1.5 rounded-md transition-colors ${
+                    hasPrevious
+                      ? 'hover:bg-accent text-foreground'
+                      : 'text-muted-foreground cursor-not-allowed opacity-50'
+                  }`}
+                  onClick={(e) => !hasPrevious && e.preventDefault()}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <span className="text-sm text-muted-foreground">
+                  {currentIndex + 1} / {allAids.length}
+                </span>
+                <Link
+                  href={hasNext ? `/aid/${nextAid?.id}` : '#'}
+                  className={`p-1.5 rounded-md transition-colors ${
+                    hasNext
+                      ? 'hover:bg-accent text-foreground'
+                      : 'text-muted-foreground cursor-not-allowed opacity-50'
+                  }`}
+                  onClick={(e) => !hasNext && e.preventDefault()}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
             <div className="flex items-center gap-2">
               {aid.pinned && (
                 <Badge variant="secondary" className="gap-1">
