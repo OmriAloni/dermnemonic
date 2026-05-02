@@ -9,7 +9,8 @@ import { AID_TYPES } from '@/lib/aid-types'
 export interface SimpleFilterState {
   chapter: string | null
   aidTypes: string[]
-  sort: 'newest' | 'rated' | 'alphabetical'
+  sort: 'newest' | 'rated' | 'alphabetical' | 'shuffle'
+  showSavedOnly: boolean
 }
 
 interface SimpleFilterPanelProps {
@@ -21,7 +22,8 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
   const [filters, setFilters] = useState<SimpleFilterState>({
     chapter: 'all',
     aidTypes: [],
-    sort: 'newest'
+    sort: 'newest',
+    showSavedOnly: false
   })
 
   const updateFilters = (updates: Partial<SimpleFilterState>) => {
@@ -87,6 +89,24 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
         </div>
       </div>
 
+      {/* Saved Only Filter */}
+      <div className="space-y-3 pt-4 border-t">
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="show-saved-only"
+            checked={filters.showSavedOnly}
+            onCheckedChange={(checked) => updateFilters({ showSavedOnly: !!checked })}
+            className="h-5 w-5"
+          />
+          <label
+            htmlFor="show-saved-only"
+            className="text-sm font-medium cursor-pointer flex-1 py-2 -my-2"
+          >
+            רק שמורים
+          </label>
+        </div>
+      </div>
+
       {/* Sort */}
       <div className="space-y-2 pt-4 border-t">
         <label htmlFor="sort-select" className="text-sm font-medium">מיון</label>
@@ -96,27 +116,30 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
               {filters.sort === 'newest' && 'חדש ביותר'}
               {filters.sort === 'rated' && 'המדורגים ביותר'}
               {filters.sort === 'alphabetical' && 'א-ב'}
+              {filters.sort === 'shuffle' && 'אקראי'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent align="start">
             <SelectItem value="newest">חדש ביותר</SelectItem>
             <SelectItem value="rated">המדורגים ביותר</SelectItem>
             <SelectItem value="alphabetical">א-ב</SelectItem>
+            <SelectItem value="shuffle">אקראי</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Active Filters Summary */}
-      {(filters.chapter !== 'all' || filters.aidTypes.length > 0) && (
+      {(filters.chapter !== 'all' || filters.aidTypes.length > 0 || filters.showSavedOnly) && (
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
               {filters.chapter !== 'all' && '1 '}
               {filters.aidTypes.length > 0 && `${filters.aidTypes.length} `}
+              {filters.showSavedOnly && '1 '}
               פילטרים פעילים
             </span>
             <button
-              onClick={() => updateFilters({ chapter: 'all', aidTypes: [] })}
+              onClick={() => updateFilters({ chapter: 'all', aidTypes: [], showSavedOnly: false })}
               className="text-sm text-primary hover:underline"
             >
               נקה הכל

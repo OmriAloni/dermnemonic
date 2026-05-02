@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Heart, Brain, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star } from 'lucide-react'
+import { Heart, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star, Handshake } from 'lucide-react'
 import { LearningAid } from '@/lib/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -311,9 +311,9 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
                 ? 'bg-purple-100 dark:bg-purple-900/20'
                 : 'hover:bg-muted'
             }`}
-            aria-label="חכם"
+            aria-label="כפיים"
           >
-            <Brain
+            <Handshake
               className={`h-5 w-5 ${
                 userReactions.includes('brain')
                   ? 'fill-purple-500 text-purple-500'

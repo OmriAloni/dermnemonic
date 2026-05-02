@@ -64,7 +64,8 @@ export default function FeedPage() {
   const [currentFilters, setCurrentFilters] = useState<SimpleFilterState>({
     chapter: 'all',
     aidTypes: [],
-    sort: 'newest'
+    sort: 'newest',
+    showSavedOnly: false
   })
 
   // Compute filtered aids using useMemo (derived state)
@@ -116,11 +117,30 @@ export default function FeedPage() {
       })
     }
 
+    // Filter by saved only
+    if (currentFilters.showSavedOnly) {
+      if (typeof window !== 'undefined') {
+        const savedAids = localStorage.getItem('saved-aids')
+        if (savedAids) {
+          const savedIds = JSON.parse(savedAids)
+          filtered = filtered.filter(aid => savedIds.includes(aid.id))
+        } else {
+          filtered = [] // No saved items
+        }
+      }
+    }
+
     // Sort
     if (currentFilters.sort === 'alphabetical') {
       filtered.sort((a, b) => a.title.localeCompare(b.title, 'he'))
     } else if (currentFilters.sort === 'rated') {
       filtered.sort((a, b) => (b.stats?.rating_avg || 0) - (a.stats?.rating_avg || 0))
+    } else if (currentFilters.sort === 'shuffle') {
+      // Fisher-Yates shuffle algorithm
+      for (let i = filtered.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]]
+      }
     }
 
     return filtered
@@ -144,10 +164,10 @@ export default function FeedPage() {
       <header id="main-header" className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
-            <div className="min-w-0 flex-shrink">
+            <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity">
               <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermasociations</h1>
               <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
-            </div>
+            </Link>
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               <Link href="/uploaders" className="hidden md:block">
                 <Button id="btn-uploaders" variant="outline" size="sm">
@@ -222,12 +242,12 @@ export default function FeedPage() {
                 <p className="text-muted-foreground">
                   נסה לשנות את החיפוש או הפילטרים
                 </p>
-                {(searchQuery || currentFilters.chapter !== 'all' || currentFilters.aidTypes.length > 0) && (
+                {(searchQuery || currentFilters.chapter !== 'all' || currentFilters.aidTypes.length > 0 || currentFilters.showSavedOnly) && (
                   <Button
                     variant="outline"
                     onClick={() => {
                       setSearchQuery('')
-                      handleFilterChange({ chapter: 'all', aidTypes: [], sort: 'newest' })
+                      handleFilterChange({ chapter: 'all', aidTypes: [], sort: 'newest', showSavedOnly: false })
                     }}
                   >
                     נקה הכל

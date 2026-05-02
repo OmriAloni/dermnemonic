@@ -53,6 +53,11 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - ✅ Fixed navigation arrows and keyboard shortcuts
 - ✅ Fixed user menu context error
 - ✅ Fixed logout functionality
+- ✅ Replaced brain reaction icon with applause (handshake)
+- ✅ Added shuffle/random sort option
+- ✅ Added "saved only" filter
+- ✅ Made header logo clickable to return home
+- ✅ Differentiated signup button (green) from upload button (coral)
 - ✅ All features tested and working
 
 ### 🚧 Future Features

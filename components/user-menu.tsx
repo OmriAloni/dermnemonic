@@ -91,12 +91,12 @@ export function UserMenu() {
     return (
       <div className="flex gap-2">
         <Link href="/auth/login">
-          <Button variant="ghost" size="sm">
+          <Button variant="outline" size="sm">
             התחבר
           </Button>
         </Link>
         <Link href="/auth/signup">
-          <Button size="sm">
+          <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
             הירשם
           </Button>
         </Link>
