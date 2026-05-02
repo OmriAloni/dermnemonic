@@ -17,16 +17,16 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Carousel Navigation** - Left/right arrows to browse cards (desktop + mobile)
 - **Shuffle Mode** - Random card navigation for study without memorizing order
 - **Search** - Search by title, body, explanation, or tags (keyboard shortcut: /)
-- **Filters** - Filter by chapter (Hebrew names) and aid type
+- **Filters** - Filter by chapter (English Bolognia chapters with numbers) and aid type
 - **Detail Page** - Full learning aid view with navigation counter + chapter badge
 - **Interactive Ratings** - 5-star rating system with login requirement
 - **Comments** - Add, view, and delete comments (with authentication + modal)
-- **Reaction Buttons** - Heart/brain/lightbulb with optimistic updates
+- **Reaction Buttons** - Heart/👏 clapping/lightbulb with optimistic updates
 - **WhatsApp Share** - Pre-filled Hebrew messages with deep links
 - **Like & Save** - Both require login, consistent UX
 - **Authentication** - Magic link signup/login with Supabase Auth
 - **Upload** - Image upload to Supabase Storage with auto-filled profile data
-- **Chapter Display** - Hebrew chapter badges (e.g., "פסוריאזיס", "מלנומה", "המנגיומות")
+- **Chapter Display** - English Bolognia chapter badges with numbers (e.g., "8. Psoriasis", "113. Melanoma")
 - **Stats** - Real-time counts (ratings, reactions, comments, saves) via optimized DB view
 - **Loading States** - Skeleton loaders, button loading text, double-click prevention
 - **Empty States** - Helpful messages for no results, login required, etc.
@@ -49,13 +49,22 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 **App Status**: ✅ Production ready! All bugs fixed, all features working.  
 **Only Task Remaining**: Upload real content from `טריקים ושטיקים לבולוניה.xlsx`
 
-**Latest Updates** (May 2, 2026):
+**Latest Updates** (May 2, 2026 - Evening Session):
+- ✅ **Shuffle Navigation Mode** - Random card navigation in detail view for studying without memorizing order
+- ✅ **Complete Bolognia Chapter Taxonomy** - All 159 chapters from textbook with proper numbering
+- ✅ **English Chapters** - Switched from Hebrew to English chapter names (1. Anatomy and Pathophysiology, etc.)
+- ✅ **LTR Chapter Display** - All chapter values display left-to-right for proper English reading
+- ✅ **Chapter Numbers** - Display format: "77. Fungal Diseases" throughout the app
+- ✅ **Clapping Emoji Reaction** - Replaced handshake icon with 👏 emoji (LinkedIn-style, better visual appeal)
+- ✅ **User Menu Width Fix** - Dropdown now accommodates long email addresses properly
+- ✅ **"Other" Chapter Option** - Added at end of chapter list for uncategorized content
+- ✅ **Wide Comboboxes** - Chapter dropdowns expand to 500px to show full chapter names
+
+**Previous Session Updates** (May 2, 2026 - Earlier):
 - ✅ Fixed infinite re-render loop on feed page
 - ✅ Fixed navigation arrows and keyboard shortcuts
 - ✅ Fixed user menu context error
 - ✅ Fixed logout functionality
-- ✅ Replaced brain reaction icon with applause (handshake)
-- ✅ Added shuffle navigation mode - study cards in random order without memorizing sequence
 - ✅ Added random sort option in feed
 - ✅ Added "saved only" filter
 - ✅ Made header logo clickable to return home
