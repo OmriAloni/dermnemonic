@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Heart, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star, Handshake } from 'lucide-react'
+import { Heart, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star } from 'lucide-react'
 import { LearningAid } from '@/lib/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -312,18 +312,20 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
             disabled={reactionsLoading}
             className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 ${
               userReactions.includes('brain')
-                ? 'bg-purple-100 dark:bg-purple-900/20'
+                ? 'bg-blue-100 dark:bg-blue-900/20'
                 : 'hover:bg-muted'
             }`}
             aria-label="כפיים"
           >
-            <Handshake
-              className={`h-5 w-5 ${
+            <span
+              className={`text-lg leading-none transition-all ${
                 userReactions.includes('brain')
-                  ? 'fill-purple-500 text-purple-500'
-                  : 'text-muted-foreground'
+                  ? 'scale-110'
+                  : 'grayscale opacity-60'
               }`}
-            />
+            >
+              👏
+            </span>
             {reactionCounts.brain > 0 && (
               <span className="text-xs font-medium">{reactionCounts.brain}</span>
             )}
