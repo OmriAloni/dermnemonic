@@ -3,11 +3,16 @@
 import { useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { Badge } from '@/components/ui/badge'
+import { Check, ChevronsUpDown, X } from 'lucide-react'
 import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
 
 export interface SimpleFilterState {
-  chapter: string | null
+  chapters: string[]
   aidTypes: string[]
   sort: 'newest' | 'rated' | 'alphabetical' | 'shuffle'
   showSavedOnly: boolean
@@ -20,11 +25,12 @@ interface SimpleFilterPanelProps {
 
 export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilterPanelProps) {
   const [filters, setFilters] = useState<SimpleFilterState>({
-    chapter: 'all',
+    chapters: [],
     aidTypes: [],
     sort: 'newest',
     showSavedOnly: false
   })
+  const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false)
 
   const updateFilters = (updates: Partial<SimpleFilterState>) => {
     const newFilters = { ...filters, ...updates }
@@ -39,41 +45,107 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     updateFilters({ aidTypes: newTypes })
   }
 
+  const toggleChapter = (chapterValue: string) => {
+    const newChapters = filters.chapters.includes(chapterValue)
+      ? filters.chapters.filter(c => c !== chapterValue)
+      : [...filters.chapters, chapterValue]
+    updateFilters({ chapters: newChapters })
+  }
+
+  const removeChapter = (chapterValue: string) => {
+    const newChapters = filters.chapters.filter(c => c !== chapterValue)
+    updateFilters({ chapters: newChapters })
+  }
+
+  const clearAllChapters = () => {
+    updateFilters({ chapters: [] })
+  }
+
   return (
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
-      {/* Chapter Filter */}
+      {/* Chapter Filter - Multi-select with Search */}
       <div className="space-y-2">
-        <label htmlFor="chapter-select" className="text-sm font-medium">פרק</label>
-        <Select value={filters.chapter} onValueChange={(value) => updateFilters({ chapter: value })}>
-          <SelectTrigger id="chapter-select" className="w-full whitespace-normal h-auto min-h-10">
-            <SelectValue>
-              {(() => {
-                const chapter = CHAPTERS.find(c => c.value === filters.chapter)
-                if (!chapter) return 'בחר פרק'
-                if (chapter.value === 'all') return chapter.label_en
-                const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
-                return <span dir="ltr" className="block text-left">{text}</span>
-              })()}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent align="start" className="max-h-[400px] w-[calc(100vw-2rem)] sm:w-[500px]">
-            {CHAPTERS.map((chapter) => (
-              <SelectItem
-                key={chapter.value}
-                value={chapter.value}
-                className="whitespace-normal h-auto py-2 leading-tight"
-              >
-                <span dir="ltr" className="block whitespace-normal break-words text-left">
-                  {chapter.value === 'all'
-                    ? chapter.label_en
-                    : chapter.number
-                      ? `${chapter.number}. ${chapter.label_en}`
-                      : chapter.label_en}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <label className="text-sm font-medium">פרקים</label>
+        <Popover open={chapterPopoverOpen} onOpenChange={setChapterPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={chapterPopoverOpen}
+              className="w-full justify-between h-auto min-h-10 font-normal"
+            >
+              <div className="flex gap-1 flex-wrap">
+                {filters.chapters.length === 0 ? (
+                  <span className="text-muted-foreground">בחר פרקים...</span>
+                ) : (
+                  filters.chapters.slice(0, 2).map((chapterValue) => {
+                    const chapter = CHAPTERS.find(c => c.value === chapterValue)
+                    if (!chapter) return null
+                    const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                    return (
+                      <Badge key={chapterValue} variant="secondary" className="gap-1">
+                        <span dir="ltr" className="text-xs">{text.length > 20 ? `Ch. ${chapter.number}` : text}</span>
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-destructive"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            removeChapter(chapterValue)
+                          }}
+                        />
+                      </Badge>
+                    )
+                  })
+                )}
+                {filters.chapters.length > 2 && (
+                  <Badge variant="secondary">+{filters.chapters.length - 2}</Badge>
+                )}
+              </div>
+              <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[400px] p-0" align="start">
+            <Command>
+              <CommandInput placeholder="חפש פרק..." />
+              <CommandList>
+                <CommandEmpty>לא נמצאו פרקים</CommandEmpty>
+                <CommandGroup>
+                  {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => {
+                    const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                    return (
+                      <CommandItem
+                        key={chapter.value}
+                        value={text}
+                        onSelect={() => toggleChapter(chapter.value)}
+                        className="gap-2"
+                      >
+                        <Checkbox
+                          checked={filters.chapters.includes(chapter.value)}
+                          className="h-4 w-4"
+                        />
+                        <span dir="ltr" className="flex-1 text-left">{text}</span>
+                        {filters.chapters.includes(chapter.value) && (
+                          <Check className="h-4 w-4" />
+                        )}
+                      </CommandItem>
+                    )
+                  })}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+            {filters.chapters.length > 0 && (
+              <div className="p-2 border-t">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllChapters}
+                  className="w-full"
+                >
+                  נקה הכל ({filters.chapters.length})
+                </Button>
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Aid Type Filter */}
@@ -139,17 +211,17 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
       </div>
 
       {/* Active Filters Summary */}
-      {(filters.chapter !== 'all' || filters.aidTypes.length > 0 || filters.showSavedOnly) && (
+      {(filters.chapters.length > 0 || filters.aidTypes.length > 0 || filters.showSavedOnly) && (
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
-              {filters.chapter !== 'all' && '1 '}
+              {filters.chapters.length > 0 && `${filters.chapters.length} `}
               {filters.aidTypes.length > 0 && `${filters.aidTypes.length} `}
               {filters.showSavedOnly && '1 '}
               פילטרים פעילים
             </span>
             <button
-              onClick={() => updateFilters({ chapter: 'all', aidTypes: [], showSavedOnly: false })}
+              onClick={() => updateFilters({ chapters: [], aidTypes: [], showSavedOnly: false })}
               className="text-sm text-primary hover:underline"
             >
               נקה הכל

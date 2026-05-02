@@ -62,7 +62,7 @@ export default function FeedPage() {
 
   // Filter state
   const [currentFilters, setCurrentFilters] = useState<SimpleFilterState>({
-    chapter: 'all',
+    chapters: [],
     aidTypes: [],
     sort: 'newest',
     showSavedOnly: false
@@ -87,13 +87,15 @@ export default function FeedPage() {
       })
     }
 
-    // Filter by chapter
-    if (currentFilters.chapter && currentFilters.chapter !== 'all') {
+    // Filter by chapters (multi-select)
+    if (currentFilters.chapters.length > 0) {
       filtered = filtered.filter(aid => {
-        const chapterInfo = CHAPTERS.find(c => c.value === currentFilters.chapter)
-        return aid.chapter === currentFilters.chapter ||
-               aid.chapter === chapterInfo?.label ||
-               aid.chapter === chapterInfo?.label_en
+        return currentFilters.chapters.some(chapterValue => {
+          const chapterInfo = CHAPTERS.find(c => c.value === chapterValue)
+          return aid.chapter === chapterValue ||
+                 aid.chapter === chapterInfo?.label ||
+                 aid.chapter === chapterInfo?.label_en
+        })
       })
     }
 
@@ -242,12 +244,12 @@ export default function FeedPage() {
                 <p className="text-muted-foreground">
                   נסה לשנות את החיפוש או הפילטרים
                 </p>
-                {(searchQuery || currentFilters.chapter !== 'all' || currentFilters.aidTypes.length > 0 || currentFilters.showSavedOnly) && (
+                {(searchQuery || currentFilters.chapters.length > 0 || currentFilters.aidTypes.length > 0 || currentFilters.showSavedOnly) && (
                   <Button
                     variant="outline"
                     onClick={() => {
                       setSearchQuery('')
-                      handleFilterChange({ chapter: 'all', aidTypes: [], sort: 'newest', showSavedOnly: false })
+                      handleFilterChange({ chapters: [], aidTypes: [], sort: 'newest', showSavedOnly: false })
                     }}
                   >
                     נקה הכל
