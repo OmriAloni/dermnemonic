@@ -318,13 +318,15 @@ export default function UploadPage() {
                         variant="outline"
                         role="combobox"
                         aria-expanded={chapterPopoverOpen}
-                        className="w-full justify-between h-auto min-h-10 font-normal"
+                        className="w-full justify-between h-auto min-h-10 font-normal whitespace-normal text-left"
                       >
-                        {formData.chapter ? (() => {
-                          const chapter = CHAPTERS.find(c => c.value === formData.chapter)
-                          const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
-                          return <span dir="ltr" className="block text-left">{text}</span>
-                        })() : <span className="text-muted-foreground">בחר פרק...</span>}
+                        <span className="flex-1 overflow-hidden">
+                          {formData.chapter ? (() => {
+                            const chapter = CHAPTERS.find(c => c.value === formData.chapter)
+                            const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
+                            return <span dir="ltr" className="block text-left break-words">{text}</span>
+                          })() : <span className="text-muted-foreground">בחר פרק...</span>}
+                        </span>
                         <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
