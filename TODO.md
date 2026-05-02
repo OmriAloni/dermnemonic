@@ -24,7 +24,11 @@
 - ✅ Made select buttons auto-width (not full-width)
 - ✅ Improved form spacing (upload page)
 - ✅ Added verified badges to cards
-- ✅ Chapter badges working on feed cards
+- ✅ Chapter badges working on feed cards + detail page
+- ✅ Mobile UI optimization (44px touch targets, responsive grids)
+- ✅ Empty states (no search results, login required, no comments)
+- ✅ Upload success message with auto-redirect
+- ✅ Removed unused card view toggle
 
 ### Features
 - ✅ Carousel navigation with side arrows on detail pages
@@ -33,6 +37,16 @@
 - ✅ Auth working (signup/login)
 - ✅ Upload flow with Supabase Storage
 - ✅ Comments and ratings working
+- ✅ Reaction buttons (heart/brain/lightbulb) with optimistic updates
+- ✅ WhatsApp share with pre-filled Hebrew messages
+- ✅ Delete comments with authentication and ownership checks
+- ✅ Login requirements for all interactions (comments, ratings, reactions)
+
+### Bug Fixes
+- ✅ Comments API now uses authenticated user (not hardcoded test user)
+- ✅ SSR guards for localStorage (prevents hydration errors)
+- ✅ Fixed Next.js 16 async params in all API routes
+- ✅ User menu fixed (removed broken profile link)
 
 ---
 
@@ -65,19 +79,20 @@
 
 ---
 
-## 🎯 Priority 2: Quick Wins (High Impact, Low Effort)
+## 🎯 Priority 2: Polish & Performance (30-60 min)
 
-### 1. Reaction Buttons (1 hour)
-**Why**: Adds fun factor, judges will notice
+### 1. Image Blur Placeholders
+**Why**: Better perceived performance
 
 **Tasks**:
-- Add heart/brain/lightbulb emoji buttons to cards
-- POST to `/api/aids/[id]/reactions`
-- Show reaction counts
-- Toggle on/off (click again to remove)
-- Smooth animations
+- Add blur data URLs to Next.js Image components
+- Use `placeholder="blur"` prop
+- Generate blur hashes for existing images
 
-**Files to touch**:
+### 2. Lighthouse Audit
+**Why**: Verify we hit performance targets
+
+**Tasks**:
 - `app/api/aids/[id]/reactions/route.ts` (already exists, verify it works)
 - `components/feed/learning-aid-card.tsx` (add button UI)
 
