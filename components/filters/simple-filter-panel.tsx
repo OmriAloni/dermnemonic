@@ -43,14 +43,14 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
       {/* Chapter Filter */}
       <div className="space-y-2">
-        <label htmlFor="chapter-select" className="text-sm font-medium">פרק</label>
+        <label htmlFor="chapter-select" className="text-sm font-medium">Chapter</label>
         <Select value={filters.chapter} onValueChange={(value) => updateFilters({ chapter: value })}>
-          <SelectTrigger id="chapter-select" className="w-full sm:w-auto sm:min-w-[200px] whitespace-normal h-auto min-h-10">
+          <SelectTrigger id="chapter-select" className="w-full whitespace-normal h-auto min-h-10">
             <SelectValue>
-              {CHAPTERS.find(c => c.value === filters.chapter)?.[locale === 'he' ? 'label' : 'label_en'] || 'בחר פרק'}
+              {CHAPTERS.find(c => c.value === filters.chapter)?.label_en || 'Select Chapter'}
             </SelectValue>
           </SelectTrigger>
-          <SelectContent align="start" className="max-h-[400px] max-w-[300px]">
+          <SelectContent align="start" className="max-h-[400px] w-[calc(100vw-2rem)] sm:w-[500px]">
             {CHAPTERS.map((chapter) => (
               <SelectItem
                 key={chapter.value}
@@ -58,7 +58,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 className="whitespace-normal h-auto py-2 leading-tight"
               >
                 <span className="block whitespace-normal break-words">
-                  {locale === 'he' ? chapter.label : chapter.label_en}
+                  {chapter.label_en}
                 </span>
               </SelectItem>
             ))}

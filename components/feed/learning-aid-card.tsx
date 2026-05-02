@@ -212,8 +212,8 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           {aid.chapter && (() => {
             const chapterInfo = CHAPTERS.find(c => c.value === aid.chapter)
             return chapterInfo && (
-              <Badge variant="secondary" className="min-w-[70px] justify-center">
-                {locale === 'he' ? chapterInfo.label : chapterInfo.label_en}
+              <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                {chapterInfo.label_en}
               </Badge>
             )
           })()}

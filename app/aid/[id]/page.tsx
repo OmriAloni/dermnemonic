@@ -388,8 +388,8 @@ export default function AidDetailPage() {
             {aid.chapter && (() => {
               const chapterInfo = CHAPTERS.find(c => c.value === aid.chapter)
               return chapterInfo && (
-                <Badge variant="secondary" className="text-base px-3 py-1 flex-shrink-0">
-                  פרק: {chapterInfo.label}
+                <Badge variant="secondary" className="text-sm px-3 py-1 flex-shrink-0">
+                  {chapterInfo.label_en}
                 </Badge>
               )
             })()}
