@@ -31,6 +31,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     showSavedOnly: false
   })
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false)
+  const [chapterSearch, setChapterSearch] = useState('')
 
   const updateFilters = (updates: Partial<SimpleFilterState>) => {
     const newFilters = { ...filters, ...updates }
@@ -50,6 +51,8 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
       ? filters.chapters.filter(c => c !== chapterValue)
       : [...filters.chapters, chapterValue]
     updateFilters({ chapters: newChapters })
+    // Clear search after selection
+    setChapterSearch('')
   }
 
   const removeChapter = (chapterValue: string) => {
@@ -66,7 +69,11 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
       {/* Chapter Filter - Multi-select with Search */}
       <div className="space-y-2">
         <label className="text-sm font-medium">פרקים</label>
-        <Popover open={chapterPopoverOpen} onOpenChange={setChapterPopoverOpen}>
+        <Popover open={chapterPopoverOpen} onOpenChange={(open) => {
+          setChapterPopoverOpen(open)
+          // Clear search when closing
+          if (!open) setChapterSearch('')
+        }}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -89,6 +96,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                           className="h-3 w-3 cursor-pointer hover:text-destructive"
                           onClick={(e) => {
                             e.stopPropagation()
+                            e.preventDefault()
                             removeChapter(chapterValue)
                           }}
                         />
@@ -104,31 +112,48 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[400px] p-0" align="start">
-            <Command>
-              <CommandInput placeholder="חפש פרק..." />
+            <Command shouldFilter={false}>
+              <CommandInput
+                placeholder="חפש פרק..."
+                value={chapterSearch}
+                onValueChange={setChapterSearch}
+              />
               <CommandList>
                 <CommandEmpty>לא נמצאו פרקים</CommandEmpty>
                 <CommandGroup>
-                  {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => {
-                    const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
-                    return (
-                      <CommandItem
-                        key={chapter.value}
-                        value={text}
-                        onSelect={() => toggleChapter(chapter.value)}
-                        className="gap-2"
-                      >
-                        <Checkbox
-                          checked={filters.chapters.includes(chapter.value)}
-                          className="h-4 w-4"
-                        />
-                        <span dir="ltr" className="flex-1 text-left">{text}</span>
-                        {filters.chapters.includes(chapter.value) && (
-                          <Check className="h-4 w-4" />
-                        )}
-                      </CommandItem>
-                    )
-                  })}
+                  {CHAPTERS.filter(c => c.value !== 'all')
+                    .filter(chapter => {
+                      if (!chapterSearch) return true
+                      const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                      return text.toLowerCase().includes(chapterSearch.toLowerCase())
+                    })
+                    .map((chapter, index) => {
+                      const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                      return (
+                        <CommandItem
+                          key={chapter.value}
+                          value={text}
+                          onSelect={() => toggleChapter(chapter.value)}
+                          className="gap-2"
+                          ref={(el) => {
+                            // Auto-scroll to first result
+                            if (index === 0 && chapterSearch && el) {
+                              el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                            }
+                          }}
+                        >
+                          <Checkbox
+                            checked={filters.chapters.includes(chapter.value)}
+                            className="h-4 w-4"
+                            onCheckedChange={(e) => e.preventDefault()}
+                          />
+                          <span dir="ltr" className="flex-1 text-left">{text}</span>
+                          {filters.chapters.includes(chapter.value) && (
+                            <Check className="h-4 w-4" />
+                          )}
+                        </CommandItem>
+                      )
+                    })}
                 </CommandGroup>
               </CommandList>
             </Command>
