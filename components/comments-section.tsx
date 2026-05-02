@@ -4,6 +4,16 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { MessageCircle, Send, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -33,6 +43,8 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
   const [submitting, setSubmitting] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null)
 
   useEffect(() => {
     fetchComments()
@@ -89,17 +101,22 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
     }
   }
 
-  async function handleDelete(commentId: string) {
-    if (!confirm('האם אתה בטוח שברצונך למחוק תגובה זו?')) return
+  function handleDeleteClick(commentId: string) {
+    setCommentToDelete(commentId)
+    setDeleteDialogOpen(true)
+  }
 
-    setDeletingId(commentId)
+  async function confirmDelete() {
+    if (!commentToDelete) return
+
+    setDeletingId(commentToDelete)
     try {
-      const response = await fetch(`/api/aids/${aidId}/comments/${commentId}`, {
+      const response = await fetch(`/api/aids/${aidId}/comments/${commentToDelete}`, {
         method: 'DELETE'
       })
 
       if (response.ok) {
-        setComments(comments.filter(c => c.id !== commentId))
+        setComments(comments.filter(c => c.id !== commentToDelete))
       } else if (response.status === 401) {
         alert('יש להתחבר כדי למחוק תגובות')
       } else if (response.status === 403) {
@@ -110,6 +127,8 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
       alert('שגיאה במחיקת התגובה')
     } finally {
       setDeletingId(null)
+      setDeleteDialogOpen(false)
+      setCommentToDelete(null)
     }
   }
 
@@ -212,7 +231,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
                     variant="ghost"
                     size="sm"
                     className="h-9 w-9 p-0 flex-shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
-                    onClick={() => handleDelete(comment.id)}
+                    onClick={() => handleDeleteClick(comment.id)}
                     disabled={deletingId === comment.id}
                     aria-label="מחק תגובה"
                   >
@@ -228,6 +247,24 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת תגובה</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם אתה בטוח שברצונך למחוק תגובה זו? פעולה זו לא ניתנת לביטול.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ביטול</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+              מחק
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

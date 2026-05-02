@@ -105,15 +105,26 @@ export default function AidDetailPage() {
           setLikeCount(Math.max(0, likeCount - 1))
         }
       } else if (response.status === 401) {
-        alert('יש להתחבר כדי להגיב')
+        window.location.href = '/auth/login'
       }
     } catch (error) {
       console.error('Error toggling like:', error)
     }
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (typeof window === 'undefined') return
+
+    // Check if user is logged in
+    try {
+      const response = await fetch('/api/aids')
+      if (response.status === 401) {
+        window.location.href = '/auth/login'
+        return
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error)
+    }
 
     const savedAids = localStorage.getItem('saved-aids')
     const saved = savedAids ? JSON.parse(savedAids) : []
