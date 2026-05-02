@@ -117,13 +117,13 @@ export function UserMenu() {
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-64">
         <div className="px-1.5 py-1 font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
               {profile?.display_name || 'משתמש'}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-xs leading-none text-muted-foreground break-all">
               {user.email}
             </p>
             {profile?.hospital && (
