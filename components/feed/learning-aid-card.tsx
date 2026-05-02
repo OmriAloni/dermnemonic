@@ -40,6 +40,14 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
   const [userReactions, setUserReactions] = useState<string[]>([])
   const [reactionsLoading, setReactionsLoading] = useState(false)
 
+  // Check if aid is recent (uploaded in last 48 hours)
+  const isRecent = () => {
+    const createdAt = new Date(aid.created_at)
+    const now = new Date()
+    const hoursDiff = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60)
+    return hoursDiff <= 48
+  }
+
   // Load user rating from localStorage on mount
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -214,9 +222,16 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <h3 className="text-lg font-semibold leading-tight hover:text-primary transition-colors flex-1">
             {aid.title}
           </h3>
-          {aid.verified && (
-            <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
-          )}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {isRecent() && (
+              <Badge variant="default" className="bg-primary text-primary-foreground text-xs px-2 py-0.5">
+                חדש
+              </Badge>
+            )}
+            {aid.verified && (
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+            )}
+          </div>
         </div>
 
         {aid.tags && aid.tags.length > 0 && (
@@ -238,7 +253,14 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
               alt={aid.title}
               fill
               className="object-cover"
+              loading="lazy"
+              placeholder="empty"
+              style={{
+                backgroundColor: 'rgb(var(--muted))',
+              }}
             />
+            {/* Shimmer effect while loading */}
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
           </div>
         )}
 

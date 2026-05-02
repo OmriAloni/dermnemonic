@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -14,6 +14,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
+import { createClient } from '@/lib/supabase/client'
 
 export default function UploadPage() {
   const router = useRouter()
@@ -21,6 +22,8 @@ export default function UploadPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [loadingProfile, setLoadingProfile] = useState(true)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -32,6 +35,39 @@ export default function UploadPage() {
     mediaType: '' as any,
     tags: [] as Array<{ category: string; value: string; value_he: string }>
   })
+
+  // Fetch user profile and auto-fill uploader details
+  useEffect(() => {
+    async function loadUserProfile() {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (user) {
+          // Fetch user profile from database
+          const { data: profile } = await supabase
+            .from('users')
+            .select('display_name, hospital')
+            .eq('id', user.id)
+            .single()
+
+          if (profile) {
+            setFormData(prev => ({
+              ...prev,
+              uploaderName: profile.display_name || '',
+              hospital: profile.hospital || ''
+            }))
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user profile:', error)
+      } finally {
+        setLoadingProfile(false)
+      }
+    }
+
+    loadUserProfile()
+  }, [])
 
   const [currentTag, setCurrentTag] = useState({
     category: '',
@@ -71,6 +107,7 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setUploading(true)
+    setUploadError(null)
 
     try {
       let mediaUrl = null
@@ -84,6 +121,10 @@ export default function UploadPage() {
           method: 'POST',
           body: uploadFormData
         })
+
+        if (!uploadResponse.ok) {
+          throw new Error('העלאת התמונה נכשלה. נסה שוב או בחר תמונה אחרת.')
+        }
 
         const uploadData = await uploadResponse.json()
         mediaUrl = uploadData.url
@@ -106,11 +147,18 @@ export default function UploadPage() {
         setUploadSuccess(true)
         setTimeout(() => router.push('/'), 1500)
       } else {
-        alert('שגיאה בשמירת העזר למידה')
+        const errorData = await response.json().catch(() => ({}))
+        setUploadError(errorData.error || 'שגיאה בשמירת העזר למידה. אנא נסה שוב.')
       }
     } catch (error) {
       console.error('Error uploading:', error)
-      alert('שגיאה בהעלאה')
+      if (error instanceof Error) {
+        setUploadError(error.message)
+      } else if (typeof error === 'string') {
+        setUploadError(error)
+      } else {
+        setUploadError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
+      }
     } finally {
       setUploading(false)
     }
@@ -142,9 +190,22 @@ export default function UploadPage() {
             </div>
           </div>
         )}
+
+        {uploadError && (
+          <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 border border-red-500 rounded-lg flex items-center gap-3">
+            <div className="text-2xl">❌</div>
+            <div>
+              <p className="font-semibold text-red-800 dark:text-red-200">שגיאה בהעלאה</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{uploadError}</p>
+            </div>
+          </div>
+        )}
         <Card>
           <CardHeader>
             <CardTitle>פרטי עזר הלמידה</CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              שדות המסומנים ב-<span className="text-destructive">*</span> הם שדות חובה
+            </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -185,22 +246,35 @@ export default function UploadPage() {
                 </div>
               </div>
 
-              {/* Uploader Info */}
+              {/* Uploader Info - Auto-filled from profile */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="uploaderName">שם מעלה</Label>
+                  <Label htmlFor="uploaderName" className="flex items-center gap-2">
+                    שם מעלה
+                    {loadingProfile && <span className="text-xs text-muted-foreground">(טוען...)</span>}
+                    {!loadingProfile && formData.uploaderName && (
+                      <span className="text-xs text-muted-foreground">(מתוך הפרופיל)</span>
+                    )}
+                  </Label>
                   <Input
                     id="uploaderName"
                     value={formData.uploaderName}
                     onChange={(e) => setFormData({ ...formData, uploaderName: e.target.value })}
                     placeholder="ד״ר שם משפחה"
+                    disabled={loadingProfile}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="hospital">בית חולים</Label>
+                  <Label htmlFor="hospital" className="flex items-center gap-2">
+                    בית חולים
+                    {!loadingProfile && formData.hospital && (
+                      <span className="text-xs text-muted-foreground">(מתוך הפרופיל)</span>
+                    )}
+                  </Label>
                   <Select
                     value={formData.hospital}
                     onValueChange={(value) => setFormData({ ...formData, hospital: value || '' })}
+                    disabled={loadingProfile}
                   >
                     <SelectTrigger>
                       <SelectValue>

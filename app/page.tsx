@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Upload, Users, Brain } from 'lucide-react'
 import { LearningAidCard } from '@/components/feed/learning-aid-card'
 import { FeedSkeleton } from '@/components/feed/learning-aid-skeleton'
 import { SimpleFilterPanel, type SimpleFilterState } from '@/components/filters/simple-filter-panel'
 import { UserMenu } from '@/components/user-menu'
-import { SearchBar } from '@/components/search-bar'
+import { SearchBar, type SearchBarRef } from '@/components/search-bar'
 import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
 import { CHAPTERS } from '@/lib/chapters'
@@ -118,15 +118,39 @@ export default function FeedPage() {
   const [filteredAids, setFilteredAids] = useState<LearningAid[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const searchBarRef = useRef<SearchBarRef>(null)
+
+  // Keyboard shortcut: "/" to focus search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is already typing in an input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return
+      }
+
+      if (e.key === '/') {
+        e.preventDefault()
+        searchBarRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   // Fetch learning aids from local API
   useEffect(() => {
     async function fetchAids() {
       try {
         const response = await fetch('/api/aids')
+        if (!response.ok) {
+          throw new Error('שגיאה בטעינת עזרי הלמידה')
+        }
         const data = await response.json()
         setAids(data)
         setFilteredAids(data)
+        setError(null)
 
         // Store initial filtered aids for detail page navigation
         if (typeof window !== 'undefined') {
@@ -134,6 +158,7 @@ export default function FeedPage() {
         }
       } catch (error) {
         console.error('Error fetching aids:', error)
+        setError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
       } finally {
         setLoading(false)
       }
@@ -261,11 +286,12 @@ export default function FeedPage() {
         {/* Search Bar */}
         <div className="mb-6">
           <SearchBar
+            ref={searchBarRef}
             onSearch={(query) => {
               setSearchQuery(query)
               // Trigger filter update - needs to be in useEffect
             }}
-            placeholder="חיפוש לפי כותרת, תוכן או תגיות..."
+            placeholder="חיפוש לפי כותרת, תוכן או תגיות... (לחץ / לפוקוס)"
           />
         </div>
 
@@ -274,6 +300,24 @@ export default function FeedPage() {
         </div>
 
         <SimpleFilterPanel onFilterChange={handleFilterChange} locale="he" />
+
+        {error && (
+          <div className="mt-6 p-4 bg-red-100 dark:bg-red-900/20 border border-red-500 rounded-lg flex items-center gap-3">
+            <div className="text-2xl">⚠️</div>
+            <div className="flex-1">
+              <p className="font-semibold text-red-800 dark:text-red-200">שגיאה</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.reload()}
+              className="flex-shrink-0"
+            >
+              נסה שוב
+            </Button>
+          </div>
+        )}
 
         <div className="mt-6">
           {loading && <FeedSkeleton />}

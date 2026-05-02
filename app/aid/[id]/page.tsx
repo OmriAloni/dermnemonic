@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { RatingStars } from '@/components/rating-stars'
 import { CommentsSection } from '@/components/comments-section'
+import { AidDetailSkeleton } from '@/components/aid-detail-skeleton'
 import {
   ArrowRight,
   ArrowLeft,
@@ -22,7 +23,8 @@ import {
   Star,
   CheckCircle,
   Pin,
-  Share2
+  Share2,
+  Clock
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
@@ -39,6 +41,8 @@ export default function AidDetailPage() {
   const [saved, setSaved] = useState(false)
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
+  const [likingInProgress, setLikingInProgress] = useState(false)
+  const [savingInProgress, setSavingInProgress] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -88,6 +92,9 @@ export default function AidDetailPage() {
   }, [id])
 
   const handleLike = async () => {
+    if (likingInProgress) return
+
+    setLikingInProgress(true)
     try {
       const response = await fetch(`/api/aids/${id}/reactions`, {
         method: 'POST',
@@ -109,42 +116,43 @@ export default function AidDetailPage() {
       }
     } catch (error) {
       console.error('Error toggling like:', error)
+    } finally {
+      setLikingInProgress(false)
     }
   }
 
   const handleSave = async () => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || savingInProgress) return
 
-    // Check if user is logged in
+    setSavingInProgress(true)
     try {
+      // Check if user is logged in
       const response = await fetch('/api/aids')
       if (response.status === 401) {
         window.location.href = '/auth/login'
         return
       }
+
+      const savedAids = localStorage.getItem('saved-aids')
+      const saved = savedAids ? JSON.parse(savedAids) : []
+
+      if (saved.includes(id)) {
+        const updated = saved.filter((aidId: string) => aidId !== id)
+        localStorage.setItem('saved-aids', JSON.stringify(updated))
+        setSaved(false)
+      } else {
+        localStorage.setItem('saved-aids', JSON.stringify([...saved, id]))
+        setSaved(true)
+      }
     } catch (error) {
-      console.error('Error checking auth:', error)
-    }
-
-    const savedAids = localStorage.getItem('saved-aids')
-    const saved = savedAids ? JSON.parse(savedAids) : []
-
-    if (saved.includes(id)) {
-      const updated = saved.filter((aidId: string) => aidId !== id)
-      localStorage.setItem('saved-aids', JSON.stringify(updated))
-      setSaved(false)
-    } else {
-      localStorage.setItem('saved-aids', JSON.stringify([...saved, id]))
-      setSaved(true)
+      console.error('Error toggling save:', error)
+    } finally {
+      setSavingInProgress(false)
     }
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    )
+    return <AidDetailSkeleton />
   }
 
   if (error || !aid) {
@@ -172,6 +180,33 @@ export default function AidDetailPage() {
   const hasNext = currentIndex < allAids.length - 1
   const previousAid = hasPrevious ? allAids[currentIndex - 1] : null
   const nextAid = hasNext ? allAids[currentIndex + 1] : null
+
+  // Check if aid is recent (uploaded in last 48 hours)
+  const isRecent = () => {
+    const createdAt = new Date(aid.created_at)
+    const now = new Date()
+    const hoursDiff = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60)
+    return hoursDiff <= 48
+  }
+
+  // Keyboard shortcuts for carousel navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return
+      }
+
+      if (e.key === 'ArrowLeft' && hasNext && nextAid) {
+        window.location.href = `/aid/${nextAid.id}`
+      } else if (e.key === 'ArrowRight' && hasPrevious && previousAid) {
+        window.location.href = `/aid/${previousAid.id}`
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [hasPrevious, hasNext, previousAid, nextAid])
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -218,7 +253,7 @@ export default function AidDetailPage() {
               >
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <span className="text-xs sm:text-sm text-muted-foreground min-w-[45px] sm:min-w-[50px] text-center">
+              <span className="text-xs sm:text-sm text-muted-foreground min-w-[45px] sm:min-w-[50px] text-center" title="השתמש בחצים ←→ לניווט">
                 {currentIndex + 1}/{allAids.length}
               </span>
               <Link
@@ -237,6 +272,12 @@ export default function AidDetailPage() {
 
             {/* Badges - hide text on mobile */}
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {isRecent() && (
+                <Badge variant="default" className="gap-1 bg-primary">
+                  <Clock className="h-3 w-3" />
+                  <span className="hidden sm:inline">חדש</span>
+                </Badge>
+              )}
               {aid.pinned && (
                 <Badge variant="secondary" className="gap-1">
                   <Pin className="h-3 w-3" />
@@ -264,7 +305,10 @@ export default function AidDetailPage() {
               className="object-contain"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               priority
+              placeholder="empty"
             />
+            {/* Shimmer effect while loading */}
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
           </div>
         )}
 
@@ -368,18 +412,20 @@ export default function AidDetailPage() {
             variant={liked ? 'default' : 'outline'}
             className={`flex-1 h-11 ${liked ? 'bg-red-500 hover:bg-red-600' : ''}`}
             onClick={handleLike}
+            disabled={likingInProgress}
           >
             <Heart className={`h-4 w-4 sm:ms-1 ${liked ? 'fill-current' : ''}`} />
-            <span className="hidden sm:inline">אהבתי</span>
-            {likeCount > 0 && <span className="text-xs ms-1">({likeCount})</span>}
+            <span className="hidden sm:inline">{likingInProgress ? 'טוען...' : 'אהבתי'}</span>
+            {!likingInProgress && likeCount > 0 && <span className="text-xs ms-1">({likeCount})</span>}
           </Button>
           <Button
             variant={saved ? 'default' : 'outline'}
             className="flex-1 h-11"
             onClick={handleSave}
+            disabled={savingInProgress}
           >
             <Bookmark className={`h-4 w-4 sm:ms-1 ${saved ? 'fill-current' : ''}`} />
-            <span className="hidden sm:inline">שמור</span>
+            <span className="hidden sm:inline">{savingInProgress ? 'טוען...' : 'שמור'}</span>
           </Button>
           <Button
             variant="outline"

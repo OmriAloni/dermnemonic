@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,29 +10,42 @@ interface SearchBarProps {
   placeholder?: string
 }
 
-export function SearchBar({ onSearch, placeholder = 'חיפוש...' }: SearchBarProps) {
-  const [query, setQuery] = useState('')
+export interface SearchBarRef {
+  focus: () => void
+}
 
-  const handleChange = (value: string) => {
-    setQuery(value)
-    onSearch(value)
-  }
+export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
+  ({ onSearch, placeholder = 'חיפוש...' }, ref) => {
+    const [query, setQuery] = useState('')
+    const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleClear = () => {
-    setQuery('')
-    onSearch('')
-  }
+    useImperativeHandle(ref, () => ({
+      focus: () => {
+        inputRef.current?.focus()
+      }
+    }))
 
-  return (
-    <div className="relative flex items-center">
-      <Search className="absolute start-3 h-4 w-4 text-muted-foreground pointer-events-none" />
-      <Input
-        type="text"
-        placeholder={placeholder}
-        value={query}
-        onChange={(e) => handleChange(e.target.value)}
-        className="ps-10 pe-3"
-      />
+    const handleChange = (value: string) => {
+      setQuery(value)
+      onSearch(value)
+    }
+
+    const handleClear = () => {
+      setQuery('')
+      onSearch('')
+    }
+
+    return (
+      <div className="relative flex items-center">
+        <Search className="absolute start-3 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          className="ps-10 pe-3"
+        />
       {query && (
         <Button
           variant="ghost"
@@ -46,4 +59,6 @@ export function SearchBar({ onSearch, placeholder = 'חיפוש...' }: SearchBar
       )}
     </div>
   )
-}
+})
+
+SearchBar.displayName = 'SearchBar'

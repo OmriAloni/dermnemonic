@@ -139,8 +139,11 @@ app/
     │   ├── route.ts        # GET /api/aids (with filters, search, sort)
     │   └── [id]/
     │       ├── route.ts    # GET /api/aids/[id] (single aid)
-    │       ├── comments/route.ts  # GET/POST /api/aids/[id]/comments
-    │       └── ratings/route.ts   # POST /api/aids/[id]/ratings
+    │       ├── comments/
+    │       │   ├── route.ts         # GET/POST /api/aids/[id]/comments
+    │       │   └── [commentId]/route.ts  # DELETE /api/aids/[id]/comments/[commentId]
+    │       ├── ratings/route.ts     # POST /api/aids/[id]/ratings
+    │       └── reactions/route.ts   # GET/POST /api/aids/[id]/reactions
     ├── upload/route.ts     # POST /api/upload (multipart/form-data, Supabase Storage)
     └── auth/logout/route.ts # POST /api/auth/logout
 ```
@@ -152,7 +155,10 @@ app/
 - `GET /api/aids/[id]` - Single learning aid with full details
 - `GET /api/aids/[id]/comments` - All comments for an aid
 - `POST /api/aids/[id]/comments` - Create new comment (requires auth)
+- `DELETE /api/aids/[id]/comments/[commentId]` - Delete comment (requires auth + ownership)
 - `POST /api/aids/[id]/ratings` - Submit rating (requires auth)
+- `GET /api/aids/[id]/reactions` - Fetch user reactions and counts for an aid
+- `POST /api/aids/[id]/reactions` - Toggle reaction (heart/brain/lightbulb, requires auth)
 - `POST /api/upload` - Upload learning aid with image (requires auth)
 - `POST /api/auth/logout` - Clear session
 
@@ -181,11 +187,12 @@ Locale handling is in `lib/i18n.ts` (Hebrew primary, English fallback).
 - `components/feed/learning-aid-skeleton.tsx` - Loading skeleton for cards
 
 **Shared Components**:
-- `components/comments-section.tsx` - Comments UI with add/view
-- `components/rating-stars.tsx` - 5-star rating with local storage
+- `components/comments-section.tsx` - Comments UI with add/view/delete + modals
+- `components/rating-stars.tsx` - 5-star rating with login requirement
 - `components/search-bar.tsx` - RTL-optimized search input
 - `components/user-menu.tsx` - User dropdown with logout
-- `components/ui/*` - shadcn/ui primitives (button, card, dropdown, etc.)
+- `components/ui/alert-dialog.tsx` - Modal confirmation dialogs (shadcn/ui)
+- `components/ui/*` - Other shadcn/ui primitives (button, card, dropdown, etc.)
 
 ### Filter Architecture
 
@@ -380,36 +387,68 @@ The app gracefully degrades when Supabase variables are missing (middleware auto
 4. **Responsive**: Test mobile viewport (primary target), tablet, desktop
 5. **Colors**: Warm palette (#FAF6F2 background, #E97C7C primary) applied consistently
 
+### Interaction Testing Checklist
+
+1. **Authentication Flow**:
+   - [ ] Can sign up with email
+   - [ ] Can login with magic link
+   - [ ] Can logout
+   - [ ] Unauthenticated users redirected when trying to interact
+
+2. **Engagement Features**:
+   - [ ] Can add rating (requires login)
+   - [ ] Can add comment (requires login)
+   - [ ] Can delete own comment (shows modal)
+   - [ ] Cannot delete others' comments
+   - [ ] Can toggle reactions (heart/brain/lightbulb)
+   - [ ] Optimistic updates work (reactions appear immediately)
+
+3. **WhatsApp Share**:
+   - [ ] Opens WhatsApp with Hebrew pre-filled message
+   - [ ] Deep link works (includes aid ID and user ref)
+   - [ ] Shared links work without login (read-only)
+
+4. **Upload Flow**:
+   - [ ] Can select image from device
+   - [ ] Chapter and aid type selects work
+   - [ ] Upload succeeds and shows success message
+   - [ ] Redirects to feed after 2 seconds
+
 ### Current Implementation Status
 
 **✅ Deployed to Production**: https://dermnemonic.vercel.app  
 **GitHub**: https://github.com/OmriAloni/dermnemonic
 
-**Working Features** (as of May 2, 2026):
+**Working Features** (as of May 2, 2026 - Evening):
 - ✅ **Authentication** - Magic link signup/login via Supabase Auth
-- ✅ **Upload Flow** - Image upload to Supabase Storage with chapter/aid type selection
+- ✅ **Upload Flow** - Image upload to Supabase Storage with chapter/aid type selection + success message
 - ✅ **Feed Page** - List view with search, filters, and sort
 - ✅ **Detail Pages** - Individual learning aid with carousel navigation (side arrows + top counter)
-- ✅ **Comments** - Add and view comments (delete not yet implemented)
-- ✅ **Ratings** - 5-star rating system with local storage
+- ✅ **Comments** - Add, view, and delete comments with in-app modal confirmation
+- ✅ **Ratings** - 5-star rating system with login requirement
+- ✅ **Reactions** - Heart/Brain/Lightbulb buttons with optimistic updates
+- ✅ **WhatsApp Share** - Pre-filled Hebrew messages with deep links
+- ✅ **Like & Save** - Both require login with consistent redirect UX
 - ✅ **Search** - Search by title, body, explanation, or tags
 - ✅ **Filters** - Chapter and aid type filtering
 - ✅ **Quiz Page** - Basic quiz mode implemented
 - ✅ **Uploaders Page** - List of all content uploaders
 - ✅ **Hebrew RTL** - Full right-to-left support with Heebo font
-- ✅ **Chapter Badges** - Hebrew chapter names on feed cards
+- ✅ **Chapter Badges** - Hebrew chapter names on feed cards and detail pages
 - ✅ **Verified Badges** - Shows curator-verified content
 - ✅ **Loading Skeletons** - Smooth loading experience
+- ✅ **Empty States** - Helpful messages for no results, login required, no comments
 - ✅ **Performance** - 40x optimized (database stats view, 2 queries vs 41)
-- ✅ **Mobile Responsive** - Works on all screen sizes
+- ✅ **Mobile Responsive** - 44px+ touch targets, responsive layouts, optimized grids
 
-**High Priority for Next Session** (contest is June 3, 2026):
-1. **Upload 15-20 quality mnemonics** - Content is most important for contest!
-2. **Reaction buttons** (heart/brain/lightbulb) - Adds fun factor
-3. **WhatsApp share** - Pre-filled message with deep link (viral growth)
-4. **Delete comments** - Basic functionality expected
-5. **Chapter badge on detail page** - Currently only on feed cards
-6. **Mobile UI audit** - Test on actual devices, fix any touch/layout issues
+**Critical for Contest** (June 3, 2026):
+1. **Upload 15-20 quality Hebrew mnemonics** - Most important! Content is what judges will see
+2. **Image blur placeholders** - Better loading experience (15 min task)
+3. **Lighthouse audit** - Verify 90+ performance score maintained (15 min)
+4. **Real device testing** - Test on actual iPhone/Android devices (30 min)
+5. **Final polish** - Any last-minute UX tweaks based on device testing
+
+Estimated time: ~1 hour for items 2-5, then 2-3 hours for content upload
 
 **Not Yet Implemented** (lower priority for contest):
 - Study sets with spaced repetition (SM-2 algorithm)
@@ -418,7 +457,6 @@ The app gracefully degrades when Supabase variables are missing (middleware auto
 - Curator dashboard (`/curator`)
 - Card-based swipeable UI mode (flashcard style)
 - User profiles (`/profile/[username]`)
-- Reactions POST endpoint (exists but not wired to UI)
 
 ## Design System
 
@@ -503,6 +541,18 @@ Do not implement unless explicitly requested:
 - `../טריקים ושטיקים לבולוניה.xlsx`: Real Hebrew mnemonics from residents (gold standard for content style)
 - `../dermnemonic/TIPS_AND_MNEMONICS.md`: Extracted mnemonic examples
 - Example images (WhatsApp screenshots): Visual design patterns to follow
+
+## Recent Session Notes
+
+For understanding recent changes and decisions:
+
+- `SESSION-MAY-2-FINAL.md`: Latest session summary (May 2, 2026)
+- `TODO.md`: Current priorities and completion status
+- `MOBILE-AUDIT.md`: Mobile optimization checklist
+- `POLISH-PLAN.md`: Polish tasks for contest readiness
+- `SESSION-MAY-2-2026.md`: Mid-day session notes
+
+These files contain context on recent bug fixes, feature additions, and rationale for UX decisions.
 
 ## Medical Content Constraints
 
