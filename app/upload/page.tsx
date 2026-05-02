@@ -8,7 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight, Upload, X, Image as ImageIcon } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -26,6 +28,8 @@ export default function UploadPage() {
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
+  const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false)
+  const [chapterSearch, setChapterSearch] = useState('')
 
   const [formData, setFormData] = useState({
     title: '',
@@ -305,34 +309,69 @@ export default function UploadPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="chapter">פרק *</Label>
-                  <Select
-                    value={formData.chapter}
-                    onValueChange={(value) => setFormData({ ...formData, chapter: value || '' })}
-                    required
-                  >
-                    <SelectTrigger className="w-full whitespace-normal h-auto min-h-10">
-                      <SelectValue>
+                  <Popover open={chapterPopoverOpen} onOpenChange={(open) => {
+                    setChapterPopoverOpen(open)
+                    if (!open) setChapterSearch('')
+                  }}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={chapterPopoverOpen}
+                        className="w-full justify-between h-auto min-h-10 font-normal"
+                      >
                         {formData.chapter ? (() => {
                           const chapter = CHAPTERS.find(c => c.value === formData.chapter)
                           const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
                           return <span dir="ltr" className="block text-left">{text}</span>
-                        })() : 'בחר פרק'}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[400px] w-[calc(100vw-2rem)] sm:w-[500px]">
-                      {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => (
-                        <SelectItem
-                          key={chapter.value}
-                          value={chapter.value}
-                          className="whitespace-normal h-auto py-2 leading-tight"
-                        >
-                          <span dir="ltr" className="block whitespace-normal break-words text-left">
-                            {chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        })() : <span className="text-muted-foreground">בחר פרק...</span>}
+                        <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[400px] p-0" align="start">
+                      <Command shouldFilter={false}>
+                        <CommandInput
+                          placeholder="חפש פרק..."
+                          value={chapterSearch}
+                          onValueChange={setChapterSearch}
+                        />
+                        <CommandList>
+                          <CommandEmpty>לא נמצאו פרקים</CommandEmpty>
+                          <CommandGroup>
+                            {CHAPTERS.filter(c => c.value !== 'all')
+                              .filter(chapter => {
+                                if (!chapterSearch) return true
+                                const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                                return text.toLowerCase().includes(chapterSearch.toLowerCase())
+                              })
+                              .map((chapter, index) => {
+                                const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                                return (
+                                  <CommandItem
+                                    key={chapter.value}
+                                    value={text}
+                                    onSelect={() => {
+                                      setFormData({ ...formData, chapter: chapter.value })
+                                      setChapterSearch('')
+                                      setChapterPopoverOpen(false)
+                                    }}
+                                    className="gap-2"
+                                    ref={(el) => {
+                                      if (index === 0 && chapterSearch && el) {
+                                        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                                      }
+                                    }}
+                                  >
+                                    <Check className={`h-4 w-4 ${formData.chapter === chapter.value ? 'opacity-100' : 'opacity-0'}`} />
+                                    <span dir="ltr" className="flex-1 text-left">{text}</span>
+                                  </CommandItem>
+                                )
+                              })}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="aidType">סוג עזר למידה *</Label>
