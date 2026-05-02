@@ -4,31 +4,44 @@ Mobile-first collaborative platform for Israeli dermatology residents to share a
 
 Built for the Israeli Dermatology Conference contest (June 3, 2026).
 
+## 🌐 Live Demo
+
+**Production**: https://dermnemonic.vercel.app  
+**GitHub**: https://github.com/OmriAloni/dermnemonic
+
 ## ✨ Features
 
 ### ✅ Working Features
 - **Hebrew RTL** - Full right-to-left support with Heebo font
-- **Feed Page** - List view with learning aid cards
+- **Feed Page** - List view with learning aid cards + chapter badges
+- **Carousel Navigation** - Left/right arrows to browse cards (desktop + mobile)
 - **Search** - Search by title, body, explanation, or tags
-- **Filters** - Filter by chapter (with Hebrew names) and aid type
-- **Detail Page** - Full learning aid view with media
-- **Interactive Ratings** - 5-star rating system
+- **Filters** - Filter by chapter (Hebrew names) and aid type
+- **Detail Page** - Full learning aid view with navigation counter
+- **Interactive Ratings** - 5-star rating system with local storage
 - **Comments** - Add and view comments on learning aids
-- **Authentication** - Signup/login with Supabase Auth
-- **Upload** - Image upload to Supabase Storage
-- **Chapter Display** - Hebrew chapter badges (e.g., "פסוריאזיס", "אקזמה", "מלנומה")
-- **Stats** - Real-time counts (ratings, comments, reactions, saves)
-- **Mobile-optimized UI** - Warm color palette (#FAF6F2 background, #E97C7C primary)
+- **Authentication** - Magic link signup/login with Supabase Auth
+- **Upload** - Image upload to Supabase Storage with chapter selection
+- **Chapter Display** - Hebrew chapter badges (e.g., "פסוריאזיס", "מלנומה", "המנגיומות")
+- **Stats** - Real-time counts (ratings, comments, saves) via optimized DB view
+- **Loading Skeletons** - Smooth loading experience
+- **Verified Badges** - Shows which content is curator-verified
+- **Mobile-optimized UI** - Warm color palette, responsive design
+- **Performance** - 40x faster API (2 queries vs 41, database view optimization)
 
-### 🚧 Coming Soon
-- Performance improvements (feed loading optimization)
-- Delete comments functionality
-- Reaction buttons (heart/brain/lightbulb)
-- User profiles
-- Study sets with spaced repetition
-- Live conference mode
-- AI quiz generator
-- WhatsApp sharing with deep links
+### 🎯 Next Session Priorities
+- **Content** - Upload 15-20 quality Hebrew mnemonics (MOST IMPORTANT!)
+- **Reaction buttons** - Heart/brain/lightbulb for engagement
+- **WhatsApp share** - Viral growth with deep links
+- **Delete comments** - Basic functionality
+- **Chapter on detail page** - Show badge on detail view too
+
+### 🚧 Future Features
+- User profiles (`/profile/[username]`)
+- Study sets with spaced repetition (SM-2 algorithm)
+- Live conference mode (`/live` + `/live/projector`)
+- AI quiz generator (Anthropic API)
+- Curator dashboard
 
 ## 🛠️ Tech Stack
 

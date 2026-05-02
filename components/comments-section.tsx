@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { MessageCircle, Send } from 'lucide-react'
+import { MessageCircle, Send, Trash2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 interface Comment {
   id: string
@@ -29,10 +31,23 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchComments()
+    getCurrentUser()
   }, [aidId])
+
+  async function getCurrentUser() {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setCurrentUserId(user?.id || null)
+    } catch (error) {
+      console.error('Error getting current user:', error)
+    }
+  }
 
   async function fetchComments() {
     try {
@@ -74,6 +89,30 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
     }
   }
 
+  async function handleDelete(commentId: string) {
+    if (!confirm('האם אתה בטוח שברצונך למחוק תגובה זו?')) return
+
+    setDeletingId(commentId)
+    try {
+      const response = await fetch(`/api/aids/${aidId}/comments/${commentId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setComments(comments.filter(c => c.id !== commentId))
+      } else if (response.status === 401) {
+        alert('יש להתחבר כדי למחוק תגובות')
+      } else if (response.status === 403) {
+        alert('אין לך הרשאה למחוק תגובה זו')
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error)
+      alert('שגיאה במחיקת התגובה')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -93,22 +132,31 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
   return (
     <div className="space-y-6">
       {/* Comment Form */}
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <Textarea
-          placeholder="כתוב תגובה..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          disabled={submitting}
-          rows={3}
-          className="resize-none"
-        />
-        <div className="flex justify-end">
-          <Button type="submit" disabled={submitting || !newComment.trim()}>
-            {submitting ? 'שולח...' : 'פרסם תגובה'}
-            <Send className="h-4 w-4 me-2" />
-          </Button>
+      {currentUserId ? (
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <Textarea
+            placeholder="כתוב תגובה..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            disabled={submitting}
+            rows={3}
+            className="resize-none"
+          />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={submitting || !newComment.trim()}>
+              {submitting ? 'שולח...' : 'פרסם תגובה'}
+              <Send className="h-4 w-4 me-2" />
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <div className="p-6 bg-muted/30 rounded-lg text-center">
+          <p className="text-muted-foreground mb-3">יש להתחבר כדי להגיב</p>
+          <Link href="/auth/login">
+            <Button>התחבר</Button>
+          </Link>
         </div>
-      </form>
+      )}
 
       {/* Comments List */}
       <div className="space-y-4">
@@ -127,8 +175,10 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
           </div>
         ) : (
           <div className="space-y-4">
-            {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3 p-4 bg-muted/30 rounded-lg">
+            {comments.map((comment) => {
+              const canDelete = currentUserId === comment.user_id
+              return (
+              <div key={comment.id} className="flex gap-3 p-4 bg-muted/30 rounded-lg group">
                 <Avatar className="h-10 w-10 flex-shrink-0">
                   <AvatarFallback>
                     {getInitials(comment.user.display_name)}
@@ -157,8 +207,24 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
                     {comment.body}
                   </p>
                 </div>
+                {canDelete && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 w-9 p-0 flex-shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleDelete(comment.id)}
+                    disabled={deletingId === comment.id}
+                    aria-label="מחק תגובה"
+                  >
+                    {deletingId === comment.id ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-destructive"></div>
+                    ) : (
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    )}
+                  </Button>
+                )}
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { LayoutList, LayoutGrid, Upload, Users, Brain } from 'lucide-react'
+import { Upload, Users, Brain } from 'lucide-react'
 import { LearningAidCard } from '@/components/feed/learning-aid-card'
 import { FeedSkeleton } from '@/components/feed/learning-aid-skeleton'
 import { SimpleFilterPanel, type SimpleFilterState } from '@/components/filters/simple-filter-panel'
@@ -114,7 +114,6 @@ const mockAidsOld: LearningAid[] = [
 ]
 
 export default function FeedPage() {
-  const [viewMode, setViewMode] = useState<'list' | 'cards'>('list')
   const [aids, setAids] = useState<LearningAid[]>([])
   const [filteredAids, setFilteredAids] = useState<LearningAid[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -226,29 +225,29 @@ export default function FeedPage() {
     <div className="min-h-screen" id="feed-page">
       {/* Header */}
       <header id="main-header" className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-primary">Dermasociations</h1>
-              <p className="text-sm text-muted-foreground">פלטפורמת עזרי למידה לרופאי עור</p>
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-shrink">
+              <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermasociations</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Link href="/uploaders">
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              <Link href="/uploaders" className="hidden md:block">
                 <Button id="btn-uploaders" variant="outline" size="sm">
                   <Users className="h-4 w-4 ms-1" />
                   מעלים
                 </Button>
               </Link>
               <Link href="/quiz">
-                <Button id="btn-quiz" variant="outline" size="sm">
-                  <Brain className="h-4 w-4 ms-1" />
-                  למידה רציפה
+                <Button id="btn-quiz" variant="outline" size="sm" className="h-9 px-2 sm:px-3">
+                  <Brain className="h-4 w-4 sm:ms-1" />
+                  <span className="hidden sm:inline">למידה רציפה</span>
                 </Button>
               </Link>
               <Link href="/upload">
-                <Button id="btn-upload" size="sm" className="bg-primary hover:bg-primary/90">
-                  <Upload className="h-4 w-4 ms-1" />
-                  העלה
+                <Button id="btn-upload" size="sm" className="bg-primary hover:bg-primary/90 h-9 px-2 sm:px-3">
+                  <Upload className="h-4 w-4 sm:ms-1" />
+                  <span className="hidden sm:inline">העלה</span>
                 </Button>
               </Link>
               <UserMenu />
@@ -270,28 +269,8 @@ export default function FeedPage() {
           />
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6">
           <h2 id="feed-title" className="text-xl font-semibold">עזרי למידה ({filteredAids.length})</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              id="btn-view-list"
-              variant={viewMode === 'list' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-            >
-              <LayoutList className="h-4 w-4 ms-1" />
-              רשימה
-            </Button>
-            <Button
-              id="btn-view-cards"
-              variant={viewMode === 'cards' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('cards')}
-            >
-              <LayoutGrid className="h-4 w-4 ms-1" />
-              כרטיסים
-            </Button>
-          </div>
         </div>
 
         <SimpleFilterPanel onFilterChange={handleFilterChange} locale="he" />
@@ -299,21 +278,34 @@ export default function FeedPage() {
         <div className="mt-6">
           {loading && <FeedSkeleton />}
 
-          {!loading && viewMode === 'list' && (
+          {!loading && filteredAids.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <div className="text-center space-y-4 max-w-md">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold">לא נמצאו תוצאות</h3>
+                <p className="text-muted-foreground">
+                  נסה לשנות את החיפוש או הפילטרים
+                </p>
+                {(searchQuery || currentFilters.chapter !== 'all' || currentFilters.aidTypes.length > 0) && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchQuery('')
+                      handleFilterChange({ chapter: 'all', aidTypes: [], sort: 'newest' })
+                    }}
+                  >
+                    נקה הכל
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {!loading && filteredAids.length > 0 && (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredAids.map((aid) => (
                 <LearningAidCard key={aid.id} aid={aid} locale="he" />
               ))}
-            </div>
-          )}
-
-          {viewMode === 'cards' && (
-            <div className="flex items-center justify-center">
-              <div className="text-center p-8 border-2 border-dashed rounded-lg">
-                <p className="text-muted-foreground">
-                  תצוגת כרטיסים תהיה זמינה בקרוב
-                </p>
-              </div>
             </div>
           )}
         </div>

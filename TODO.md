@@ -1,194 +1,245 @@
 # TODO - Next Session Priorities
 
-## 🔥 Critical (Do First)
-
-### 1. Performance Optimization ⚡
-**Problem**: Feed page loads slowly (32+ database queries per page load)
-
-**Fix**:
-1. Create database view for stats aggregation:
-   - File: `supabase/migrations/20260502000000_add_stats_view.sql`
-   - View name: `learning_aid_stats`
-   - Aggregates: rating_avg, rating_count, comment_count, reaction_count, save_count
-   
-2. Update `/app/api/aids/route.ts`:
-   - Use single query with JOIN to stats view
-   - Remove N+1 query loop
-   
-3. Add caching:
-   - Install: `npm install swr`
-   - Wrap feed data fetching with SWR
-   - Add cache headers to API routes
-
-4. Add loading states:
-   - Skeleton loaders for feed cards
-   - Loading spinner for detail pages
-   - Optimistic UI updates for ratings/comments
-
-**Expected Result**: Feed loads in <2 seconds instead of 5-10 seconds
+**Last Updated**: May 2, 2026  
+**Production URL**: https://dermnemonic.vercel.app  
+**GitHub**: https://github.com/OmriAloni/dermnemonic
 
 ---
 
-## 🎯 Quick Wins (1-2 hours each)
+## ✅ Completed (May 1-2, 2026)
 
-### 2. Delete Comments
-**What**: Users can delete their own comments
+### Performance & Infrastructure
+- ✅ Created database view for stats aggregation (40x faster)
+- ✅ Optimized API from 41 queries to 2 queries (N+1 fix)
+- ✅ Deployed to Vercel successfully
+- ✅ Fixed all TypeScript errors
+- ✅ Production build working
+- ✅ Environment variables configured
+- ✅ Supabase integration complete
 
-**Implementation**:
-1. Add DELETE endpoint: `/app/api/aids/[id]/comments/[commentId]/route.ts`
-2. Check comment ownership (user_id === auth user)
-3. Add delete button to each comment (only show for own comments)
-4. Update UI after deletion (optimistic update or refetch)
+### UI/UX
+- ✅ Fixed search bar RTL layout and icon positioning
+- ✅ Simplified label classes for cleaner HTML
+- ✅ Added loading skeletons for better perceived performance
+- ✅ Made select buttons auto-width (not full-width)
+- ✅ Improved form spacing (upload page)
+- ✅ Added verified badges to cards
+- ✅ Chapter badges working on feed cards
 
-### 3. Reaction Buttons
-**What**: Heart/brain/lightbulb emoji reactions on learning aids
-
-**Implementation**:
-1. Already have `reactions` table in database
-2. Add POST endpoint: `/app/api/aids/[id]/reactions/route.ts`
-3. Add reaction buttons component to card and detail page
-4. Show reaction counts
-5. Toggle reactions (click again to remove)
-
----
-
-## 🚀 Deployment (After Performance Fix)
-
-### 4. Git Setup
-- [x] .gitignore created
-- [ ] Review for any secrets in code
-- [ ] Test build: `npm run build`
-- [ ] Fix any build errors
-- [ ] Commit and push to GitHub
-
-### 5. Vercel Deployment
-- [ ] Create Vercel project
-- [ ] Add environment variables
-- [ ] Update Supabase redirect URLs
-- [ ] Deploy
-- [ ] Test in production
-- [ ] Run Lighthouse audit
+### Features
+- ✅ Carousel navigation with side arrows on detail pages
+- ✅ Top navigation counter (e.g., "5 / 10")
+- ✅ Chapter field saving correctly in upload form
+- ✅ Auth working (signup/login)
+- ✅ Upload flow with Supabase Storage
+- ✅ Comments and ratings working
 
 ---
 
-## 📋 Medium Priority Features
+## 🔥 Priority 1: Content (MOST IMPORTANT!)
 
-### 6. User Profiles (`/profile/[username]`)
-- Show user's uploaded learning aids
-- Aggregate rating score
-- Hospital and year of residency
-- Follow button (use `follows` table)
+**Why**: Contest judges care about learning aids, not tech features.
 
-### 7. Study Sets
-- Use existing `study_sets` and `study_set_items` tables
-- Create/edit sets
-- Add aids to sets
-- Set detail page with all aids
+### Tasks:
+1. **Upload 15-20 quality mnemonics** from `טריקים ושטיקים לבולוניה.xlsx`
+   - Focus on: Psoriasis, Melanoma, Drug Reactions, Pemphigus, Lichen Planus
+   - Include images where possible (use examples from WhatsApp screenshots)
+   - Make sure each has:
+     - Title in Hebrew
+     - Body with English medical terms
+     - Explanation in Hebrew
+     - Proper chapter selected
+     - Aid type selected (mnemonic/illustration/table)
 
-### 8. WhatsApp Share
-- Share button opens WhatsApp
-- Pre-filled message: "בדוק את עזר הלמידה הזה: [title]"
-- Deep link to aid
-- Track referrals (ref parameter in URL)
+2. **Test the learning experience**
+   - Can you actually study from these cards?
+   - Is navigation smooth?
+   - Are chapters helpful for organization?
 
----
+3. **Get 2-3 dermatology residents to test**
+   - Watch them use it (don't explain)
+   - Note what confuses them
+   - Ask: "Would you use this daily?"
 
-## 🎨 UI/UX Improvements
-
-### 9. Image Optimization
-- Add blur placeholders to all images
-- Lazy loading on feed (IntersectionObserver)
-- Compress uploaded images before saving
-
-### 10. Error Handling
-- Add error boundaries
-- Better error messages (Hebrew)
-- Toast notifications for actions
-- Offline detection
-
-### 11. Loading States
-- Skeleton loaders everywhere
-- Progress indicators for uploads
-- Optimistic UI updates
+**Time estimate**: 2-3 hours
 
 ---
 
-## 🧪 Advanced Features (Later)
+## 🎯 Priority 2: Quick Wins (High Impact, Low Effort)
 
-### 12. Quiz Mode
-- Spaced repetition algorithm (SM-2)
-- Card-based swipeable UI
-- Track user progress
-- Schedule next review
+### 1. Reaction Buttons (1 hour)
+**Why**: Adds fun factor, judges will notice
 
-### 13. Live Conference Mode
-- `/live` - QR code for audience
-- `/live/projector` - Real-time feed display
-- Supabase realtime subscriptions
-- Live leaderboard
+**Tasks**:
+- Add heart/brain/lightbulb emoji buttons to cards
+- POST to `/api/aids/[id]/reactions`
+- Show reaction counts
+- Toggle on/off (click again to remove)
+- Smooth animations
 
-### 14. Curator Dashboard (`/curator`)
-- Bulk verification
-- Pin/unpin aids
-- Featured carousel management
-- User role management
-- Content moderation
+**Files to touch**:
+- `app/api/aids/[id]/reactions/route.ts` (already exists, verify it works)
+- `components/feed/learning-aid-card.tsx` (add button UI)
 
-### 15. AI Quiz Generator
-- Anthropic API integration
-- Vision model for image analysis
-- Generate 4-option MCQ
-- Store generated questions
+### 2. Delete Comments (30 min)
+**Why**: Basic functionality expected by users
+
+**Tasks**:
+- Add DELETE endpoint: `/app/api/aids/[id]/comments/[commentId]/route.ts`
+- Check user owns comment
+- Add delete button to `components/comments-section.tsx`
+- Only show delete button for own comments
+
+### 3. Chapter Badge on Detail Page (15 min)
+**Why**: Currently only shows on feed cards, not detail view
+
+**Tasks**:
+- Add chapter badge to `app/aid/[id]/page.tsx` header
+- Use same badge component as feed cards
+- Test with multiple chapters
+
+### 4. Mobile UI Audit (1-2 hours)
+**Why**: User discovered glitches on mobile - critical since this is a mobile-first app
+
+**Tasks**:
+- Test all pages on actual mobile device (iPhone/Android)
+- Check RTL layout and spacing on small screens
+- Verify touch targets are large enough (44x44px minimum)
+- Test search bar, filters, and navigation on mobile
+- Check carousel arrows and gestures
+- Verify form inputs and select dropdowns work properly
+- Test upload flow from mobile camera
+- Fix any layout breaks, overlapping text, or touch issues
+- Document any remaining mobile-specific issues
+
+**Files likely to need fixes**:
+- `components/search-bar.tsx`
+- `components/filters/simple-filter-panel.tsx`
+- `app/upload/page.tsx`
+- `app/aid/[id]/page.tsx` (carousel navigation)
+
+### 5. WhatsApp Share (45 min)
+**Why**: Viral growth potential, shows strategic thinking
+
+**Tasks**:
+- Update share button in cards to open WhatsApp
+- Pre-filled message: `"בדוק את עזר הלמידה הזה: [title] - https://dermnemonic.vercel.app/aid/[id]"`
+- Test on mobile (where WhatsApp is installed)
+
+**Time estimate**: 4-5 hours total
 
 ---
 
-## 📊 Quality Checks Before Production
+## 🎨 Priority 3: Polish (Before Contest)
 
-- [ ] Lighthouse score: 90+ performance, 95+ accessibility
-- [ ] Test on iPhone (Safari)
+### Visual Polish
+- [ ] Image optimization (blur placeholders, lazy loading)
+- [ ] Better empty states (when no search results)
+- [ ] Consistent spacing throughout
+- [ ] Test dark mode (if supported)
+
+### Mobile Testing
+- [ ] Test on real iPhone (Safari)
 - [ ] Test on Android (Chrome)
-- [ ] All Hebrew RTL correct
+- [ ] Test WhatsApp share on mobile
+- [ ] Verify gestures work (carousel swipe)
+
+### Performance
+- [ ] Run Lighthouse audit
+  - Target: 90+ performance
+  - Target: 95+ accessibility
+  - Target: 100 SEO
+- [ ] Test with 30+ cards loaded
+- [ ] Check API response times
+
+**Time estimate**: 2-3 hours
+
+---
+
+## 🚫 Out of Scope (Don't Do Unless Time Permits)
+
+These are nice-to-have but won't help win the contest:
+
+- Study sets with spaced repetition
+- Live conference mode
+- AI quiz generator
+- Curator dashboard
+- User profiles
+- Advanced analytics
+
+**Focus on: Content + Fun + Usefulness**
+
+---
+
+## 📊 Contest Preparation Checklist
+
+### Content Ready
+- [ ] 15-20 quality mnemonics uploaded
+- [ ] All have proper chapters assigned
+- [ ] All have proper aid types
+- [ ] Images look good on mobile
+- [ ] Hebrew text is clear and readable
+
+### Features Demo-Ready
+- [ ] Carousel navigation works smoothly
+- [ ] Search and filters work
+- [ ] Reactions are fun and engaging
+- [ ] WhatsApp share works
+- [ ] Mobile experience is excellent
+
+### Technical Ready
+- [ ] Site loads fast (<2s)
 - [ ] No console errors
-- [ ] All images load
-- [ ] Authentication flow works
+- [ ] Works in Safari and Chrome
+- [ ] Auth works (signup/login)
 - [ ] Upload works
-- [ ] Comments/ratings work
-- [ ] Search works
-- [ ] Filters work
-- [ ] 20+ quality learning aids loaded
+
+### Presentation Ready
+- [ ] Demo script prepared
+- [ ] Know what to show judges
+- [ ] Practice 2-minute pitch
+- [ ] Backup plan if WiFi fails (screenshots/video)
 
 ---
 
-## 🔑 Environment Variables Needed
+## 🎯 Success Metrics
 
-Production (Vercel):
-```
-NEXT_PUBLIC_SUPABASE_URL=https://pgzveeykjxpqwakazedc.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
-NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
-ANTHROPIC_API_KEY=(when AI features ready)
-```
+**You're competing against: Song, Poster, TikTok**
 
----
+**Your advantages**:
+1. **Usefulness** - actually helps study
+2. **Technology** - shows innovation
+3. **Engagement** - reactions, sharing, navigation
 
-## 📁 Files to Create/Modify
+**Judge for yourself**:
+- Would a resident use this daily? (If no, fix it)
+- Is it more useful than a poster? (Better be!)
+- Is it more engaging than a song? (Reactions + sharing help)
+- Is it more memorable than a TikTok? (Beautiful cards + smooth UX)
 
-Next session will touch:
-1. `supabase/migrations/20260502000000_add_stats_view.sql` - NEW
-2. `app/api/aids/route.ts` - MODIFY (performance)
-3. `app/api/aids/[id]/comments/[commentId]/route.ts` - NEW
-4. `app/api/aids/[id]/reactions/route.ts` - NEW
-5. `components/comments-section.tsx` - MODIFY (delete button)
-6. `components/reaction-buttons.tsx` - NEW
-7. `package.json` - ADD swr dependency
+**Remember**: Medical accuracy + Creativity + Fun = Win 🏆
 
 ---
 
-## 💡 Notes
+## 🐛 Known Issues
 
-- Test user credentials: test@dermnemonic.com / test123456
-- Supabase URL: https://pgzveeykjxpqwakazedc.supabase.co
-- All credentials in `.env.local` (not in git)
-- Performance is #1 blocker for deployment
-- Focus on speed + core features before advanced features
+### Minor
+- None blocking! 🎉
+
+### Future Enhancement Ideas
+- Swipe gestures on mobile (instead of arrow buttons)
+- Save to study sets from card view
+- Filter by multiple chapters at once
+- Export cards as PDF for printing
+
+---
+
+## 💡 Tips for Next Session
+
+1. **Start with content** - upload mnemonics first, then fix UI issues you notice
+2. **Test on mobile** - most users will be on phones
+3. **Get real user feedback** - don't assume, validate
+4. **Focus on fun** - reactions and smooth animations matter
+5. **Keep it simple** - don't add complexity, polish what exists
+
+**You have a solid foundation. Now make it shine! ✨**

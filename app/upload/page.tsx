@@ -20,6 +20,7 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -102,7 +103,8 @@ export default function UploadPage() {
       })
 
       if (response.ok) {
-        router.push('/')
+        setUploadSuccess(true)
+        setTimeout(() => router.push('/'), 1500)
       } else {
         alert('שגיאה בשמירת העזר למידה')
       }
@@ -131,6 +133,15 @@ export default function UploadPage() {
 
       {/* Form */}
       <main className="container mx-auto px-4 py-8 max-w-2xl">
+        {uploadSuccess && (
+          <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 border border-green-500 rounded-lg flex items-center gap-3">
+            <div className="text-2xl">✅</div>
+            <div>
+              <p className="font-semibold text-green-800 dark:text-green-200">העזר למידה פורסם בהצלחה!</p>
+              <p className="text-sm text-green-700 dark:text-green-300">מעביר לעמוד הראשי...</p>
+            </div>
+          </div>
+        )}
         <Card>
           <CardHeader>
             <CardTitle>פרטי עזר הלמידה</CardTitle>
@@ -175,7 +186,7 @@ export default function UploadPage() {
               </div>
 
               {/* Uploader Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="uploaderName">שם מעלה</Label>
                   <Input
@@ -210,7 +221,7 @@ export default function UploadPage() {
               </div>
 
               {/* Chapter and Aid Type */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="chapter">פרק *</Label>
                   <Select
@@ -218,7 +229,7 @@ export default function UploadPage() {
                     onValueChange={(value) => setFormData({ ...formData, chapter: value || '' })}
                     required
                   >
-                    <SelectTrigger className="whitespace-normal h-auto min-h-8">
+                    <SelectTrigger className="whitespace-normal h-auto min-h-10">
                       <SelectValue>
                         {formData.chapter
                           ? CHAPTERS.find(c => c.value === formData.chapter)?.label
@@ -247,7 +258,7 @@ export default function UploadPage() {
                     onValueChange={(value) => setFormData({ ...formData, mediaType: value || '' })}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-10">
                       <SelectValue>
                         {formData.mediaType
                           ? AID_TYPES.find(t => t.value === formData.mediaType)?.label
@@ -278,7 +289,7 @@ export default function UploadPage() {
                   />
                   <label
                     htmlFor="image-upload"
-                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+                    className="flex flex-col items-center justify-center w-full h-40 sm:h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
                   >
                     {imagePreview ? (
                       <div className="relative w-full h-full">
@@ -302,12 +313,12 @@ export default function UploadPage() {
               {/* Tags */}
               <div>
                 <Label>תגיות</Label>
-                <div className="flex gap-2 mt-2">
+                <div className="flex flex-col sm:flex-row gap-2 mt-2">
                   <Select
                     value={currentTag.category}
                     onValueChange={(value) => setCurrentTag({ ...currentTag, category: value || '' })}
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px] h-10">
                       <SelectValue>
                         {currentTag.category === 'diagnosis' && 'אבחנה'}
                         {currentTag.category === 'sign' && 'סימן קליני'}
@@ -329,13 +340,15 @@ export default function UploadPage() {
                     placeholder="ערך (באנגלית)"
                     value={currentTag.value}
                     onChange={(e) => setCurrentTag({ ...currentTag, value: e.target.value })}
+                    className="h-10"
                   />
                   <Input
                     placeholder="ערך (בעברית)"
                     value={currentTag.value_he}
                     onChange={(e) => setCurrentTag({ ...currentTag, value_he: e.target.value })}
+                    className="h-10"
                   />
-                  <Button type="button" onClick={addTag} variant="outline">
+                  <Button type="button" onClick={addTag} variant="outline" className="h-10">
                     הוסף
                   </Button>
                 </div>

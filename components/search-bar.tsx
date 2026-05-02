@@ -38,7 +38,8 @@ export function SearchBar({ onSearch, placeholder = 'חיפוש...' }: SearchBar
           variant="ghost"
           size="sm"
           onClick={handleClear}
-          className="absolute end-1 h-7 w-7 p-0"
+          className="absolute end-1 h-10 w-10 p-0"
+          aria-label="נקה חיפוש"
         >
           <X className="h-4 w-4" />
         </Button>

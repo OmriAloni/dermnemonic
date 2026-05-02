@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Star } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 interface RatingStarsProps {
   aidId: string
@@ -13,8 +16,15 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
   const [rating, setRating] = useState(initialRating)
   const [hoverRating, setHoverRating] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
+    async function checkAuth() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setIsLoggedIn(!!user)
+    }
+
     // Fetch user's existing rating
     async function fetchUserRating() {
       try {
@@ -30,6 +40,7 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
       }
     }
 
+    checkAuth()
     fetchUserRating()
   }, [aidId])
 
@@ -56,6 +67,17 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="p-4 bg-muted/30 rounded-lg text-center">
+        <p className="text-sm text-muted-foreground mb-2">יש להתחבר כדי לדרג</p>
+        <Link href="/auth/login">
+          <Button size="sm">התחבר</Button>
+        </Link>
+      </div>
+    )
   }
 
   return (

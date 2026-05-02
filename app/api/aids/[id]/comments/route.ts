@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 const USE_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL &&
                      process.env.SUPABASE_SERVICE_ROLE_KEY &&
@@ -78,11 +79,16 @@ export async function POST(
       return NextResponse.json({ error: 'Comment body is required' }, { status: 400 })
     }
 
-    const supabase = getSupabaseAdmin()
+    // Get authenticated user
+    const supabaseAuth = await createServerClient()
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
 
-    // Get authenticated user (fallback to test user for now)
-    const fallbackUserId = 'c15d913b-82a4-4c55-bba0-8f4d72ef2798'
-    const userId = fallbackUserId
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized - please login' }, { status: 401 })
+    }
+
+    const supabase = getSupabaseAdmin()
+    const userId = user.id
 
     // Create comment
     const { data: comment, error } = await supabase

@@ -43,7 +43,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
       <div className="space-y-2">
         <label htmlFor="chapter-select" className="text-sm font-medium">פרק</label>
         <Select value={filters.chapter} onValueChange={(value) => updateFilters({ chapter: value })}>
-          <SelectTrigger id="chapter-select" className="w-auto min-w-[200px] whitespace-normal h-auto min-h-8">
+          <SelectTrigger id="chapter-select" className="w-full sm:w-auto sm:min-w-[200px] whitespace-normal h-auto min-h-10">
             <SelectValue>
               {CHAPTERS.find(c => c.value === filters.chapter)?.[locale === 'he' ? 'label' : 'label_en'] || 'בחר פרק'}
             </SelectValue>
@@ -69,15 +69,16 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
         <div className="text-sm font-medium">סוג עזר למידה</div>
         <div className="space-y-2">
           {AID_TYPES.map((type) => (
-            <div key={type.value} className="flex items-center gap-2">
+            <div key={type.value} className="flex items-center gap-3">
               <Checkbox
                 id={`aid-type-${type.value}`}
                 checked={filters.aidTypes.includes(type.value)}
                 onCheckedChange={() => toggleAidType(type.value)}
+                className="h-5 w-5"
               />
               <label
                 htmlFor={`aid-type-${type.value}`}
-                className="text-sm cursor-pointer flex-1"
+                className="text-sm cursor-pointer flex-1 py-2 -my-2"
               >
                 {locale === 'he' ? type.label : type.label_en}
               </label>
@@ -90,7 +91,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
       <div className="space-y-2 pt-4 border-t">
         <label htmlFor="sort-select" className="text-sm font-medium">מיון</label>
         <Select value={filters.sort} onValueChange={(value: any) => updateFilters({ sort: value })}>
-          <SelectTrigger id="sort-select" className="w-auto min-w-[150px]">
+          <SelectTrigger id="sort-select" className="w-full sm:w-auto sm:min-w-[150px] h-10">
             <SelectValue>
               {filters.sort === 'newest' && 'חדש ביותר'}
               {filters.sort === 'rated' && 'המדורגים ביותר'}

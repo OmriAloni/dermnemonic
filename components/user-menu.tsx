@@ -128,12 +128,6 @@ export function UserMenu() {
             <span>העלה עזר למידה</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href={`/profile/${user.id}`} className="flex items-center cursor-pointer">
-            <User className="me-2 h-4 w-4" />
-            <span>הפרופיל שלי</span>
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
           <LogOut className="me-2 h-4 w-4" />

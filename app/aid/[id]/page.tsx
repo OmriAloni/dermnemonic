@@ -21,7 +21,8 @@ import {
   Bookmark,
   Star,
   CheckCircle,
-  Pin
+  Pin,
+  Share2
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
@@ -35,6 +36,9 @@ export default function AidDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [allAids, setAllAids] = useState<LearningAid[]>([])
   const [currentIndex, setCurrentIndex] = useState(-1)
+  const [saved, setSaved] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(0)
 
   useEffect(() => {
     async function fetchData() {
@@ -46,6 +50,23 @@ export default function AidDetailPage() {
         }
         const aidData = await aidResponse.json()
         setAid(aidData)
+
+        // Check if saved in localStorage
+        if (typeof window !== 'undefined') {
+          const savedAids = localStorage.getItem('saved-aids')
+          if (savedAids) {
+            const saved = JSON.parse(savedAids)
+            setSaved(saved.includes(id))
+          }
+        }
+
+        // Fetch reactions to see if user liked
+        const reactionsResponse = await fetch(`/api/aids/${id}/reactions`)
+        if (reactionsResponse.ok) {
+          const reactionsData = await reactionsResponse.json()
+          setLikeCount(reactionsData.counts.heart || 0)
+          setLiked(reactionsData.userReactions?.includes('heart') || false)
+        }
 
         // Fetch all aids for navigation
         const allResponse = await fetch('/api/aids')
@@ -65,6 +86,47 @@ export default function AidDetailPage() {
 
     fetchData()
   }, [id])
+
+  const handleLike = async () => {
+    try {
+      const response = await fetch(`/api/aids/${id}/reactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reaction_type: 'heart' })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.action === 'added') {
+          setLiked(true)
+          setLikeCount(likeCount + 1)
+        } else {
+          setLiked(false)
+          setLikeCount(Math.max(0, likeCount - 1))
+        }
+      } else if (response.status === 401) {
+        alert('יש להתחבר כדי להגיב')
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error)
+    }
+  }
+
+  const handleSave = () => {
+    if (typeof window === 'undefined') return
+
+    const savedAids = localStorage.getItem('saved-aids')
+    const saved = savedAids ? JSON.parse(savedAids) : []
+
+    if (saved.includes(id)) {
+      const updated = saved.filter((aidId: string) => aidId !== id)
+      localStorage.setItem('saved-aids', JSON.stringify(updated))
+      setSaved(false)
+    } else {
+      localStorage.setItem('saved-aids', JSON.stringify([...saved, id]))
+      setSaved(true)
+    }
+  }
 
   if (loading) {
     return (
@@ -102,11 +164,12 @@ export default function AidDetailPage() {
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Side Navigation - Carousel Style */}
+      {/* Side Navigation - Carousel Style (hidden on mobile to avoid overlap) */}
       {hasPrevious && (
         <Link
           href={`/aid/${previousAid?.id}`}
-          className="fixed right-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+          className="hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+          aria-label="עזר למידה קודם"
         >
           <ChevronRight className="h-6 w-6" />
         </Link>
@@ -114,7 +177,8 @@ export default function AidDetailPage() {
       {hasNext && (
         <Link
           href={`/aid/${nextAid?.id}`}
-          className="fixed left-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+          className="hidden md:flex fixed left-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
+          aria-label="עזר למידה הבא"
         >
           <ChevronLeft className="h-6 w-6" />
         </Link>
@@ -122,53 +186,56 @@ export default function AidDetailPage() {
 
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 hover:opacity-80">
-                <ArrowRight className="h-5 w-5" />
-                <span>חזרה לפיד</span>
-              </Link>
+          <div className="flex items-center justify-between gap-2">
+            {/* Back button - icon only on mobile */}
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 flex-shrink-0">
+              <ArrowRight className="h-5 w-5" />
+              <span className="hidden sm:inline">חזרה לפיד</span>
+            </Link>
 
-              {/* Top Navigation Arrows */}
-              <div className="flex items-center gap-2 border-r pr-4">
-                <Link
-                  href={hasPrevious ? `/aid/${previousAid?.id}` : '#'}
-                  className={`p-1.5 rounded-md transition-colors ${
-                    hasPrevious
-                      ? 'hover:bg-accent text-foreground'
-                      : 'text-muted-foreground cursor-not-allowed opacity-50'
-                  }`}
-                  onClick={(e) => !hasPrevious && e.preventDefault()}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <span className="text-sm text-muted-foreground">
-                  {currentIndex + 1} / {allAids.length}
-                </span>
-                <Link
-                  href={hasNext ? `/aid/${nextAid?.id}` : '#'}
-                  className={`p-1.5 rounded-md transition-colors ${
-                    hasNext
-                      ? 'hover:bg-accent text-foreground'
-                      : 'text-muted-foreground cursor-not-allowed opacity-50'
-                  }`}
-                  onClick={(e) => !hasNext && e.preventDefault()}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Link>
-              </div>
+            {/* Top Navigation Arrows - compact on mobile */}
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              <Link
+                href={hasPrevious ? `/aid/${previousAid?.id}` : '#'}
+                className={`p-2 rounded-md transition-colors ${
+                  hasPrevious
+                    ? 'hover:bg-accent text-foreground'
+                    : 'text-muted-foreground cursor-not-allowed opacity-50'
+                }`}
+                onClick={(e) => !hasPrevious && e.preventDefault()}
+                aria-label="עזר למידה קודם"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <span className="text-xs sm:text-sm text-muted-foreground min-w-[45px] sm:min-w-[50px] text-center">
+                {currentIndex + 1}/{allAids.length}
+              </span>
+              <Link
+                href={hasNext ? `/aid/${nextAid?.id}` : '#'}
+                className={`p-2 rounded-md transition-colors ${
+                  hasNext
+                    ? 'hover:bg-accent text-foreground'
+                    : 'text-muted-foreground cursor-not-allowed opacity-50'
+                }`}
+                onClick={(e) => !hasNext && e.preventDefault()}
+                aria-label="עזר למידה הבא"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Badges - hide text on mobile */}
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               {aid.pinned && (
                 <Badge variant="secondary" className="gap-1">
                   <Pin className="h-3 w-3" />
-                  מוצמד
+                  <span className="hidden sm:inline">מוצמד</span>
                 </Badge>
               )}
               {aid.verified && (
                 <Badge variant="default" className="gap-1 bg-green-500">
                   <CheckCircle className="h-3 w-3" />
-                  מאומת
+                  <span className="hidden sm:inline">מאומת</span>
                 </Badge>
               )}
             </div>
@@ -191,13 +258,13 @@ export default function AidDetailPage() {
         )}
 
         <div className="mb-6">
-          <div className="flex items-start gap-3 mb-4">
-            <h1 className="text-3xl font-bold flex-1">{aid.title}</h1>
+          <div className="flex items-start gap-3 mb-4 flex-wrap">
+            <h1 className="text-3xl font-bold flex-1 min-w-0">{aid.title}</h1>
             {aid.chapter && (() => {
               const chapterInfo = CHAPTERS.find(c => c.value === aid.chapter)
               return chapterInfo && (
-                <Badge variant="secondary" className="text-base px-3 py-1">
-                  {chapterInfo.label}
+                <Badge variant="secondary" className="text-base px-3 py-1 flex-shrink-0">
+                  פרק: {chapterInfo.label}
                 </Badge>
               )
             })()}
@@ -286,16 +353,39 @@ export default function AidDetailPage() {
         <Separator className="my-8" />
 
         <div className="flex gap-3 mb-8">
-          <Button variant="outline" className="flex-1" disabled>
-            <Heart className="h-4 w-4 ms-1" />
-            אהבתי
+          <Button
+            variant={liked ? 'default' : 'outline'}
+            className={`flex-1 h-11 ${liked ? 'bg-red-500 hover:bg-red-600' : ''}`}
+            onClick={handleLike}
+          >
+            <Heart className={`h-4 w-4 sm:ms-1 ${liked ? 'fill-current' : ''}`} />
+            <span className="hidden sm:inline">אהבתי</span>
+            {likeCount > 0 && <span className="text-xs ms-1">({likeCount})</span>}
           </Button>
-          <Button variant="outline" className="flex-1" disabled>
-            <Bookmark className="h-4 w-4 ms-1" />
-            שמור
+          <Button
+            variant={saved ? 'default' : 'outline'}
+            className="flex-1 h-11"
+            onClick={handleSave}
+          >
+            <Bookmark className={`h-4 w-4 sm:ms-1 ${saved ? 'fill-current' : ''}`} />
+            <span className="hidden sm:inline">שמור</span>
           </Button>
-          <Button variant="outline" className="flex-1" disabled>
-            שתף
+          <Button
+            variant="outline"
+            className="flex-1 h-11"
+            onClick={() => {
+              const url = `${window.location.origin}/aid/${aid.id}`
+              const message = `בדוק את עזר הלמידה הזה: ${aid.title}\n\n${url}`
+              const encodedMessage = encodeURIComponent(message)
+              const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+              const whatsappUrl = isMobile
+                ? `whatsapp://send?text=${encodedMessage}`
+                : `https://wa.me/?text=${encodedMessage}`
+              window.open(whatsappUrl, '_blank')
+            }}
+          >
+            <Share2 className="h-4 w-4 sm:ms-1" />
+            <span className="hidden sm:inline">שתף</span>
           </Button>
         </div>
 
