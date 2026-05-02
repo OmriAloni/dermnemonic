@@ -24,7 +24,8 @@ import {
   CheckCircle,
   Pin,
   Share2,
-  Clock
+  Clock,
+  Shuffle
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
@@ -44,6 +45,7 @@ export default function AidDetailPage() {
   const [likeCount, setLikeCount] = useState(0)
   const [likingInProgress, setLikingInProgress] = useState(false)
   const [savingInProgress, setSavingInProgress] = useState(false)
+  const [shuffleMode, setShuffleMode] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -82,6 +84,12 @@ export default function AidDetailPage() {
             setCurrentIndex(index)
             setFilteredAidIds(aidIds)
           }
+
+          // Load shuffle mode from localStorage
+          const savedShuffleMode = localStorage.getItem('shuffle-mode')
+          if (savedShuffleMode) {
+            setShuffleMode(savedShuffleMode === 'true')
+          }
         }
       } catch (err) {
         setError('שגיאה בטעינת עזר הלמידה')
@@ -97,7 +105,7 @@ export default function AidDetailPage() {
   // Keyboard shortcuts for carousel navigation (must be before early returns)
   useEffect(() => {
     // Only set up keyboard shortcuts after data is loaded
-    if (loading || !aid || typeof window === 'undefined') return
+    if (loading || !aid || typeof window === 'undefined' || filteredAidIds.length === 0) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in an input/textarea
@@ -105,34 +113,61 @@ export default function AidDetailPage() {
         return
       }
 
-      // Get the filtered IDs from localStorage
-      const storedIds = localStorage.getItem('filtered-aid-ids')
-      if (!storedIds) return
-
-      const aidIds = JSON.parse(storedIds)
-      const currentIdx = aidIds.indexOf(id)
-
-      if (currentIdx === -1) return
-
       // Navigate based on arrow keys (RTL: left = next, right = previous)
       if (e.key === 'ArrowLeft') {
         // Next aid (RTL)
-        const nextIdx = currentIdx + 1
-        if (nextIdx < aidIds.length) {
-          router.push(`/aid/${aidIds[nextIdx]}`)
+        const nextId = getNextAidId()
+        if (nextId) {
+          router.push(`/aid/${nextId}`)
         }
       } else if (e.key === 'ArrowRight') {
         // Previous aid (RTL)
-        const prevIdx = currentIdx - 1
-        if (prevIdx >= 0) {
-          router.push(`/aid/${aidIds[prevIdx]}`)
+        const prevId = getPreviousAidId()
+        if (prevId) {
+          router.push(`/aid/${prevId}`)
         }
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [loading, aid, id, router])
+  }, [loading, aid, id, router, shuffleMode, filteredAidIds, currentIndex])
+
+  // Toggle shuffle mode
+  const toggleShuffleMode = () => {
+    const newMode = !shuffleMode
+    setShuffleMode(newMode)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('shuffle-mode', String(newMode))
+    }
+  }
+
+  // Get random aid ID (excluding current)
+  const getRandomAidId = (): string | null => {
+    if (filteredAidIds.length <= 1) return null
+    const otherAids = filteredAidIds.filter(aidId => aidId !== id)
+    if (otherAids.length === 0) return null
+    const randomIndex = Math.floor(Math.random() * otherAids.length)
+    return otherAids[randomIndex]
+  }
+
+  // Get next aid ID (respects shuffle mode)
+  const getNextAidId = (): string | null => {
+    if (shuffleMode) {
+      return getRandomAidId()
+    }
+    const nextIdx = currentIndex + 1
+    return nextIdx < filteredAidIds.length ? filteredAidIds[nextIdx] : null
+  }
+
+  // Get previous aid ID (respects shuffle mode)
+  const getPreviousAidId = (): string | null => {
+    if (shuffleMode) {
+      return getRandomAidId()
+    }
+    const prevIdx = currentIndex - 1
+    return prevIdx >= 0 ? filteredAidIds[prevIdx] : null
+  }
 
   const handleLike = async () => {
     if (likingInProgress) return
@@ -219,10 +254,11 @@ export default function AidDetailPage() {
     .join('')
     .toUpperCase() || '?'
 
-  const hasPrevious = currentIndex > 0
-  const hasNext = currentIndex >= 0 && currentIndex < filteredAidIds.length - 1
-  const previousAidId = hasPrevious ? filteredAidIds[currentIndex - 1] : null
-  const nextAidId = hasNext ? filteredAidIds[currentIndex + 1] : null
+  // Navigation state (respects shuffle mode)
+  const previousAidId = getPreviousAidId()
+  const nextAidId = getNextAidId()
+  const hasPrevious = previousAidId !== null
+  const hasNext = nextAidId !== null
 
   // Check if aid is recent (uploaded in last 48 hours)
   const isRecent = () => {
@@ -278,7 +314,7 @@ export default function AidDetailPage() {
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <span className="text-xs sm:text-sm text-muted-foreground min-w-[45px] sm:min-w-[50px] text-center" title="השתמש בחצים ←→ לניווט">
-                {currentIndex >= 0 ? `${currentIndex + 1}/${filteredAidIds.length}` : '—'}
+                {currentIndex >= 0 && !shuffleMode ? `${currentIndex + 1}/${filteredAidIds.length}` : shuffleMode ? '🔀' : '—'}
               </span>
               <Link
                 href={hasNext && nextAidId ? `/aid/${nextAidId}` : '#'}
@@ -292,6 +328,16 @@ export default function AidDetailPage() {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Link>
+              <Button
+                variant={shuffleMode ? 'default' : 'outline'}
+                size="sm"
+                onClick={toggleShuffleMode}
+                className="h-8 px-2 sm:px-3"
+                title={shuffleMode ? 'כרטיסים אקראיים פעיל' : 'לחץ לניווט אקראי'}
+              >
+                <Shuffle className={`h-4 w-4 ${shuffleMode ? 'text-primary-foreground' : ''}`} />
+                <span className="hidden sm:inline sm:ms-1">{shuffleMode ? 'אקראי' : 'סדר'}</span>
+              </Button>
             </div>
 
             {/* Badges - hide text on mobile */}

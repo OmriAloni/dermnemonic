@@ -15,6 +15,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Hebrew RTL** - Full right-to-left support with Heebo font
 - **Feed Page** - List view with learning aid cards + chapter badges
 - **Carousel Navigation** - Left/right arrows to browse cards (desktop + mobile)
+- **Shuffle Mode** - Random card navigation for study without memorizing order
 - **Search** - Search by title, body, explanation, or tags (keyboard shortcut: /)
 - **Filters** - Filter by chapter (Hebrew names) and aid type
 - **Detail Page** - Full learning aid view with navigation counter + chapter badge
@@ -54,7 +55,8 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - ✅ Fixed user menu context error
 - ✅ Fixed logout functionality
 - ✅ Replaced brain reaction icon with applause (handshake)
-- ✅ Added shuffle/random sort option
+- ✅ Added shuffle navigation mode - study cards in random order without memorizing sequence
+- ✅ Added random sort option in feed
 - ✅ Added "saved only" filter
 - ✅ Made header logo clickable to return home
 - ✅ Differentiated signup button (green) from upload button (coral)
