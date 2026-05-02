@@ -171,7 +171,8 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         setReactionCounts(reactionCounts)
 
         if (response.status === 401) {
-          alert('יש להתחבר כדי להגיב')
+          // Redirect to login instead of showing alert
+          window.location.href = '/auth/login'
         }
       }
     } catch (error) {
