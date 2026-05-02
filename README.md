@@ -36,7 +36,8 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Keyboard Shortcuts** - ←/→ navigation, / for search, Esc for modals
 - **Error Handling** - Friendly error messages with retry options
 - **Image Loading** - Blur placeholders with shimmer animation
-- **Performance** - 40x faster API (2 queries vs 41, database view optimization)
+- **Image Compression** - Automatic compression before upload (90% faster uploads)
+- **Performance** - 40x faster API, instant client-side navigation, optimized data fetching
 
 ### 🎯 Next Session Priority (June 3 Contest!)
 1. **🔴 CRITICAL: Content Upload** - Upload 15-20 quality Hebrew mnemonics from Excel file

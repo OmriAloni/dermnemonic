@@ -15,10 +15,12 @@ import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
 import { createClient } from '@/lib/supabase/client'
+import { compressImage } from '@/lib/image-utils'
 
 export default function UploadPage() {
   const router = useRouter()
   const [uploading, setUploading] = useState(false)
+  const [compressing, setCompressing] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploadSuccess, setUploadSuccess] = useState(false)
@@ -114,8 +116,13 @@ export default function UploadPage() {
 
       // Upload image if selected
       if (selectedFile) {
+        // Compress image before uploading (much faster!)
+        setCompressing(true)
+        const compressedFile = await compressImage(selectedFile)
+        setCompressing(false)
+
         const uploadFormData = new FormData()
-        uploadFormData.append('file', selectedFile)
+        uploadFormData.append('file', compressedFile)
 
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
@@ -451,10 +458,10 @@ export default function UploadPage() {
               <div className="flex gap-3">
                 <Button
                   type="submit"
-                  disabled={uploading || !formData.title || !formData.body || !formData.chapter || !formData.mediaType}
+                  disabled={uploading || compressing || !formData.title || !formData.body || !formData.chapter || !formData.mediaType}
                   className="flex-1"
                 >
-                  {uploading ? 'מעלה...' : 'פרסם עזר למידה'}
+                  {compressing ? 'מכווץ תמונה...' : uploading ? 'מעלה...' : 'פרסם עזר למידה'}
                 </Button>
                 <Link href="/">
                   <Button type="button" variant="outline">

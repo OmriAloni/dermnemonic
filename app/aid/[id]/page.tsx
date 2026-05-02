@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
@@ -31,6 +31,7 @@ import { CHAPTERS } from '@/lib/chapters'
 
 export default function AidDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const id = params.id as string
 
   const [aid, setAid] = useState<LearningAid | null>(null)
@@ -72,13 +73,37 @@ export default function AidDetailPage() {
           setLiked(reactionsData.userReactions?.includes('heart') || false)
         }
 
-        // Fetch all aids for navigation
-        const allResponse = await fetch('/api/aids')
-        if (allResponse.ok) {
-          const allData = await allResponse.json()
-          setAllAids(allData)
-          const index = allData.findIndex((a: LearningAid) => a.id === id)
-          setCurrentIndex(index)
+        // Get filtered aid IDs from localStorage for navigation
+        if (typeof window !== 'undefined') {
+          const storedIds = localStorage.getItem('filtered-aid-ids')
+          if (storedIds) {
+            const aidIds = JSON.parse(storedIds)
+            const index = aidIds.indexOf(id)
+            setCurrentIndex(index)
+
+            // Only fetch the adjacent aids (prev/next) for navigation
+            const prevId = index > 0 ? aidIds[index - 1] : null
+            const nextId = index < aidIds.length - 1 ? aidIds[index + 1] : null
+
+            const adjacentAids: LearningAid[] = []
+
+            if (prevId) {
+              const prevResponse = await fetch(`/api/aids/${prevId}`)
+              if (prevResponse.ok) {
+                adjacentAids.push(await prevResponse.json())
+              }
+            }
+
+            if (nextId) {
+              const nextResponse = await fetch(`/api/aids/${nextId}`)
+              if (nextResponse.ok) {
+                adjacentAids.push(await nextResponse.json())
+              }
+            }
+
+            // Build minimal array with current aid + adjacent aids
+            setAllAids([...adjacentAids, aidData])
+          }
         }
       } catch (err) {
         setError('שגיאה בטעינת עזר הלמידה')
@@ -198,15 +223,15 @@ export default function AidDetailPage() {
       }
 
       if (e.key === 'ArrowLeft' && hasNext && nextAid) {
-        window.location.href = `/aid/${nextAid.id}`
+        router.push(`/aid/${nextAid.id}`)
       } else if (e.key === 'ArrowRight' && hasPrevious && previousAid) {
-        window.location.href = `/aid/${previousAid.id}`
+        router.push(`/aid/${previousAid.id}`)
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [hasPrevious, hasNext, previousAid, nextAid])
+  }, [hasPrevious, hasNext, previousAid, nextAid, router])
 
   return (
     <div className="min-h-screen bg-background relative">
