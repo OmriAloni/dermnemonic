@@ -1,12 +1,13 @@
 # TODO - Next Session Priorities
 
-**Last Updated**: May 2, 2026  
+**Last Updated**: May 2, 2026 (Evening Session)  
 **Production URL**: https://dermnemonic.vercel.app  
-**GitHub**: https://github.com/OmriAloni/dermnemonic
+**GitHub**: https://github.com/OmriAloni/dermnemonic  
+**Contest Deadline**: June 3, 2026
 
 ---
 
-## ✅ Completed (May 1-2, 2026)
+## ✅ Completed (May 2, 2026 - Full Day)
 
 ### Performance & Infrastructure
 - ✅ Created database view for stats aggregation (40x faster)
@@ -47,35 +48,56 @@
 - ✅ SSR guards for localStorage (prevents hydration errors)
 - ✅ Fixed Next.js 16 async params in all API routes
 - ✅ User menu fixed (removed broken profile link)
+- ✅ Fixed duplicate "no results" message on feed page
+- ✅ Fixed duplicate "login required" message in comments
+- ✅ Like/Save buttons now redirect to login (instead of alerts)
+
+### UX Polish
+- ✅ Delete confirmation modal (replaces browser confirm dialog)
+- ✅ Hebrew RTL modal with proper styling
+- ✅ Consistent login requirements across all interactions
+- ✅ Removed all browser alert() calls (in-app UX only)
 
 ---
 
 ## 🔥 Priority 1: Content (MOST IMPORTANT!)
 
-**Why**: Contest judges care about learning aids, not tech features.
+**Why**: Contest judges care about learning aids, not tech features. All tech is ready - just needs content!
 
-### Tasks:
-1. **Upload 15-20 quality mnemonics** from `טריקים ושטיקים לבולוניה.xlsx`
-   - Focus on: Psoriasis, Melanoma, Drug Reactions, Pemphigus, Lichen Planus
-   - Include images where possible (use examples from WhatsApp screenshots)
-   - Make sure each has:
-     - Title in Hebrew
-     - Body with English medical terms
-     - Explanation in Hebrew
-     - Proper chapter selected
-     - Aid type selected (mnemonic/illustration/table)
+### 🎯 Content Upload (2-3 hours)
 
-2. **Test the learning experience**
-   - Can you actually study from these cards?
-   - Is navigation smooth?
-   - Are chapters helpful for organization?
+**Source**: `טריקים ושטיקים לבולוניה.xlsx` (real Hebrew mnemonics from residents)
 
-3. **Get 2-3 dermatology residents to test**
-   - Watch them use it (don't explain)
-   - Note what confuses them
-   - Ask: "Would you use this daily?"
+**Target**: 15-20 high-quality mnemonics covering:
+1. **Psoriasis** - Most common, high-yield
+2. **Melanoma** - ABCDE rule + risk factors
+3. **Drug Reactions** - Stevens-Johnson, TEN, common culprits
+4. **Pemphigus/Pemphigoid** - Differentiation mnemonics
+5. **Lichen Planus** - 5 P's classic
+6. **Infections** - HSV/HPV/HIV manifestations
+7. **Autoimmune** - Lupus, Dermatomyositis associations
 
-**Time estimate**: 2-3 hours
+**For each mnemonic**:
+- ✅ Title in Hebrew (short and memorable)
+- ✅ Body with English medical terms embedded in Hebrew
+- ✅ Explanation in Hebrew (why it works, when to use)
+- ✅ Proper chapter selected (use CHAPTERS list)
+- ✅ Aid type (mnemonic/illustration/table/flowchart)
+- ✅ Image if available (check WhatsApp examples folder)
+
+**Upload process**:
+1. Go to `/upload` (already logged in as test user)
+2. Fill form for each mnemonic
+3. Mark as "verified" if you're confident in accuracy
+4. Test immediately after upload (view in feed, detail page, search)
+
+**Quality check after upload**:
+- Can you study from these cards effectively?
+- Is navigation smooth between related topics?
+- Are chapters helping with organization?
+- Would a resident actually use this daily?
+
+**Time estimate**: 2-3 hours (most important work!)
 
 ---
 

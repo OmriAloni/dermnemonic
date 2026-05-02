@@ -11,7 +11,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 
 ## ✨ Features
 
-### ✅ Working Features
+### ✅ Working Features (Fully Functional)
 - **Hebrew RTL** - Full right-to-left support with Heebo font
 - **Feed Page** - List view with learning aid cards + chapter badges
 - **Carousel Navigation** - Left/right arrows to browse cards (desktop + mobile)
@@ -19,9 +19,10 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Filters** - Filter by chapter (Hebrew names) and aid type
 - **Detail Page** - Full learning aid view with navigation counter + chapter badge
 - **Interactive Ratings** - 5-star rating system with login requirement
-- **Comments** - Add, view, and delete comments (with authentication)
+- **Comments** - Add, view, and delete comments (with authentication + modal)
 - **Reaction Buttons** - Heart/brain/lightbulb with optimistic updates
 - **WhatsApp Share** - Pre-filled Hebrew messages with deep links
+- **Like & Save** - Both require login, consistent UX
 - **Authentication** - Magic link signup/login with Supabase Auth
 - **Upload** - Image upload to Supabase Storage with success message
 - **Chapter Display** - Hebrew chapter badges (e.g., "פסוריאזיס", "מלנומה", "המנגיומות")
@@ -30,13 +31,19 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Empty States** - Helpful messages for no results, login required, etc.
 - **Verified Badges** - Shows which content is curator-verified
 - **Mobile-optimized UI** - Touch targets 44px+, responsive layouts, warm colors
+- **In-app Modals** - Beautiful delete confirmation (no browser alerts)
 - **Performance** - 40x faster API (2 queries vs 41, database view optimization)
 
-### 🎯 Next Session Priorities
-- **Content** - Upload 15-20 quality Hebrew mnemonics (MOST IMPORTANT!)
-- **Image blur placeholders** - Better loading experience
-- **Lighthouse audit** - Verify 90+ performance score
-- **Test on real devices** - iPhone/Android testing
+### 🎯 Next Session Priorities (June 3 Contest!)
+1. **🔴 CRITICAL: Content** - Upload 15-20 quality Hebrew mnemonics from Excel file
+   - This is what judges will see - everything else is ready!
+2. **Image blur placeholders** - Better loading experience (15 min)
+3. **Lighthouse audit** - Verify 90+ performance score (15 min)
+4. **Real device testing** - iPhone/Android testing (30 min)
+5. **Final polish** - Any last-minute UX tweaks
+
+**Estimated time for priorities 2-5**: ~1 hour  
+**Content upload**: 2-3 hours (most important!)
 
 ### 🚧 Future Features
 - User profiles (`/profile/[username]`)
