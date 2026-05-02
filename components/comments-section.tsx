@@ -245,7 +245,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
               </div>
             )})}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Delete Confirmation Dialog */}
