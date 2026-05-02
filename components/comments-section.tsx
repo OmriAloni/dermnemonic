@@ -167,13 +167,13 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
           </h3>
         </div>
 
-        {comments.length === 0 ? (
+        {comments.length === 0 && currentUserId ? (
           <div className="text-center py-8 text-muted-foreground">
             <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p>אין תגובות עדיין</p>
             <p className="text-sm">היה הראשון להגיב!</p>
           </div>
-        ) : (
+        ) : comments.length > 0 ? (
           <div className="space-y-4">
             {comments.map((comment) => {
               const canDelete = currentUserId === comment.user_id
