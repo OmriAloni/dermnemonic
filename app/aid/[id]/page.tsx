@@ -37,7 +37,7 @@ export default function AidDetailPage() {
   const [aid, setAid] = useState<LearningAid | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [allAids, setAllAids] = useState<LearningAid[]>([])
+  const [filteredAidIds, setFilteredAidIds] = useState<string[]>([])
   const [currentIndex, setCurrentIndex] = useState(-1)
   const [saved, setSaved] = useState(false)
   const [liked, setLiked] = useState(false)
@@ -80,29 +80,7 @@ export default function AidDetailPage() {
             const aidIds = JSON.parse(storedIds)
             const index = aidIds.indexOf(id)
             setCurrentIndex(index)
-
-            // Only fetch the adjacent aids (prev/next) for navigation
-            const prevId = index > 0 ? aidIds[index - 1] : null
-            const nextId = index < aidIds.length - 1 ? aidIds[index + 1] : null
-
-            const adjacentAids: LearningAid[] = []
-
-            if (prevId) {
-              const prevResponse = await fetch(`/api/aids/${prevId}`)
-              if (prevResponse.ok) {
-                adjacentAids.push(await prevResponse.json())
-              }
-            }
-
-            if (nextId) {
-              const nextResponse = await fetch(`/api/aids/${nextId}`)
-              if (nextResponse.ok) {
-                adjacentAids.push(await nextResponse.json())
-              }
-            }
-
-            // Build minimal array with current aid + adjacent aids
-            setAllAids([...adjacentAids, aidData])
+            setFilteredAidIds(aidIds)
           }
         }
       } catch (err) {
@@ -115,6 +93,46 @@ export default function AidDetailPage() {
 
     fetchData()
   }, [id])
+
+  // Keyboard shortcuts for carousel navigation (must be before early returns)
+  useEffect(() => {
+    // Only set up keyboard shortcuts after data is loaded
+    if (loading || !aid || typeof window === 'undefined') return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return
+      }
+
+      // Get the filtered IDs from localStorage
+      const storedIds = localStorage.getItem('filtered-aid-ids')
+      if (!storedIds) return
+
+      const aidIds = JSON.parse(storedIds)
+      const currentIdx = aidIds.indexOf(id)
+
+      if (currentIdx === -1) return
+
+      // Navigate based on arrow keys (RTL: left = next, right = previous)
+      if (e.key === 'ArrowLeft') {
+        // Next aid (RTL)
+        const nextIdx = currentIdx + 1
+        if (nextIdx < aidIds.length) {
+          router.push(`/aid/${aidIds[nextIdx]}`)
+        }
+      } else if (e.key === 'ArrowRight') {
+        // Previous aid (RTL)
+        const prevIdx = currentIdx - 1
+        if (prevIdx >= 0) {
+          router.push(`/aid/${aidIds[prevIdx]}`)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [loading, aid, id, router])
 
   const handleLike = async () => {
     if (likingInProgress) return
@@ -202,9 +220,9 @@ export default function AidDetailPage() {
     .toUpperCase() || '?'
 
   const hasPrevious = currentIndex > 0
-  const hasNext = currentIndex < allAids.length - 1
-  const previousAid = hasPrevious ? allAids[currentIndex - 1] : null
-  const nextAid = hasNext ? allAids[currentIndex + 1] : null
+  const hasNext = currentIndex >= 0 && currentIndex < filteredAidIds.length - 1
+  const previousAidId = hasPrevious ? filteredAidIds[currentIndex - 1] : null
+  const nextAidId = hasNext ? filteredAidIds[currentIndex + 1] : null
 
   // Check if aid is recent (uploaded in last 48 hours)
   const isRecent = () => {
@@ -214,40 +232,21 @@ export default function AidDetailPage() {
     return hoursDiff <= 48
   }
 
-  // Keyboard shortcuts for carousel navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input/textarea
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-        return
-      }
-
-      if (e.key === 'ArrowLeft' && hasNext && nextAid) {
-        router.push(`/aid/${nextAid.id}`)
-      } else if (e.key === 'ArrowRight' && hasPrevious && previousAid) {
-        router.push(`/aid/${previousAid.id}`)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [hasPrevious, hasNext, previousAid, nextAid, router])
-
   return (
     <div className="min-h-screen bg-background relative">
       {/* Side Navigation - Carousel Style (hidden on mobile to avoid overlap) */}
-      {hasPrevious && (
+      {hasPrevious && previousAidId && (
         <Link
-          href={`/aid/${previousAid?.id}`}
+          href={`/aid/${previousAidId}`}
           className="hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
           aria-label="עזר למידה קודם"
         >
           <ChevronRight className="h-6 w-6" />
         </Link>
       )}
-      {hasNext && (
+      {hasNext && nextAidId && (
         <Link
-          href={`/aid/${nextAid?.id}`}
+          href={`/aid/${nextAidId}`}
           className="hidden md:flex fixed left-4 top-1/2 -translate-y-1/2 z-20 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full p-3 shadow-lg transition-all hover:scale-110"
           aria-label="עזר למידה הבא"
         >
@@ -267,7 +266,7 @@ export default function AidDetailPage() {
             {/* Top Navigation Arrows - compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               <Link
-                href={hasPrevious ? `/aid/${previousAid?.id}` : '#'}
+                href={hasPrevious && previousAidId ? `/aid/${previousAidId}` : '#'}
                 className={`p-2 rounded-md transition-colors ${
                   hasPrevious
                     ? 'hover:bg-accent text-foreground'
@@ -279,10 +278,10 @@ export default function AidDetailPage() {
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <span className="text-xs sm:text-sm text-muted-foreground min-w-[45px] sm:min-w-[50px] text-center" title="השתמש בחצים ←→ לניווט">
-                {currentIndex + 1}/{allAids.length}
+                {currentIndex >= 0 ? `${currentIndex + 1}/${filteredAidIds.length}` : '—'}
               </span>
               <Link
-                href={hasNext ? `/aid/${nextAid?.id}` : '#'}
+                href={hasNext && nextAidId ? `/aid/${nextAidId}` : '#'}
                 className={`p-2 rounded-md transition-colors ${
                   hasNext
                     ? 'hover:bg-accent text-foreground'

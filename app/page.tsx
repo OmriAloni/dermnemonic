@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Upload, Users, Brain } from 'lucide-react'
 import { LearningAidCard } from '@/components/feed/learning-aid-card'
@@ -12,110 +12,10 @@ import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
 import { CHAPTERS } from '@/lib/chapters'
 
-// Removed mock data - will fetch from API
-const mockAidsOld: LearningAid[] = [
-  {
-    id: '1',
-    uploader_id: 'user1',
-    title: '5 P\'s של Lichen Planus',
-    body: 'Pruritic, Purple, Polygonal, Planar, Papules',
-    explanation: 'זכור את 5 ה-P\'s הקלאסיים של Lichen Planus. זה אחד המנמוניקים הכי שימושיים בדרמטולוגיה.',
-    media_type: 'text-only',
-    verified: true,
-    pinned: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    uploader: {
-      id: 'user1',
-      email: 'dr.maya@example.com',
-      display_name: 'ד״ר מאיה כהן',
-      hospital: 'איכילוב',
-      role: 'verified_contributor',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    tags: [
-      { id: 't1', category: 'diagnosis', value: 'lichen-planus', value_he: 'ליכן פלנוס', created_at: new Date().toISOString() },
-      { id: 't2', category: 'aid_type', value: 'mnemonic', value_he: 'מנמוניק', created_at: new Date().toISOString() },
-    ],
-    stats: {
-      rating_avg: 4.8,
-      rating_count: 24,
-      reaction_count: 45,
-      comment_count: 8,
-      save_count: 32,
-    }
-  },
-  {
-    id: '2',
-    uploader_id: 'user2',
-    title: 'סרפדת כרונית - אסוציאציות',
-    body: 'סכרת, ראומטואיד ארתריטיס, פרנישוס אנמיה, דה-פיגמנטציה (ויטיליגו), תיאוריד (היפו)',
-    explanation: 'זכרון לאסוציאציות של אורטיקריה כרונית: סרפדת = סכרת + RA + פרנישוס + ויטיליגו + היפותיאורידיזם',
-    media_type: 'text-only',
-    verified: false,
-    pinned: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    uploader: {
-      id: 'user2',
-      email: 'resident@example.com',
-      display_name: 'יוסי לוי',
-      hospital: 'הדסה',
-      year_of_residency: 3,
-      role: 'contributor',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    tags: [
-      { id: 't3', category: 'diagnosis', value: 'urticaria', value_he: 'אורטיקריה', created_at: new Date().toISOString() },
-      { id: 't4', category: 'aid_type', value: 'mnemonic', value_he: 'מנמוניק', created_at: new Date().toISOString() },
-    ],
-    stats: {
-      rating_avg: 4.2,
-      rating_count: 12,
-      reaction_count: 28,
-      comment_count: 5,
-      save_count: 18,
-    }
-  },
-  {
-    id: '3',
-    uploader_id: 'user1',
-    title: 'ABCDE של מלנומה',
-    body: 'Asymmetry\nBorder irregularity\nColor variation\nDiameter >6mm\nEvolving',
-    explanation: 'כלל ABCDE עוזר לזהות נגעים חשודים למלנומה. כל נגע שעומד באחד מהקריטריונים הללו דורש בדיקה נוספת.',
-    media_type: 'text-only',
-    verified: true,
-    pinned: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    uploader: {
-      id: 'user1',
-      email: 'dr.maya@example.com',
-      display_name: 'ד״ר מאיה כהן',
-      hospital: 'איכילוב',
-      role: 'verified_contributor',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    tags: [
-      { id: 't5', category: 'diagnosis', value: 'melanoma', value_he: 'מלנומה', created_at: new Date().toISOString() },
-      { id: 't6', category: 'aid_type', value: 'mnemonic', value_he: 'מנמוניק', created_at: new Date().toISOString() },
-    ],
-    stats: {
-      rating_avg: 5.0,
-      rating_count: 56,
-      reaction_count: 89,
-      comment_count: 12,
-      save_count: 67,
-    }
-  }
-]
+// Mock data removed - now fetching from API
 
 export default function FeedPage() {
   const [aids, setAids] = useState<LearningAid[]>([])
-  const [filteredAids, setFilteredAids] = useState<LearningAid[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -149,13 +49,7 @@ export default function FeedPage() {
         }
         const data = await response.json()
         setAids(data)
-        setFilteredAids(data)
         setError(null)
-
-        // Store initial filtered aids for detail page navigation
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('filtered-aid-ids', JSON.stringify(data.map((a: LearningAid) => a.id)))
-        }
       } catch (error) {
         console.error('Error fetching aids:', error)
         setError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
@@ -166,19 +60,15 @@ export default function FeedPage() {
     fetchAids()
   }, [])
 
-  // Re-apply filters when search query changes
+  // Filter state
   const [currentFilters, setCurrentFilters] = useState<SimpleFilterState>({
     chapter: 'all',
     aidTypes: [],
     sort: 'newest'
   })
 
-  useEffect(() => {
-    handleFilterChange(currentFilters)
-  }, [searchQuery, aids])
-
-  const handleFilterChange = (filters: SimpleFilterState) => {
-    setCurrentFilters(filters)
+  // Compute filtered aids using useMemo (derived state)
+  const filteredAids = useMemo(() => {
     let filtered = [...aids]
 
     // Filter by search query
@@ -197,32 +87,29 @@ export default function FeedPage() {
     }
 
     // Filter by chapter
-    if (filters.chapter && filters.chapter !== 'all') {
-      // Match chapter value with aid.chapter field
+    if (currentFilters.chapter && currentFilters.chapter !== 'all') {
       filtered = filtered.filter(aid => {
-        const chapterInfo = CHAPTERS.find(c => c.value === filters.chapter)
-        return aid.chapter === filters.chapter ||
+        const chapterInfo = CHAPTERS.find(c => c.value === currentFilters.chapter)
+        return aid.chapter === currentFilters.chapter ||
                aid.chapter === chapterInfo?.label ||
                aid.chapter === chapterInfo?.label_en
       })
     }
 
     // Filter by aid types
-    if (filters.aidTypes.length > 0) {
+    if (currentFilters.aidTypes.length > 0) {
       filtered = filtered.filter(aid => {
         if (!aid.media_type) return false
 
-        // Map old values to new filter values
         const typeMapping: Record<string, string[]> = {
-          'mnemonic': ['mnemonic', 'text-only'], // Text mnemonics
-          'illustration': ['illustration', 'character'], // Visual aids
-          'table': ['table', 'summary-table'], // Tables
+          'mnemonic': ['mnemonic', 'text-only'],
+          'illustration': ['illustration', 'character'],
+          'table': ['table', 'summary-table'],
           'flowchart': ['flowchart'],
-          'other': ['other', 'photo', 'diagram', 'comparison'] // Everything else
+          'other': ['other', 'photo', 'diagram', 'comparison']
         }
 
-        // Check if the aid's media_type matches any selected filter
-        return filters.aidTypes.some(selectedType => {
+        return currentFilters.aidTypes.some(selectedType => {
           const mappedTypes = typeMapping[selectedType] || [selectedType]
           return aid.media_type && mappedTypes.includes(aid.media_type)
         })
@@ -230,21 +117,26 @@ export default function FeedPage() {
     }
 
     // Sort
-    if (filters.sort === 'alphabetical') {
+    if (currentFilters.sort === 'alphabetical') {
       filtered.sort((a, b) => a.title.localeCompare(b.title, 'he'))
-    } else if (filters.sort === 'rated') {
+    } else if (currentFilters.sort === 'rated') {
       filtered.sort((a, b) => (b.stats?.rating_avg || 0) - (a.stats?.rating_avg || 0))
-    } else {
-      // newest (default) - already sorted by created_at DESC from API
     }
 
-    setFilteredAids(filtered)
+    return filtered
+  }, [aids, searchQuery, currentFilters])
 
-    // Store filtered aids IDs for detail page navigation
+  // Store filtered aids IDs in localStorage for detail page navigation
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('filtered-aid-ids', JSON.stringify(filtered.map(a => a.id)))
+      localStorage.setItem('filtered-aid-ids', JSON.stringify(filteredAids.map(a => a.id)))
     }
-  }
+  }, [filteredAids])
+
+  // Handle filter changes from filter panel
+  const handleFilterChange = useCallback((filters: SimpleFilterState) => {
+    setCurrentFilters(filters)
+  }, [])
 
   return (
     <div className="min-h-screen" id="feed-page">

@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Note**: This is the development guide for the Next.js app at `/Users/omrialon/Documents/yuval/dermnemonic/`. The parent directory contains high-level project requirements in its own CLAUDE.md file.
+
 ## Important Context
 
 **Read the parent directory's CLAUDE.md first** (`../CLAUDE.md`) for full project context, requirements, and design patterns. This file focuses on practical development tasks specific to the Next.js codebase.
@@ -42,29 +44,60 @@ The app runs at http://localhost:3000.
 
 **Mock data fallback**: When Supabase is not configured, API routes read from `data/learning-aids.json`
 
+## Quick Reference - Common Tasks
+
+```bash
+# First time setup
+npm install
+npx tsx verify-supabase.ts
+npx tsx scripts/seed-supabase.ts
+npm run dev
+
+# Daily development
+npm run dev                              # Start dev server
+npx tsx verify-supabase.ts              # Check if Supabase is working
+
+# Before committing
+npm run build                            # Verify build works
+npm run lint                             # Check for errors
+
+# Deploying
+git push origin main                     # Auto-deploys to Vercel
+
+# Troubleshooting
+npx tsx verify-full-setup.ts            # Full system check
+npx tsx check-storage.ts                # Fix storage issues
+rm -rf .next && npm run dev             # Clear cache
+```
+
+## Testing
+
+**⚠️ No test framework configured**. This project currently has no tests. To add testing:
+
+```bash
+# Install testing dependencies (when needed)
+npm install -D vitest @testing-library/react @testing-library/jest-dom
+
+# Add to package.json scripts:
+# "test": "vitest",
+# "test:ui": "vitest --ui"
+```
+
 ## Utility Scripts
 
-The project includes several TypeScript utility scripts in the root directory:
+**Most frequently used:**
+- `npx tsx verify-supabase.ts` - Verify Supabase connection (run this first!)
+- `npx tsx scripts/seed-supabase.ts` - Seed 8 sample learning aids
+- `npx tsx check-storage.ts` - Verify Supabase Storage bucket
 
-### Database & Setup
-- `verify-supabase.ts` - Check Supabase connection and credentials
-- `verify-full-setup.ts` - Comprehensive check (auth, storage, database, RLS)
-- `run-migration.ts` - Apply database migrations programmatically
-- `apply-migration.ts` - Alternative migration helper
-
-### Data Management
-- `scripts/seed-supabase.ts` - Seed database with 8 sample learning aids
-- `scripts/quick-seed.ts` - Fast seed for testing
-- `scripts/seed.ts` - Original seed script (deprecated)
-
-### Storage & Uploads
-- `check-storage.ts` - Verify Supabase Storage bucket configuration
-- `check-uploads.ts` - Check uploaded files
-- `scripts/setup-storage.sql` - SQL to create storage buckets
-
-### User Management
-- `update-test-user.ts` - Reset test user credentials
+**Other helpful scripts:**
+- `verify-full-setup.ts` - Comprehensive system check (auth, storage, database, RLS)
+- `update-test-user.ts` - Reset test user credentials  
 - `update-chapters.ts` - Update chapter taxonomy
+- `check-uploads.ts` - Check uploaded files
+- `run-migration.ts` / `apply-migration.ts` - Apply database migrations programmatically
+- `scripts/quick-seed.ts` - Fast seed for testing
+- `scripts/setup-storage.sql` - SQL to create storage buckets
 
 **Run any script with**: `npx tsx <script-name>.ts`
 
@@ -177,10 +210,12 @@ Locale handling is in `lib/i18n.ts` (Hebrew primary, English fallback).
 
 ### Component Organization
 
-**Filter Components** (multiple versions exist, only one is active):
-- `components/filters/simple-filter-panel.tsx` - **ACTIVE**: Current filter UI
-- `components/filters/filter-panel.tsx` - Deprecated (more complex version)
-- `components/filters/new-filter-panel.tsx` - Experimental (not in use)
+**Filter Components** (**Note**: Only `simple-filter-panel.tsx` is currently in use):
+- `components/filters/simple-filter-panel.tsx` - ✅ **ACTIVE** - Current filter UI (chapter + aid type)
+- `components/filters/filter-panel.tsx` - ❌ Deprecated (more complex, all 6 tag categories)
+- `components/filters/new-filter-panel.tsx` - ❌ Experimental (not in use)
+
+**When modifying filters**: Always update `simple-filter-panel.tsx`, not the others.
 
 **Feed Components**:
 - `components/feed/learning-aid-card.tsx` - Main card component with stats, badges, actions
@@ -441,6 +476,15 @@ The app gracefully degrades when Supabase variables are missing (middleware auto
 - ✅ **Performance** - 40x optimized (database stats view, 2 queries vs 41)
 - ✅ **Mobile Responsive** - 44px+ touch targets, responsive layouts, optimized grids
 
+**Latest Polish** (May 2, 2026 Evening):
+- ✅ **Image blur placeholders** - Shimmer animation while loading (in `app/globals.css`)
+- ✅ **Recent badge** - "חדש" for content uploaded in last 48 hours
+- ✅ **Upload form auto-fill** - Profile data auto-populates (name, hospital)
+- ✅ **Required fields hint** - Hebrew hint text on upload form
+- ✅ **Keyboard shortcuts** - ←/→ for navigation, / for search, Esc for modals
+- ✅ **Image compression** - Auto-compress before upload (90% faster)
+- ✅ **Double-click prevention** - All action buttons prevent duplicate submissions
+
 **Critical for Contest** (June 3, 2026):
 1. **Upload 15-20 quality Hebrew mnemonics** - Most important! Content is what judges will see
 2. **Image blur placeholders** - Better loading experience (15 min task)
@@ -533,6 +577,23 @@ Do not implement unless explicitly requested:
 - AI content moderation (manual flag-and-review only)
 - Complex analytics beyond basic leaderboard stats
 
+## Documentation Files
+
+Key documentation in this directory (most recent first):
+
+- `TODO.md` - **Current priorities and completion status** (check this first!)
+- `README.md` - User-facing project documentation
+- `SESSION-MAY-2-POLISH.md` - Latest polish improvements (May 2, 2026 evening)
+- `SESSION-MAY-2-FINAL.md` - Performance optimization session (May 2, 2026)
+- `PERFORMANCE-FIXES.md` - 40x performance improvement details
+- `MOBILE-AUDIT.md` - Mobile optimization checklist
+- `POLISH-PLAN.md` - Polish tasks for contest readiness
+- `HOW_TO_RUN.md` - Alternative getting started guide
+- `SESSION-MAY-2-2026.md` - Mid-day session notes
+- Other session notes (SESSION-SUMMARY.md, SESSION_NOTES.md, etc.) - Historical decisions and bug fixes
+
+These files contain context on recent bug fixes, feature additions, and rationale for UX decisions.
+
 ## Reference Files in Parent Directory
 
 - `../CLAUDE.md`: Full project requirements and strategy
@@ -541,18 +602,6 @@ Do not implement unless explicitly requested:
 - `../טריקים ושטיקים לבולוניה.xlsx`: Real Hebrew mnemonics from residents (gold standard for content style)
 - `../dermnemonic/TIPS_AND_MNEMONICS.md`: Extracted mnemonic examples
 - Example images (WhatsApp screenshots): Visual design patterns to follow
-
-## Recent Session Notes
-
-For understanding recent changes and decisions:
-
-- `SESSION-MAY-2-FINAL.md`: Latest session summary (May 2, 2026)
-- `TODO.md`: Current priorities and completion status
-- `MOBILE-AUDIT.md`: Mobile optimization checklist
-- `POLISH-PLAN.md`: Polish tasks for contest readiness
-- `SESSION-MAY-2-2026.md`: Mid-day session notes
-
-These files contain context on recent bug fixes, feature additions, and rationale for UX decisions.
 
 ## Medical Content Constraints
 

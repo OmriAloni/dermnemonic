@@ -65,8 +65,20 @@ export function UserMenu() {
   }
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    router.refresh()
+    try {
+      // Call API to clear session
+      await fetch('/api/auth/logout', { method: 'POST' })
+
+      // Clear client-side Supabase session
+      const supabase = createClient()
+      await supabase.auth.signOut()
+
+      // Redirect to home page
+      router.push('/')
+      router.refresh()
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
   }
 
   if (loading) {
@@ -106,7 +118,7 @@ export function UserMenu() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="font-normal">
+        <div className="px-1.5 py-1 font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
               {profile?.display_name || 'משתמש'}
@@ -120,7 +132,7 @@ export function UserMenu() {
               </p>
             )}
           </div>
-        </DropdownMenuLabel>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Link href="/upload" className="flex items-center w-full">
