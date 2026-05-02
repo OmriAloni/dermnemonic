@@ -67,7 +67,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
   return (
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
       {/* Chapter Filter - Multi-select with Search */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <label className="text-sm font-medium">פרקים</label>
         <Popover open={chapterPopoverOpen} onOpenChange={(open) => {
           setChapterPopoverOpen(open)
