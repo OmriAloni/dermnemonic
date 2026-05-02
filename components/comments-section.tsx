@@ -170,7 +170,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         </form>
       ) : (
         <div className="p-6 bg-muted/30 rounded-lg text-center">
-          <p className="text-muted-foreground mb-3">יש להתחבר כדי להגיב</p>
+          <p className="text-muted-foreground mb-3">יש להתחבר כדי לדרג ולהגיב</p>
           <Link href="/auth/login">
             <Button>התחבר</Button>
           </Link>

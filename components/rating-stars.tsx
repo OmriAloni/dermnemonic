@@ -70,14 +70,7 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
   }
 
   if (!isLoggedIn) {
-    return (
-      <div className="p-4 bg-muted/30 rounded-lg text-center">
-        <p className="text-sm text-muted-foreground mb-2">יש להתחבר כדי לדרג</p>
-        <Link href="/auth/login">
-          <Button size="sm">התחבר</Button>
-        </Link>
-      </div>
-    )
+    return null // Don't show rating UI when logged out
   }
 
   return (
