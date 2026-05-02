@@ -74,13 +74,11 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
           // Clear search when closing
           if (!open) setChapterSearch('')
         }}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={chapterPopoverOpen}
-              className="w-full justify-between h-auto min-h-10 font-normal"
-            >
+          <PopoverTrigger
+            className="w-full justify-between h-auto min-h-10 font-normal flex items-center rounded-md border border-input bg-background px-3 py-2 text-base hover:bg-accent hover:text-accent-foreground"
+            role="combobox"
+            aria-expanded={chapterPopoverOpen}
+          >
               <div className="flex gap-1 flex-wrap">
                 {filters.chapters.length === 0 ? (
                   <span className="text-muted-foreground">בחר פרקים...</span>
@@ -109,7 +107,6 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 )}
               </div>
               <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[400px] p-0" align="start">
             <Command shouldFilter={false}>
@@ -145,7 +142,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                           <Checkbox
                             checked={filters.chapters.includes(chapter.value)}
                             className="h-4 w-4"
-                            onCheckedChange={(e) => e.preventDefault()}
+                            readOnly
                           />
                           <span dir="ltr" className="flex-1 text-left">{text}</span>
                           {filters.chapters.includes(chapter.value) && (

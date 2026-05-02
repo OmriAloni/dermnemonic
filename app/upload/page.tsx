@@ -313,13 +313,11 @@ export default function UploadPage() {
                     setChapterPopoverOpen(open)
                     if (!open) setChapterSearch('')
                   }}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={chapterPopoverOpen}
-                        className="w-full justify-between h-auto min-h-10 font-normal whitespace-normal text-left"
-                      >
+                    <PopoverTrigger
+                      className="w-full justify-between h-auto min-h-10 font-normal whitespace-normal text-left flex items-center rounded-md border border-input bg-background px-3 py-2 text-base hover:bg-accent hover:text-accent-foreground"
+                      role="combobox"
+                      aria-expanded={chapterPopoverOpen}
+                    >
                         <span className="flex-1 overflow-hidden">
                           {formData.chapter ? (() => {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
@@ -328,7 +326,6 @@ export default function UploadPage() {
                           })() : <span className="text-muted-foreground">בחר פרק...</span>}
                         </span>
                         <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[400px] p-0" align="start">
                       <Command shouldFilter={false}>
