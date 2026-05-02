@@ -17,7 +17,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Carousel Navigation** - Left/right arrows to browse cards (desktop + mobile)
 - **Shuffle Mode** - Random card navigation for study without memorizing order
 - **Search** - Search by title, body, explanation, or tags (keyboard shortcut: /)
-- **Filters** - Filter by chapter (English Bolognia chapters with numbers) and aid type
+- **Filters** - Multi-select searchable chapter filter (159 Bolognia chapters) + aid type filter
 - **Detail Page** - Full learning aid view with navigation counter + chapter badge
 - **Interactive Ratings** - 5-star rating system with login requirement
 - **Comments** - Add, view, and delete comments (with authentication + modal)
@@ -50,6 +50,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 **Only Task Remaining**: Upload real content from `טריקים ושטיקים לבולוניה.xlsx`
 
 **Latest Updates** (May 2, 2026 - Evening Session):
+- ✅ **Multi-Select Searchable Chapter Filter** - Filter by multiple chapters with built-in search (Command + Popover)
 - ✅ **Shuffle Navigation Mode** - Random card navigation in detail view for studying without memorizing order
 - ✅ **Complete Bolognia Chapter Taxonomy** - All 159 chapters from textbook with proper numbering
 - ✅ **English Chapters** - Switched from Hebrew to English chapter names (1. Anatomy and Pathophysiology, etc.)
@@ -58,7 +59,6 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - ✅ **Clapping Emoji Reaction** - Replaced handshake icon with 👏 emoji (LinkedIn-style, better visual appeal)
 - ✅ **User Menu Width Fix** - Dropdown now accommodates long email addresses properly
 - ✅ **"Other" Chapter Option** - Added at end of chapter list for uncategorized content
-- ✅ **Wide Comboboxes** - Chapter dropdowns expand to 500px to show full chapter names
 
 **Previous Session Updates** (May 2, 2026 - Earlier):
 - ✅ Fixed infinite re-render loop on feed page

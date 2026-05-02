@@ -10,6 +10,37 @@ This session focused on UX improvements and completing the chapter taxonomy syst
 
 ## ✨ Features Implemented
 
+### 8. Multi-Select Searchable Chapter Filter ✅
+**User Request**: "I want the chapter filter to be multi-choice and searchable"
+
+**Implementation**:
+- Replaced single-select dropdown with Command + Popover combo
+- Built-in search input filters 159 chapters by name or number
+- Checkboxes for multi-selection
+- Selected chapters shown as removable badges
+- "Clear All" button with count
+
+**Files Changed**:
+- `components/filters/simple-filter-panel.tsx` - Complete filter redesign
+- `app/page.tsx` - Updated filtering logic for multiple chapters
+
+**Features**:
+- Search: Type to filter 159 chapters instantly
+- Multi-select: Choose multiple chapters with checkboxes
+- Visual badges: First 2 shown, "+N" for more
+- Remove: Click X on badge to remove individual chapter
+- Filter logic: Shows aids matching ANY selected chapter
+
+**User Experience**:
+- Compare content across multiple chapters easily
+- Search helps navigate large chapter list
+- Clear visual feedback of selected chapters
+- No need to apply filter repeatedly
+
+---
+
+## ✨ Features Implemented (Session Start)
+
 ### 1. Shuffle Navigation Mode ✅
 **User Request**: "I want to learn about the cards but I don't want to memorize by order"
 
@@ -145,6 +176,8 @@ This session focused on UX improvements and completing the chapter taxonomy syst
 4. `920f0dc` - Display chapter values as LTR and show full names in badges
 5. `9300abd` - Fix user menu dropdown width for long emails
 6. `f466075` - Replace handshake icon with clapping hands emoji
+7. `18f3cb9` - Update documentation for evening session
+8. `ddeeb36` - Add multi-select searchable chapter filter
 
 ### Files Modified
 - `app/aid/[id]/page.tsx`
@@ -156,8 +189,10 @@ This session focused on UX improvements and completing the chapter taxonomy syst
 - `README.md`
 
 ### Lines Changed
-- ~350 lines added/modified across 6 commits
-- Major refactor: `lib/chapters.ts` (159 chapters with full metadata)
+- ~470 lines added/modified across 8 commits
+- Major refactors: 
+  - `lib/chapters.ts` (159 chapters with full metadata)
+  - `components/filters/simple-filter-panel.tsx` (multi-select search UI)
 
 ---
 
@@ -172,12 +207,18 @@ This session focused on UX improvements and completing the chapter taxonomy syst
    - Proper numbering matching the book
    - English names for international standard
 
-3. **Improved Readability**
+3. **Advanced Filtering**
+   - Multi-select chapter filter
+   - Searchable dropdown with instant results
+   - Compare content across multiple chapters
+   - Visual badges show active filters
+
+4. **Improved Readability**
    - LTR display for English chapter names
    - Proper alignment and direction
    - Full text visible in dropdowns
 
-4. **Better Reactions**
+5. **Better Reactions**
    - 👏 emoji more expressive than icon
    - LinkedIn-style interaction
    - Cleaner active/inactive states
