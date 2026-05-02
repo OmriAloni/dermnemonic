@@ -314,7 +314,8 @@ export default function UploadPage() {
                       <SelectValue>
                         {formData.chapter ? (() => {
                           const chapter = CHAPTERS.find(c => c.value === formData.chapter)
-                          return chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
+                          const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
+                          return <span dir="ltr" className="block text-left">{text}</span>
                         })() : 'בחר פרק'}
                       </SelectValue>
                     </SelectTrigger>
@@ -325,7 +326,7 @@ export default function UploadPage() {
                           value={chapter.value}
                           className="whitespace-normal h-auto py-2 leading-tight"
                         >
-                          <span className="block whitespace-normal break-words">
+                          <span dir="ltr" className="block whitespace-normal break-words text-left">
                             {chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en}
                           </span>
                         </SelectItem>

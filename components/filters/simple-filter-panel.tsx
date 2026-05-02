@@ -51,7 +51,8 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 const chapter = CHAPTERS.find(c => c.value === filters.chapter)
                 if (!chapter) return 'בחר פרק'
                 if (chapter.value === 'all') return chapter.label_en
-                return chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                const text = chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+                return <span dir="ltr" className="block text-left">{text}</span>
               })()}
             </SelectValue>
           </SelectTrigger>
@@ -62,7 +63,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 value={chapter.value}
                 className="whitespace-normal h-auto py-2 leading-tight"
               >
-                <span className="block whitespace-normal break-words">
+                <span dir="ltr" className="block whitespace-normal break-words text-left">
                   {chapter.value === 'all'
                     ? chapter.label_en
                     : chapter.number

@@ -162,4 +162,7 @@ export const CHAPTERS = [
   { value: 'hair-restoration', label: 'שיקום שיער', label_en: 'Hair Restoration', number: 157 },
   { value: 'fillers', label: 'הזרקת חומרי מילוי לרקמות רכות', label_en: 'Injectable Soft Tissue Augmentation', number: 158 },
   { value: 'botox', label: 'בוטולינום טוקסין', label_en: 'Botulinum Toxin', number: 159 },
+
+  // Other
+  { value: 'other', label: 'אחר', label_en: 'Other', number: null },
 ]

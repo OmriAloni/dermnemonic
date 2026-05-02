@@ -213,7 +213,11 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
             const chapterInfo = CHAPTERS.find(c => c.value === aid.chapter)
             return chapterInfo && (
               <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                {chapterInfo.number ? `Ch. ${chapterInfo.number}` : chapterInfo.label_en}
+                <span dir="ltr">
+                  {chapterInfo.number
+                    ? `${chapterInfo.number}. ${chapterInfo.label_en}`
+                    : chapterInfo.label_en}
+                </span>
               </Badge>
             )
           })()}
