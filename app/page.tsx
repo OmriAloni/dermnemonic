@@ -309,13 +309,6 @@ export default function FeedPage() {
             </div>
           )}
         </div>
-
-        {filteredAids.length === 0 && (
-          <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4">
-            <p className="text-lg font-medium">לא נמצאו תוצאות</p>
-            <p className="text-muted-foreground">נסה לשנות את הפילטרים</p>
-          </div>
-        )}
       </main>
 
     </div>
