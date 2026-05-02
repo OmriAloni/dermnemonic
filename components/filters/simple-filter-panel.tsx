@@ -43,11 +43,16 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
       {/* Chapter Filter */}
       <div className="space-y-2">
-        <label htmlFor="chapter-select" className="text-sm font-medium">Chapter</label>
+        <label htmlFor="chapter-select" className="text-sm font-medium">פרק</label>
         <Select value={filters.chapter} onValueChange={(value) => updateFilters({ chapter: value })}>
           <SelectTrigger id="chapter-select" className="w-full whitespace-normal h-auto min-h-10">
             <SelectValue>
-              {CHAPTERS.find(c => c.value === filters.chapter)?.label_en || 'Select Chapter'}
+              {(() => {
+                const chapter = CHAPTERS.find(c => c.value === filters.chapter)
+                if (!chapter) return 'בחר פרק'
+                if (chapter.value === 'all') return chapter.label_en
+                return chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
+              })()}
             </SelectValue>
           </SelectTrigger>
           <SelectContent align="start" className="max-h-[400px] w-[calc(100vw-2rem)] sm:w-[500px]">
@@ -58,7 +63,11 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 className="whitespace-normal h-auto py-2 leading-tight"
               >
                 <span className="block whitespace-normal break-words">
-                  {chapter.label_en}
+                  {chapter.value === 'all'
+                    ? chapter.label_en
+                    : chapter.number
+                      ? `${chapter.number}. ${chapter.label_en}`
+                      : chapter.label_en}
                 </span>
               </SelectItem>
             ))}

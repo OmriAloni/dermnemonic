@@ -304,7 +304,7 @@ export default function UploadPage() {
               {/* Chapter and Aid Type */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="chapter">Chapter *</Label>
+                  <Label htmlFor="chapter">פרק *</Label>
                   <Select
                     value={formData.chapter}
                     onValueChange={(value) => setFormData({ ...formData, chapter: value || '' })}
@@ -312,9 +312,10 @@ export default function UploadPage() {
                   >
                     <SelectTrigger className="w-full whitespace-normal h-auto min-h-10">
                       <SelectValue>
-                        {formData.chapter
-                          ? CHAPTERS.find(c => c.value === formData.chapter)?.label_en
-                          : 'Select Chapter'}
+                        {formData.chapter ? (() => {
+                          const chapter = CHAPTERS.find(c => c.value === formData.chapter)
+                          return chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
+                        })() : 'בחר פרק'}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="max-h-[400px] w-[calc(100vw-2rem)] sm:w-[500px]">
@@ -325,7 +326,7 @@ export default function UploadPage() {
                           className="whitespace-normal h-auto py-2 leading-tight"
                         >
                           <span className="block whitespace-normal break-words">
-                            {chapter.label_en}
+                            {chapter.number ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en}
                           </span>
                         </SelectItem>
                       ))}
