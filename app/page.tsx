@@ -145,6 +145,13 @@ export default function FeedPage() {
       }
     }
 
+    // Always show items without chapter at the top
+    filtered.sort((a, b) => {
+      if (!a.chapter && b.chapter) return -1
+      if (a.chapter && !b.chapter) return 1
+      return 0
+    })
+
     return filtered
   }, [aids, searchQuery, currentFilters])
 

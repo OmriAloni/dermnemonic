@@ -178,7 +178,7 @@ export function FilterPanel({ onFilterChange, locale = 'he' }: FilterPanelProps)
           {/* Clinical Sign Filter */}
           <div>
             <label className="text-sm font-medium mb-2 block">
-              {locale === 'he' ? 'סימן קליני' : 'Clinical Sign'}
+              {locale === 'he' ? 'תסמינים' : 'Clinical Sign'}
             </label>
             <Select onValueChange={(value) => addFilter('sign', value as string)}>
               <SelectTrigger>

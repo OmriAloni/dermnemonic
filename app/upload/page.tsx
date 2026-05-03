@@ -38,9 +38,9 @@ export default function UploadPage() {
     uploaderName: '',
     hospital: '',
     chapter: '',
-    mediaType: '' as any,
     tags: [] as Array<{ category: string; value: string; value_he: string }>
   })
+  const [selectedAidTypes, setSelectedAidTypes] = useState<string[]>([])
 
   // Fetch user profile and auto-fill uploader details
   useEffect(() => {
@@ -141,6 +141,16 @@ export default function UploadPage() {
         mediaUrl = uploadData.url
       }
 
+      // Determine media type based on uploaded file
+      const mediaType = selectedFile ? 'illustration' : 'text-only'
+
+      // Add aid_type tags
+      const aidTypeTags = selectedAidTypes.map(type => ({
+        category: 'aid_type',
+        value: type,
+        value_he: AID_TYPES.find(t => t.value === type)?.label || type
+      }))
+
       // Create learning aid
       const response = await fetch('/api/aids', {
         method: 'POST',
@@ -150,7 +160,8 @@ export default function UploadPage() {
         body: JSON.stringify({
           ...formData,
           media_url: mediaUrl,
-          media_type: selectedFile ? formData.mediaType : 'text-only'
+          media_type: mediaType,
+          tags: [...formData.tags, ...aidTypeTags]
         })
       })
 
@@ -308,7 +319,7 @@ export default function UploadPage() {
               {/* Chapter and Aid Type */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="chapter">פרק *</Label>
+                  <Label htmlFor="chapter">פרק</Label>
                   <Popover open={chapterPopoverOpen} onOpenChange={(open) => {
                     setChapterPopoverOpen(open)
                     if (!open) setChapterSearch('')
@@ -323,8 +334,20 @@ export default function UploadPage() {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
                             const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
                             return <span dir="ltr" className="block text-left break-words">{text}</span>
-                          })() : <span className="text-muted-foreground">בחר פרק...</span>}
+                          })() : <span className="text-muted-foreground">ללא פרק (יופיע בראש הרשימה)</span>}
                         </span>
+                        {formData.chapter && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setFormData({ ...formData, chapter: '' })
+                            }}
+                            className="ms-2 h-4 w-4 shrink-0 opacity-50 hover:opacity-100"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
                         <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
                     </PopoverTrigger>
                     <PopoverContent className="w-[400px] p-0" align="start">
@@ -373,27 +396,34 @@ export default function UploadPage() {
                   </Popover>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="aidType">סוג עזר למידה *</Label>
-                  <Select
-                    value={formData.mediaType}
-                    onValueChange={(value) => setFormData({ ...formData, mediaType: value || '' })}
-                    required
-                  >
-                    <SelectTrigger className="h-10">
-                      <SelectValue>
-                        {formData.mediaType
-                          ? AID_TYPES.find(t => t.value === formData.mediaType)?.label
-                          : 'בחר סוג'}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {AID_TYPES.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
+                  <Label htmlFor="aidType">סוגי עזר למידה * (ניתן לבחור מספר)</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {AID_TYPES.map((type) => {
+                      const isSelected = selectedAidTypes.includes(type.value)
+                      return (
+                        <Button
+                          key={type.value}
+                          type="button"
+                          variant={isSelected ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            if (isSelected) {
+                              setSelectedAidTypes(selectedAidTypes.filter(t => t !== type.value))
+                            } else {
+                              setSelectedAidTypes([...selectedAidTypes, type.value])
+                            }
+                          }}
+                          className="h-9"
+                        >
+                          {isSelected && <Check className="me-1 h-4 w-4" />}
                           {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        </Button>
+                      )
+                    })}
+                  </div>
+                  {selectedAidTypes.length === 0 && (
+                    <p className="text-sm text-muted-foreground">בחר לפחות סוג אחד</p>
+                  )}
                 </div>
               </div>
 
@@ -442,7 +472,7 @@ export default function UploadPage() {
                     <SelectTrigger className="w-full sm:w-[180px] h-10">
                       <SelectValue>
                         {currentTag.category === 'diagnosis' && 'אבחנה'}
-                        {currentTag.category === 'sign' && 'סימן קליני'}
+                        {currentTag.category === 'sign' && 'תסמינים'}
                         {currentTag.category === 'pathology' && 'פתולוגיה'}
                         {currentTag.category === 'treatment' && 'טיפול'}
                         {currentTag.category === 'risk_factors' && 'גורמי סיכון'}
@@ -451,7 +481,7 @@ export default function UploadPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="diagnosis">אבחנה</SelectItem>
-                      <SelectItem value="sign">סימן קליני</SelectItem>
+                      <SelectItem value="sign">תסמינים</SelectItem>
                       <SelectItem value="pathology">פתולוגיה</SelectItem>
                       <SelectItem value="treatment">טיפול</SelectItem>
                       <SelectItem value="risk_factors">גורמי סיכון</SelectItem>
@@ -498,7 +528,7 @@ export default function UploadPage() {
               <div className="flex gap-3">
                 <Button
                   type="submit"
-                  disabled={uploading || compressing || !formData.title || !formData.body || !formData.chapter || !formData.mediaType}
+                  disabled={uploading || compressing || !formData.title || !formData.body || selectedAidTypes.length === 0}
                   className="flex-1"
                 >
                   {compressing ? 'מכווץ תמונה...' : uploading ? 'מעלה...' : 'פרסם עזר למידה'}

@@ -408,7 +408,6 @@ export default function AidDetailPage() {
                 <p className="font-medium">{aid.uploader?.display_name}</p>
                 <p className="text-sm text-muted-foreground">
                   {aid.uploader?.hospital}
-                  {aid.uploader?.year_of_residency && ` • שנה ${aid.uploader.year_of_residency}`}
                 </p>
               </div>
             </div>

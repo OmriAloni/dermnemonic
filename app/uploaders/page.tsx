@@ -15,7 +15,6 @@ interface UploaderStats {
   hospital: string
   avatar_url?: string
   role: string
-  year_of_residency?: number
   totalUploads: number
   avgRating: number
   totalReactions: number
@@ -48,7 +47,6 @@ export default function UploadersPage() {
               hospital: uploader.hospital || '',
               avatar_url: uploader.avatar_url,
               role: uploader.role,
-              year_of_residency: uploader.year_of_residency,
               totalUploads: 0,
               avgRating: 0,
               totalReactions: 0,
@@ -224,7 +222,6 @@ export default function UploadersPage() {
                       </div>
                       <p className="text-sm text-muted-foreground">
                         {uploader.hospital}
-                        {uploader.year_of_residency && ` • שנה ${uploader.year_of_residency}`}
                       </p>
                     </div>
                   </div>

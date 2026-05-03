@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 import { promises as fs } from 'fs'
 import path from 'path'
 
@@ -111,7 +112,6 @@ export async function GET() {
             id,
             display_name,
             hospital,
-            year_of_residency,
             role
           ),
           tags:learning_aid_tags (
@@ -192,38 +192,16 @@ export async function POST(request: Request) {
     try {
       const newAid = await request.json()
 
-      // Get user from request headers (cookie-based auth)
-      const cookieStore = request.headers.get('cookie')
-      const authHeader = request.headers.get('authorization')
+      // Get authenticated user using the proper server client
+      const supabaseAuth = await createServerClient()
+      const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
 
-      // Create client to check auth
-      const authSupabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          global: {
-            headers: {
-              cookie: cookieStore || '',
-            }
-          }
-        }
-      )
-
-      const { data: { user } } = await authSupabase.auth.getUser()
-
-      if (!user) {
-        console.log('No authenticated user found')
-        // For development, fall back to test user
-        // TODO: Remove this fallback in production
-        const fallbackUserId = 'c15d913b-82a4-4c55-bba0-8f4d72ef2798'
-        console.log('Using fallback user ID:', fallbackUserId)
-
-        const supabase = getSupabaseAdmin()
-        await insertLearningAid(supabase, newAid, fallbackUserId)
-
-        return NextResponse.json({ success: true })
+      if (authError || !user) {
+        console.log('Authentication failed:', authError?.message || 'No user')
+        return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
       }
 
+      // Use admin client to insert data (bypasses RLS)
       const supabase = getSupabaseAdmin()
       const result = await insertLearningAid(supabase, newAid, user.id)
       return NextResponse.json(result)

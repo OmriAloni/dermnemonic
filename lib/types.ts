@@ -12,7 +12,6 @@ export interface User {
   display_name: string
   avatar_url?: string
   hospital?: string
-  year_of_residency?: number
   bio?: string
   role: UserRole
   invited_by_user_id?: string

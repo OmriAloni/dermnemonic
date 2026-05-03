@@ -18,8 +18,7 @@ export default function SignupPage() {
     email: '',
     password: '',
     displayName: '',
-    hospital: '',
-    yearOfResidency: ''
+    hospital: ''
   })
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -50,7 +49,6 @@ export default function SignupPage() {
             email: formData.email,
             display_name: formData.displayName,
             hospital: formData.hospital || null,
-            year_of_residency: formData.yearOfResidency ? parseInt(formData.yearOfResidency) : null,
             role: 'contributor'
           })
 
@@ -137,26 +135,6 @@ export default function SignupPage() {
                   <SelectItem value="בילינסון">בילינסון</SelectItem>
                   <SelectItem value="סורוקה">סורוקה</SelectItem>
                   <SelectItem value="אחר">אחר</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="year">שנת התמחות</Label>
-              <Select
-                value={formData.yearOfResidency}
-                onValueChange={(value) => setFormData({ ...formData, yearOfResidency: value || '' })}
-                disabled={loading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר שנה (אופציונלי)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">שנה ראשונה</SelectItem>
-                  <SelectItem value="2">שנה שנייה</SelectItem>
-                  <SelectItem value="3">שנה שלישית</SelectItem>
-                  <SelectItem value="4">שנה רביעית</SelectItem>
-                  <SelectItem value="5">שנה חמישית</SelectItem>
                 </SelectContent>
               </Select>
             </div>
