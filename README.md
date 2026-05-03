@@ -25,8 +25,14 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **WhatsApp Share** - Pre-filled Hebrew messages with deep links
 - **Like & Save** - Both require login, consistent UX
 - **Authentication** - Magic link signup/login with Supabase Auth
-- **Upload** - Image upload to Supabase Storage with auto-filled profile data
+- **Upload Features**:
+  - Image upload to Supabase Storage with auto-filled profile data
+  - **Multi-select aid types** - Select multiple types per upload (e.g., mnemonic + illustration)
+  - **Optional chapter** - Upload without chapter (appears at top of feed)
+  - **Rich text (bold)** - Format text with **markdown** bold syntax
+  - **Document upload** - PDF/DOC upload for curators only
 - **Chapter Display** - English Bolognia chapter badges with numbers (e.g., "8. Psoriasis", "113. Melanoma")
+- **Content Management** - Edit/Delete API endpoints with permission checks (owner or curator)
 - **Stats** - Real-time counts (ratings, reactions, comments, saves) via optimized DB view
 - **Loading States** - Skeleton loaders, button loading text, double-click prevention
 - **Empty States** - Helpful messages for no results, login required, etc.
@@ -40,36 +46,34 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Image Compression** - Automatic compression before upload (90% faster uploads)
 - **Performance** - 40x faster API, instant client-side navigation, optimized data fetching
 
-### 🎯 Next Session Priority (June 3 Contest!)
-1. **🔴 CRITICAL: Content Upload** - Upload 15-20 quality Hebrew mnemonics from Excel file
-   - This is what judges will see - everything else is ready!
-   - Upload form auto-fills your profile data
-   - Time estimate: 2-3 hours
+### 🎉 Contest Ready! (June 3, 2026)
 
-**App Status**: ✅ Production ready! All bugs fixed, all features working.  
-**Only Task Remaining**: Upload real content from `טריקים ושטיקים לבולוניה.xlsx`
+**App Status**: ✅ **READY FOR SUBMISSION**
 
-**Latest Updates** (May 2, 2026 - Evening Session):
-- ✅ **Multi-Select Searchable Chapter Filter** - Filter by multiple chapters with built-in search (Command + Popover)
-- ✅ **Shuffle Navigation Mode** - Random card navigation in detail view for studying without memorizing order
-- ✅ **Complete Bolognia Chapter Taxonomy** - All 159 chapters from textbook with proper numbering
-- ✅ **English Chapters** - Switched from Hebrew to English chapter names (1. Anatomy and Pathophysiology, etc.)
-- ✅ **LTR Chapter Display** - All chapter values display left-to-right for proper English reading
-- ✅ **Chapter Numbers** - Display format: "77. Fungal Diseases" throughout the app
-- ✅ **Clapping Emoji Reaction** - Replaced handshake icon with 👏 emoji (LinkedIn-style, better visual appeal)
-- ✅ **User Menu Width Fix** - Dropdown now accommodates long email addresses properly
-- ✅ **"Other" Chapter Option** - Added at end of chapter list for uncategorized content
+- ✅ **18 learning aids** uploaded and live
+- ✅ All core features working flawlessly
+- ✅ Mobile-optimized and responsive
+- ✅ Hebrew RTL throughout
+- ✅ Fast performance (40x optimized)
+- ✅ Beautiful, polished UI
 
-**Previous Session Updates** (May 2, 2026 - Earlier):
-- ✅ Fixed infinite re-render loop on feed page
-- ✅ Fixed navigation arrows and keyboard shortcuts
-- ✅ Fixed user menu context error
-- ✅ Fixed logout functionality
-- ✅ Added random sort option in feed
-- ✅ Added "saved only" filter
-- ✅ Made header logo clickable to return home
-- ✅ Differentiated signup button (green) from upload button (coral)
-- ✅ All features tested and working
+**Latest Updates** (May 4, 2026 - Final Pre-Competition):
+- ✅ **Multi-select aid types** - Select multiple types per upload (mnemonic + illustration, etc.)
+- ✅ **Optional chapter** - Upload without chapter (items appear at top of feed)
+- ✅ **Rich text formatting** - Bold support with markdown (**text**)
+- ✅ **Document upload** - PDF/DOC upload for curators
+- ✅ **Label update** - Changed "סימן קליני" to "תסמינים"
+- ✅ **Removed year of residency** - Simplified user profiles
+- ✅ **Fixed uploader attribution** - Each user's uploads show their own name
+- ✅ **Edit/Delete API endpoints** - Permission-based content management
+
+**Previous Updates** (May 2, 2026):
+- ✅ Multi-select searchable chapter filter (159 Bolognia chapters)
+- ✅ Shuffle navigation mode for random study
+- ✅ Complete Bolognia chapter taxonomy with English names
+- ✅ Fixed infinite re-render loop, navigation, logout
+- ✅ User menu improvements, keyboard shortcuts
+- ✅ Performance optimization (40x faster API)
 
 ### 🚧 Future Features
 - User profiles (`/profile/[username]`)
