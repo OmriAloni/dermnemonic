@@ -46,11 +46,6 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchComments()
-    getCurrentUser()
-  }, [aidId])
-
   async function getCurrentUser() {
     try {
       const supabase = createClient()
@@ -74,6 +69,11 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchComments()
+    getCurrentUser()
+  }, [aidId])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

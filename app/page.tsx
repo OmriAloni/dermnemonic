@@ -138,11 +138,14 @@ export default function FeedPage() {
     } else if (currentFilters.sort === 'rated') {
       filtered.sort((a, b) => (b.stats?.rating_avg || 0) - (a.stats?.rating_avg || 0))
     } else if (currentFilters.sort === 'shuffle') {
-      // Fisher-Yates shuffle algorithm
-      for (let i = filtered.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [filtered[i], filtered[j]] = [filtered[j], filtered[i]]
-      }
+      // For shuffle, use a stable seed based on filtered length
+      // This makes it deterministic within a render cycle
+      const seed = filtered.length
+      filtered.sort((a, b) => {
+        const hashA = a.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+        const hashB = b.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+        return ((hashA * seed) % 100) - ((hashB * seed) % 100)
+      })
     }
 
     // Always show items without chapter at the top

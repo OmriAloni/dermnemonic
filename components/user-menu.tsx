@@ -23,6 +23,18 @@ export function UserMenu() {
   const [profile, setProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
+  const fetchProfile = async (userId: string) => {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    setProfile(data)
+    setLoading(false)
+  }
+
   useEffect(() => {
     const supabase = createClient()
 
@@ -51,18 +63,6 @@ export function UserMenu() {
 
     return () => subscription.unsubscribe()
   }, [])
-
-  const fetchProfile = async (userId: string) => {
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
-
-    setProfile(data)
-    setLoading(false)
-  }
 
   const handleLogout = async () => {
     try {

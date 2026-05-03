@@ -104,6 +104,42 @@ export default function AidDetailPage() {
     fetchData()
   }, [id])
 
+  // Get random aid ID (excluding current)
+  const getRandomAidId = (): string | null => {
+    if (filteredAidIds.length <= 1) return null
+    const otherAids = filteredAidIds.filter(aidId => aidId !== id)
+    if (otherAids.length === 0) return null
+    const randomIndex = Math.floor(Math.random() * otherAids.length)
+    return otherAids[randomIndex]
+  }
+
+  // Get next aid ID (respects shuffle mode)
+  const getNextAidId = (): string | null => {
+    if (shuffleMode) {
+      return getRandomAidId()
+    }
+    const nextIdx = currentIndex + 1
+    return nextIdx < filteredAidIds.length ? filteredAidIds[nextIdx] : null
+  }
+
+  // Get previous aid ID (respects shuffle mode)
+  const getPreviousAidId = (): string | null => {
+    if (shuffleMode) {
+      return getRandomAidId()
+    }
+    const prevIdx = currentIndex - 1
+    return prevIdx >= 0 ? filteredAidIds[prevIdx] : null
+  }
+
+  // Toggle shuffle mode
+  const toggleShuffleMode = () => {
+    const newMode = !shuffleMode
+    setShuffleMode(newMode)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('shuffle-mode', String(newMode))
+    }
+  }
+
   // Keyboard shortcuts for carousel navigation (must be before early returns)
   useEffect(() => {
     // Only set up keyboard shortcuts after data is loaded
@@ -133,43 +169,7 @@ export default function AidDetailPage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [loading, aid, id, router, shuffleMode, filteredAidIds, currentIndex])
-
-  // Toggle shuffle mode
-  const toggleShuffleMode = () => {
-    const newMode = !shuffleMode
-    setShuffleMode(newMode)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('shuffle-mode', String(newMode))
-    }
-  }
-
-  // Get random aid ID (excluding current)
-  const getRandomAidId = (): string | null => {
-    if (filteredAidIds.length <= 1) return null
-    const otherAids = filteredAidIds.filter(aidId => aidId !== id)
-    if (otherAids.length === 0) return null
-    const randomIndex = Math.floor(Math.random() * otherAids.length)
-    return otherAids[randomIndex]
-  }
-
-  // Get next aid ID (respects shuffle mode)
-  const getNextAidId = (): string | null => {
-    if (shuffleMode) {
-      return getRandomAidId()
-    }
-    const nextIdx = currentIndex + 1
-    return nextIdx < filteredAidIds.length ? filteredAidIds[nextIdx] : null
-  }
-
-  // Get previous aid ID (respects shuffle mode)
-  const getPreviousAidId = (): string | null => {
-    if (shuffleMode) {
-      return getRandomAidId()
-    }
-    const prevIdx = currentIndex - 1
-    return prevIdx >= 0 ? filteredAidIds[prevIdx] : null
-  }
+  }, [loading, aid, id, router, shuffleMode, filteredAidIds, currentIndex, getNextAidId, getPreviousAidId])
 
   const handleLike = async () => {
     if (likingInProgress) return
