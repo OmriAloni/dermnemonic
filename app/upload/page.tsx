@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check } from 'lucide-react'
+import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check, Bold } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -41,6 +41,8 @@ export default function UploadPage() {
     tags: [] as Array<{ category: string; value: string; value_he: string }>
   })
   const [selectedAidTypes, setSelectedAidTypes] = useState<string[]>([])
+  const [userRole, setUserRole] = useState<string>('')
+  const [fileType, setFileType] = useState<'image' | 'document'>('image')
 
   // Fetch user profile and auto-fill uploader details
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function UploadPage() {
           // Fetch user profile from database
           const { data: profile } = await supabase
             .from('users')
-            .select('display_name, hospital')
+            .select('display_name, hospital, role')
             .eq('id', user.id)
             .single()
 
@@ -63,6 +65,7 @@ export default function UploadPage() {
               uploaderName: profile.display_name || '',
               hospital: profile.hospital || ''
             }))
+            setUserRole(profile.role || '')
           }
         }
       } catch (error) {
@@ -110,6 +113,29 @@ export default function UploadPage() {
     })
   }
 
+  const applyBoldFormatting = (fieldId: 'body' | 'explanation') => {
+    const textarea = document.getElementById(fieldId) as HTMLTextAreaElement
+    if (!textarea) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selectedText = textarea.value.substring(start, end)
+
+    if (selectedText) {
+      const beforeText = textarea.value.substring(0, start)
+      const afterText = textarea.value.substring(end)
+      const newText = beforeText + '**' + selectedText + '**' + afterText
+
+      setFormData({ ...formData, [fieldId]: newText })
+
+      // Restore cursor position after bold
+      setTimeout(() => {
+        textarea.focus()
+        textarea.setSelectionRange(end + 4, end + 4)
+      }, 0)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setUploading(true)
@@ -118,15 +144,19 @@ export default function UploadPage() {
     try {
       let mediaUrl = null
 
-      // Upload image if selected
+      // Upload file if selected
       if (selectedFile) {
-        // Compress image before uploading (much faster!)
-        setCompressing(true)
-        const compressedFile = await compressImage(selectedFile)
-        setCompressing(false)
+        let fileToUpload = selectedFile
+
+        // Compress only if it's an image
+        if (fileType === 'image') {
+          setCompressing(true)
+          fileToUpload = await compressImage(selectedFile)
+          setCompressing(false)
+        }
 
         const uploadFormData = new FormData()
-        uploadFormData.append('file', compressedFile)
+        uploadFormData.append('file', fileToUpload)
 
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
@@ -142,7 +172,14 @@ export default function UploadPage() {
       }
 
       // Determine media type based on uploaded file
-      const mediaType = selectedFile ? 'illustration' : 'text-only'
+      let mediaType = 'text-only'
+      if (selectedFile) {
+        if (fileType === 'document') {
+          mediaType = 'document'
+        } else {
+          mediaType = 'illustration'
+        }
+      }
 
       // Add aid_type tags
       const aidTypeTags = selectedAidTypes.map(type => ({
@@ -245,7 +282,19 @@ export default function UploadPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="body">תוכן *</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="body">תוכן *</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => applyBoldFormatting('body')}
+                      className="h-7 px-2"
+                      title="הדגש טקסט (בחר טקסט ולחץ)"
+                    >
+                      <Bold className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <Textarea
                     id="body"
                     value={formData.body}
@@ -254,10 +303,25 @@ export default function UploadPage() {
                     rows={4}
                     required
                   />
+                  <p className="text-xs text-muted-foreground">
+                    טיפ: בחר טקסט ולחץ על B להדגשה
+                  </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => applyBoldFormatting('explanation')}
+                      className="h-7 px-2"
+                      title="הדגש טקסט (בחר טקסט ולחץ)"
+                    >
+                      <Bold className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <Textarea
                     id="explanation"
                     value={formData.explanation}
@@ -265,6 +329,9 @@ export default function UploadPage() {
                     placeholder="הסבר למה זה עובד, מתי להשתמש..."
                     rows={3}
                   />
+                  <p className="text-xs text-muted-foreground">
+                    טיפ: בחר טקסט ולחץ על B להדגשה
+                  </p>
                 </div>
               </div>
 
@@ -427,19 +494,51 @@ export default function UploadPage() {
                 </div>
               </div>
 
-              {/* Image Upload */}
+              {/* File Upload */}
               <div>
-                <Label>תמונה (אופציונלי)</Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label>קובץ (אופציונלי)</Label>
+                  {userRole === 'curator' && (
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={fileType === 'image' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => {
+                          setFileType('image')
+                          setSelectedFile(null)
+                          setImagePreview(null)
+                        }}
+                        className="h-8 text-xs"
+                      >
+                        תמונה
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={fileType === 'document' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => {
+                          setFileType('document')
+                          setSelectedFile(null)
+                          setImagePreview(null)
+                        }}
+                        className="h-8 text-xs"
+                      >
+                        מסמך
+                      </Button>
+                    </div>
+                  )}
+                </div>
                 <div className="mt-2">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept={fileType === 'image' ? 'image/*' : '.pdf,.doc,.docx'}
                     onChange={handleImageChange}
                     className="hidden"
-                    id="image-upload"
+                    id="file-upload"
                   />
                   <label
-                    htmlFor="image-upload"
+                    htmlFor="file-upload"
                     className="flex flex-col items-center justify-center w-full h-40 sm:h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
                   >
                     {imagePreview ? (
@@ -451,10 +550,24 @@ export default function UploadPage() {
                           className="object-contain p-2"
                         />
                       </div>
+                    ) : selectedFile ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <Upload className="h-8 w-8 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">{selectedFile.name}</span>
+                      </div>
                     ) : (
                       <div className="flex flex-col items-center gap-2">
-                        <ImageIcon className="h-8 w-8 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">לחץ להעלאת תמונה</span>
+                        {fileType === 'image' ? (
+                          <>
+                            <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">לחץ להעלאת תמונה</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-8 w-8 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">לחץ להעלאת מסמך (PDF, DOC)</span>
+                          </>
+                        )}
                       </div>
                     )}
                   </label>

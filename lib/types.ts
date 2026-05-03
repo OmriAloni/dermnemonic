@@ -1,6 +1,6 @@
 export type UserRole = 'curator' | 'verified_contributor' | 'contributor'
 
-export type MediaType = 'illustration' | 'table' | 'summary-table' | 'character' | 'text-only' | 'audio' | 'video' | 'photo'
+export type MediaType = 'illustration' | 'table' | 'summary-table' | 'character' | 'text-only' | 'audio' | 'video' | 'photo' | 'document'
 
 export type TagCategory = 'diagnosis' | 'sign' | 'pathology' | 'treatment' | 'aid_type' | 'risk_factors'
 

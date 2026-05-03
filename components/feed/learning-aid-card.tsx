@@ -11,6 +11,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CHAPTERS } from '@/lib/chapters'
+import { MarkdownText } from '@/components/markdown-text'
 
 interface LearningAidCardProps {
   aid: LearningAid
@@ -270,9 +271,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         )}
 
         {aid.body && (
-          <p className="text-sm leading-relaxed">
-            {aid.body}
-          </p>
+          <MarkdownText text={aid.body} className="text-sm leading-relaxed" />
         )}
 
         {aid.caption && (

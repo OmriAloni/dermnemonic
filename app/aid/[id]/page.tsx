@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator'
 import { RatingStars } from '@/components/rating-stars'
 import { CommentsSection } from '@/components/comments-section'
 import { AidDetailSkeleton } from '@/components/aid-detail-skeleton'
+import { MarkdownText } from '@/components/markdown-text'
 import {
   ArrowRight,
   ArrowLeft,
@@ -25,7 +26,8 @@ import {
   Pin,
   Share2,
   Clock,
-  Shuffle
+  Shuffle,
+  Upload
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
@@ -367,19 +369,43 @@ export default function AidDetailPage() {
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {aid.media_url && (
-          <div className="relative aspect-video rounded-lg overflow-hidden bg-muted mb-6">
-            <Image
-              src={aid.media_url}
-              alt={aid.title}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-              priority
-              placeholder="empty"
-            />
-            {/* Shimmer effect while loading */}
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
-          </div>
+          aid.media_type === 'document' ? (
+            <div className="rounded-lg overflow-hidden bg-muted mb-6 p-6">
+              <div className="flex items-center gap-4 mb-4">
+                <Upload className="h-12 w-12 text-muted-foreground" />
+                <div>
+                  <h3 className="font-semibold">מסמך מצורף</h3>
+                  <p className="text-sm text-muted-foreground">PDF או מסמך</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <a href={aid.media_url} target="_blank" rel="noopener noreferrer">
+                  <Button>
+                    פתח מסמך
+                  </Button>
+                </a>
+                <a href={aid.media_url} download>
+                  <Button variant="outline">
+                    הורד
+                  </Button>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="relative aspect-video rounded-lg overflow-hidden bg-muted mb-6">
+              <Image
+                src={aid.media_url}
+                alt={aid.title}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                priority
+                placeholder="empty"
+              />
+              {/* Shimmer effect while loading */}
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
+            </div>
+          )
         )}
 
         <div className="mb-6">
@@ -443,7 +469,7 @@ export default function AidDetailPage() {
             <div>
               <h2 className="text-xl font-semibold mb-3">תוכן</h2>
               <div className="prose prose-lg max-w-none">
-                <p className="whitespace-pre-wrap text-lg leading-relaxed">{aid.body}</p>
+                <MarkdownText text={aid.body} className="whitespace-pre-wrap text-lg leading-relaxed" />
               </div>
             </div>
           )}
@@ -452,7 +478,7 @@ export default function AidDetailPage() {
             <div>
               <h2 className="text-xl font-semibold mb-3">הסבר</h2>
               <div className="prose max-w-none bg-muted/50 p-4 rounded-lg">
-                <p className="whitespace-pre-wrap">{aid.explanation}</p>
+                <MarkdownText text={aid.explanation} className="whitespace-pre-wrap" />
               </div>
             </div>
           )}
