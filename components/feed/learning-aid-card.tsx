@@ -61,22 +61,13 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
     }
   }, [aid.id])
 
-  // Fetch reactions on mount
+  // Load user reactions from localStorage only (no API call)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    async function fetchReactions() {
-      try {
-        const response = await fetch(`/api/aids/${aid.id}/reactions`)
-        if (response.ok) {
-          const data = await response.json()
-          setReactionCounts(data.counts)
-          setUserReactions(data.userReactions || [])
-        }
-      } catch (error) {
-        console.error('Error fetching reactions:', error)
-      }
+    const savedReactions = localStorage.getItem(`reactions-${aid.id}`)
+    if (savedReactions) {
+      setUserReactions(JSON.parse(savedReactions))
     }
-    fetchReactions()
   }, [aid.id])
 
   const handleRating = (rating: number, e: React.MouseEvent) => {
@@ -157,6 +148,11 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
     setReactionCounts(newCounts)
     setReactionsLoading(true)
 
+    // Save to localStorage immediately
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`reactions-${aid.id}`, JSON.stringify(newUserReactions))
+    }
+
     try {
       const response = await fetch(`/api/aids/${aid.id}/reactions`, {
         method: 'POST',
@@ -170,9 +166,11 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         // Revert on error
         setUserReactions(userReactions)
         setReactionCounts(reactionCounts)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`reactions-${aid.id}`, JSON.stringify(userReactions))
+        }
 
         if (response.status === 401) {
-          // Redirect to login instead of showing alert
           window.location.href = '/auth/login'
         }
       }
@@ -181,6 +179,9 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
       // Revert on error
       setUserReactions(userReactions)
       setReactionCounts(reactionCounts)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`reactions-${aid.id}`, JSON.stringify(userReactions))
+      }
     } finally {
       setReactionsLoading(false)
     }
