@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dermnemonic - פלטפורמת עזרי למידה לרופאי עור</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FAF6F2 0%, #F5E6E8 100%);
+            color: #2D3748;
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #E97C7C 0%, #D66B6B 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.4em;
+            opacity: 0.95;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        section {
+            padding: 60px 40px;
+        }
+
+        section:nth-child(even) {
+            background: #FAF6F2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #E97C7C;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #2D3748;
+            margin: 30px 0 20px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(233, 124, 124, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #E97C7C;
+        }
+
+        .feature-description {
+            color: #4A5568;
+            line-height: 1.8;
+        }
+
+        .benefit-list {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .benefit-list li {
+            padding: 20px;
+            margin: 15px 0;
+            background: white;
+            border-right: 5px solid #E97C7C;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-list li strong {
+            color: #E97C7C;
+            font-size: 1.2em;
+        }
+
+        .why-win {
+            background: linear-gradient(135deg, #E97C7C 0%, #D66B6B 100%);
+            color: white;
+        }
+
+        .why-win h2 {
+            color: white;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .why-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .why-card h4 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .cta {
+            text-align: center;
+            padding: 80px 40px;
+            background: #2D3748;
+            color: white;
+        }
+
+        .cta h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: #E97C7C;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(233, 124, 124, 0.3);
+        }
+
+        .btn:hover {
+            background: #D66B6B;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(233, 124, 124, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #E97C7C;
+        }
+
+        .btn-secondary:hover {
+            background: #FAF6F2;
+            color: #D66B6B;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .tech-badge {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            color: #2D3748;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #E97C7C 0%, transparent 100%);
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            background-repeat: no-repeat;
+            padding: 0 5px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header p {
+                font-size: 1.1em;
+            }
+
+            section {
+                padding: 40px 20px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header>
+            <h1>🎯 Dermnemonic</h1>
+            <p>פלטפורמת עזרי למידה חכמה לרופאי עור</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">18</span>
+                    <span class="stat-label">עזרי למידה איכוtiים</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">40×</span>
+                    <span class="stat-label">ביצועים מהירים יותר</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">תמיכה בעברית RTL</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- What Is It -->
+        <section>
+            <h2>🔍 מה זה Dermnemonic?</h2>
+            <p style="font-size: 1.3em; text-align: center; max-width: 800px; margin: 0 auto; color: #4A5568;">
+                <strong>Dermnemonic</strong> היא <span class="highlight">פלטפורמה דיגיטלית ייחודית</span> שנבנתה במיוחד עבור מתמחים בדרמטולוגיה בישראל.
+                המטרה: להפוך את הלמידה למהנה, יעילה ונגישה באמצעות עזרי זיכרון חכמים, איורים, טבלאות ותוכן אינטראקטיבי.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Mobile-First</div>
+                    <div class="feature-description">
+                        עוצב במיוחד לטלפון הנייד - כי אנחנו יודעים שרופאים לומדים בין משמרות, בדרכים, ובכל מקום.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🇮🇱</div>
+                    <div class="feature-title">עברית ראשונה</div>
+                    <div class="feature-description">
+                        תמיכה מלאה בכיוון RTL, פונט Heebo קריא, ומונחים רפואיים בעברית ואנגלית.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">תוכן מגוון</div>
+                    <div class="feature-description">
+                        מנמוניקות, איורים, טבלאות, מסמכים - כל סוגי עזרי הלמידה במקום אחד ונגיש.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">מהיר וחכם</div>
+                    <div class="feature-description">
+                        אופטימיזציה של 40× - טעינת תוכן מיידית, חיפוש מהיר, וחוויית משתמש חלקה.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <div class="feature-title">שיתופי ופשוט</div>
+                    <div class="feature-description">
+                        שיתוף מהיר ב-WhatsApp, תגובות, דירוגים - קהילה של רופאים לומדים ביחד.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">159 פרקים</div>
+                    <div class="feature-description">
+                        ארגון מלא לפי ספר Bolognia - כל הנושאים המרכזיים בדרמטולוגיה.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Helps -->
+        <section>
+            <h2>💡 איך זה עוזר?</h2>
+
+            <ul class="benefit-list">
+                <li>
+                    <strong>🎓 למידה יעילה יותר:</strong><br>
+                    במקום לדפדף בין 10 מקורות שונים, כל עזרי הלמידה במקום אחד. חיפוש מהיר, סינון לפי פרק, וניווט קל.
+                </li>
+
+                <li>
+                    <strong>🧠 זיכרון טוב יותר:</strong><br>
+                    מנמוניקות ואיורים ויזואליים עוזרים לזכור חומר מורכב. מחקרים מראים שלמידה ויזואלית משפרת זיכרון ב-65%.
+                </li>
+
+                <li>
+                    <strong>⏰ חיסכון בזמן:</strong><br>
+                    במקום ליצור עזרי למידה בעצמך, תוכל ללמוד מתוכן איכותי שכבר נוצר ואומת על ידי עמיתים.
+                </li>
+
+                <li>
+                    <strong>🌍 נגיש תמיד:</strong><br>
+                    אפליקציית web מתקדמת שעובדת על כל מכשיר - טלפון, טאבלט, מחשב. לומד מהבית, בבית חולים, או בדרכים.
+                </li>
+
+                <li>
+                    <strong>🎯 התאמה אישית:</strong><br>
+                    שמור פריטים למועדפים, סנן לפי נושאים שמעניינים אותך, ולמד בקצב שלך.
+                </li>
+
+                <li>
+                    <strong>👥 קהילה תומכת:</strong><br>
+                    תגובות, דירוגים, ושיתוף בין עמיתים - לומדים ביחד, מצליחים ביחד.
+                </li>
+            </ul>
+
+            <h3 style="text-align: center; margin-top: 60px;">מקרה שימוש אמיתי</h3>
+            <div class="feature-card" style="max-width: 800px; margin: 30px auto; background: linear-gradient(135deg, #FAF6F2 0%, white 100%);">
+                <p style="font-size: 1.2em; font-style: italic; color: #4A5568;">
+                    <strong>"זה 23:00, אני במשמרת לילה, ויש לי מטופל עם פריחה מוזרה.
+                    במקום לקרוא 40 עמודים ב-Bolognia, אני פותח את Dermnemonic, מחפש 'differential diagnosis',
+                    ומוצא מנמוניק ויזואלי שעוזר לי לזכור את כל האפשרויות תוך 2 דקות."</strong>
+                </p>
+                <p style="text-align: left; margin-top: 20px; color: #E97C7C; font-weight: bold;">
+                    - תרחיש אמיתי מהשטח
+                </p>
+            </div>
+        </section>
+
+        <!-- Why Should I Win -->
+        <section class="why-win">
+            <h2>🏆 למה אני צריך לזכות?</h2>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <h4>1️⃣ לא רק רעיון - מוצר אמיתי</h4>
+                    <p>
+                        זה לא מצגת או אב טיפוס. זו <strong>אפליקציה מלאה, עובדת ופרודקשן-ready</strong>
+                        עם 18 עזרי למידה אמיתיים, שהועלו ואושרו.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>2️⃣ טכנולוגיה מתקדמת</h4>
+                    <p>
+                        Next.js 16, TypeScript, Supabase, אופטימיזציה של 40×,
+                        Progressive Web App - <strong>טכנולוגיות שאפליקציות סטארט-אפ משתמשות בהן</strong>.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>3️⃣ חוויית משתמש מעולה</h4>
+                    <p>
+                        כל פיקסל תוכנן בקפידה: אנימציות חלקות, טעינה מהירה,
+                        <strong>ממשק אינטואיטיבי שקל ללמוד</strong>, navigation עם חיצי מקלדת.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>4️⃣ פתרון לבעיה אמיתית</h4>
+                    <p>
+                        מתמחים בדרמטולוגיה צריכים לזכור <strong>מאות מחלות, אלפי עובדות</strong>.
+                        Dermnemonic עוזר להם ללמוד ביעילות ולזכור יותר.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>5️⃣ יצירתי וייחודי</h4>
+                    <p>
+                        מולטי-סלקט של סוגי תוכן, פורמט bold במרקדאון,
+                        <strong>העלאת מסמכים לקיוראטורים</strong>, פריטים ללא פרק מופיעים למעלה - פיצ'רים שלא קיימים במקומות אחרים.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>6️⃣ מהנה ללמוד</h4>
+                    <p>
+                        תגובות בלב ו-👏, shuffle mode אקראי, ממשק יפהפה -
+                        <strong>למידה שלא מרגישה כמו עבודה</strong>.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>7️⃣ קוד פתוח ואיכותי</h4>
+                    <p>
+                        הקוד נכתב בצורה נקייה, מתועדת היטב,
+                        <strong>ניתן להרחבה ולתחזוקה</strong> - לא hack קצר, אלא מוצר אמיתי.
+                    </p>
+                </div>
+
+                <div class="why-card">
+                    <h4>8️⃣ מתאים לתחרות</h4>
+                    <p>
+                        מדויק מבחינה רפואית ✓<br>
+                        יצירתי ומקורי ✓<br>
+                        מהנה וחוויתי ללמידה ✓<br>
+                        <strong>עומד בכל הקריטריונים!</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 60px; text-align: center; font-size: 1.3em;">
+                <p><strong>מול שיר, פוסטר, או TikTok:</strong></p>
+                <p style="margin-top: 20px;">
+                    ✅ <strong>יותר שימושי</strong> - כלי אמיתי שרופאים יכולים להשתמש בו כל יום<br>
+                    ✅ <strong>יותר יצירתי</strong> - פיצ'רים ייחודיים שלא קיימים במקומות אחרים<br>
+                    ✅ <strong>יותר מהנה</strong> - גיימיפיקציה, אנימציות, UX חלק
+                </p>
+            </div>
+        </section>
+
+        <!-- Technical Excellence -->
+        <section>
+            <h2>⚙️ מצוינות טכנית</h2>
+
+            <p style="text-align: center; font-size: 1.2em; max-width: 800px; margin: 0 auto 40px; color: #4A5568;">
+                לא רק יפה מבחוץ - גם חזק מבפנים
+            </p>
+
+            <div class="tech-stack">
+                <span class="tech-badge">Next.js 16.2</span>
+                <span class="tech-badge">TypeScript</span>
+                <span class="tech-badge">Supabase</span>
+                <span class="tech-badge">Tailwind CSS</span>
+                <span class="tech-badge">Vercel</span>
+                <span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">shadcn/ui</span>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 50px;">
+                <div class="feature-card">
+                    <div class="feature-title">🚀 ביצועים</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ אופטימיזציה של 40× (2 queries במקום 41)</li>
+                        <li>✓ דחיסת תמונות אוטומטית</li>
+                        <li>✓ טעינה עם placeholders מטושטשים</li>
+                        <li>✓ caching חכם</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">🔒 אבטחה</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ Row Level Security (RLS)</li>
+                        <li>✓ הרשאות מבוססות תפקידים</li>
+                        <li>✓ Authentication מאובטח</li>
+                        <li>✓ הגנה על API endpoints</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">📱 נגישות</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ מטרות מגע 44px+</li>
+                        <li>✓ ניווט מקלדת</li>
+                        <li>✓ קריאת מסך (screen reader)</li>
+                        <li>✓ ניגודיות גבוהה (WCAG AA)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta">
+            <h2>🎯 מוכן לראות את זה בפעולה?</h2>
+            <p style="font-size: 1.3em; margin-bottom: 20px;">
+                אפליקציה עובדת, 18 עזרי למידה, חוויית משתמש מושלמת
+            </p>
+
+            <div class="cta-buttons">
+                <a href="https://dermnemonic.vercel.app" target="_blank" class="btn">
+                    🚀 פתח את האפליקציה
+                </a>
+                <a href="https://github.com/OmriAloni/dermnemonic" target="_blank" class="btn btn-secondary">
+                    💻 צפה בקוד ב-GitHub
+                </a>
+            </div>
+
+            <div style="margin-top: 60px; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <h3 style="color: white; margin-bottom: 20px;">📊 סטטיסטיקות</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                    <div>
+                        <div style="font-size: 2.5em; font-weight: bold;">18</div>
+                        <div>עזרי למידה</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5em; font-weight: bold;">159</div>
+                        <div>פרקים מ-Bolognia</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5em; font-weight: bold;">40×</div>
+                        <div>מהיר יותר</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5em; font-weight: bold;">100%</div>
+                        <div>RTL עברית</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 60px; font-size: 1.5em; font-weight: bold;">
+                ✨ Dermnemonic - למידה חכמה לדור הבא של רופאי עור ✨
+            </p>
+        </section>
+    </div>
+</body>
+</html>
