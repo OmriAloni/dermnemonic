@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check, Bold } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
@@ -21,6 +21,8 @@ import { compressImage } from '@/lib/image-utils'
 
 export default function UploadPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('edit')
   const [uploading, setUploading] = useState(false)
   const [compressing, setCompressing] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -28,6 +30,7 @@ export default function UploadPage() {
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
+  const [loadingAid, setLoadingAid] = useState(!!editId)
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false)
   const [chapterSearch, setChapterSearch] = useState('')
 
@@ -43,6 +46,53 @@ export default function UploadPage() {
   const [selectedAidTypes, setSelectedAidTypes] = useState<string[]>([])
   const [userRole, setUserRole] = useState<string>('')
   const [fileType, setFileType] = useState<'image' | 'document'>('image')
+
+  // Fetch existing aid data when in edit mode
+  useEffect(() => {
+    async function loadAidData() {
+      if (!editId) return
+
+      try {
+        const response = await fetch(`/api/aids/${editId}`)
+        if (!response.ok) {
+          throw new Error('Failed to load learning aid')
+        }
+
+        const aid = await response.json()
+
+        // Pre-populate form with existing data
+        setFormData({
+          title: aid.title || '',
+          body: aid.body || '',
+          explanation: aid.explanation || '',
+          uploaderName: aid.uploader?.display_name || '',
+          hospital: aid.uploader?.hospital || '',
+          chapter: aid.chapter || '',
+          tags: aid.tags?.filter((t: any) => t.category !== 'aid_type') || []
+        })
+
+        // Set aid types
+        const aidTypeTags = aid.tags?.filter((t: any) => t.category === 'aid_type').map((t: any) => t.value) || []
+        setSelectedAidTypes(aidTypeTags)
+
+        // Set image preview if exists
+        if (aid.media_url) {
+          setImagePreview(aid.media_url)
+          // Determine file type from media_type
+          if (aid.media_type === 'document') {
+            setFileType('document')
+          }
+        }
+      } catch (error) {
+        console.error('Error loading aid data:', error)
+        setUploadError('שגיאה בטעינת העזר למידה לעריכה')
+      } finally {
+        setLoadingAid(false)
+      }
+    }
+
+    loadAidData()
+  }, [editId])
 
   // Fetch user profile and auto-fill uploader details
   useEffect(() => {
@@ -60,11 +110,14 @@ export default function UploadPage() {
             .single()
 
           if (profile) {
-            setFormData(prev => ({
-              ...prev,
-              uploaderName: profile.display_name || '',
-              hospital: profile.hospital || ''
-            }))
+            // Only auto-fill if not in edit mode (edit mode pre-fills from aid data)
+            if (!editId) {
+              setFormData(prev => ({
+                ...prev,
+                uploaderName: profile.display_name || '',
+                hospital: profile.hospital || ''
+              }))
+            }
             setUserRole(profile.role || '')
           }
         }
@@ -76,7 +129,7 @@ export default function UploadPage() {
     }
 
     loadUserProfile()
-  }, [])
+  }, [editId])
 
   const [currentTag, setCurrentTag] = useState({
     category: '',
@@ -137,9 +190,9 @@ export default function UploadPage() {
     setUploadError(null)
 
     try {
-      let mediaUrl = null
+      let mediaUrl = imagePreview // Keep existing media URL if not uploading new file
 
-      // Upload file if selected
+      // Upload file if selected (new file)
       if (selectedFile) {
         let fileToUpload = selectedFile
 
@@ -168,11 +221,13 @@ export default function UploadPage() {
 
       // Determine media type based on uploaded file
       let mediaType = 'text-only'
-      if (selectedFile) {
-        if (fileType === 'document') {
-          mediaType = 'document'
+      if (mediaUrl) {
+        if (selectedFile) {
+          // New file uploaded
+          mediaType = fileType === 'document' ? 'document' : 'illustration'
         } else {
-          mediaType = 'illustration'
+          // Keep existing media type (infer from URL or default to illustration)
+          mediaType = imagePreview?.includes('.pdf') ? 'document' : 'illustration'
         }
       }
 
@@ -183,9 +238,12 @@ export default function UploadPage() {
         value_he: AID_TYPES.find(t => t.value === type)?.label || type
       }))
 
-      // Create learning aid
-      const response = await fetch('/api/aids', {
-        method: 'POST',
+      // Create or update learning aid
+      const url = editId ? `/api/aids/${editId}` : '/api/aids'
+      const method = editId ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json'
         },
@@ -199,8 +257,20 @@ export default function UploadPage() {
 
       if (response.ok) {
         setUploadSuccess(true)
-        setTimeout(() => router.push('/'), 1500)
+        const redirectUrl = editId ? `/aid/${editId}` : '/'
+        setTimeout(() => router.push(redirectUrl), 1500)
       } else {
+        // Check for authentication error
+        if (response.status === 401) {
+          setUploadError('נדרש להתחבר כדי להעלות תוכן. אנא התחבר ונסה שוב.')
+          // Redirect to login after 2 seconds
+          setTimeout(() => {
+            const returnUrl = editId ? `/upload?edit=${editId}` : '/upload'
+            router.push(`/auth/login?returnUrl=${returnUrl}`)
+          }, 2000)
+          return
+        }
+
         const errorData = await response.json().catch(() => ({}))
         setUploadError(errorData.error || 'שגיאה בשמירת העזר למידה. אנא נסה שוב.')
       }
@@ -218,17 +288,21 @@ export default function UploadPage() {
     }
   }
 
+  const backUrl = editId ? `/aid/${editId}` : '/'
+  const backText = editId ? 'חזרה לכרטיס' : 'חזרה לפיד'
+  const pageTitle = editId ? 'עריכת עזר למידה' : 'העלאת עזר למידה'
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href={backUrl} className="flex items-center gap-2">
               <ArrowRight className="h-5 w-5" />
-              <span>חזרה לפיד</span>
+              <span>{backText}</span>
             </Link>
-            <h1 className="text-xl font-bold">העלאת עזר למידה</h1>
+            <h1 className="text-xl font-bold">{pageTitle}</h1>
           </div>
         </div>
       </header>
@@ -254,6 +328,13 @@ export default function UploadPage() {
             </div>
           </div>
         )}
+
+        {loadingAid && (
+          <div className="mb-6 p-4 bg-muted rounded-lg">
+            <p className="text-center text-muted-foreground">טוען נתונים לעריכה...</p>
+          </div>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>פרטי עזר הלמידה</CardTitle>
