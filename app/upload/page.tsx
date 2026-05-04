@@ -506,17 +506,17 @@ function UploadPageContent() {
                   >
                     <SelectTrigger>
                       <SelectValue>
-                        {formData.hospital || 'בחר בית חולים'}
+                        {formData.hospital || 'אחר'}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="אחר">אחר</SelectItem>
                       <SelectItem value="איכילוב">איכילוב</SelectItem>
                       <SelectItem value="הדסה">הדסה</SelectItem>
                       <SelectItem value="שיבא">שיבא</SelectItem>
                       <SelectItem value="רמב״ם">רמב״ם</SelectItem>
                       <SelectItem value="בילינסון">בילינסון</SelectItem>
                       <SelectItem value="סורוקה">סורוקה</SelectItem>
-                      <SelectItem value="אחר">אחר</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -540,7 +540,7 @@ function UploadPageContent() {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
                             const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
                             return <span dir="ltr" className="block text-left break-words">{text}</span>
-                          })() : <span className="text-muted-foreground">ללא פרק</span>}
+                          })() : <span dir="rtl" className="text-muted-foreground">ללא פרק</span>}
                         </span>
                         {formData.chapter && (
                           <button
