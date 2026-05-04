@@ -538,7 +538,8 @@ function UploadPageContent() {
                         <span className="flex-1 overflow-hidden">
                           {formData.chapter ? (() => {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
-                            const text = chapter?.number !== null ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
+                            if (!chapter) return null
+                            const text = chapter.number !== null ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
                             return <span dir="ltr" className="block text-left break-words">{text}</span>
                           })() : <span dir="rtl" className="text-muted-foreground">אחר</span>}
                         </span>
