@@ -52,13 +52,26 @@ export default function AidDetailPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch current aid
+        // Check cache first
+        const cacheKey = `aid-${id}`
+        const cached = sessionStorage.getItem(cacheKey)
+
+        if (cached) {
+          const cachedData = JSON.parse(cached)
+          setAid(cachedData)
+          setLoading(false)
+        }
+
+        // Fetch current aid (in background if cached)
         const aidResponse = await fetch(`/api/aids/${id}`)
         if (!aidResponse.ok) {
           throw new Error('Failed to fetch learning aid')
         }
         const aidData = await aidResponse.json()
         setAid(aidData)
+
+        // Cache for instant loading next time
+        sessionStorage.setItem(cacheKey, JSON.stringify(aidData))
 
         // Check if saved in localStorage
         if (typeof window !== 'undefined') {
@@ -67,14 +80,14 @@ export default function AidDetailPage() {
             const saved = JSON.parse(savedAids)
             setSaved(saved.includes(id))
           }
-        }
 
-        // Fetch reactions to see if user liked
-        const reactionsResponse = await fetch(`/api/aids/${id}/reactions`)
-        if (reactionsResponse.ok) {
-          const reactionsData = await reactionsResponse.json()
-          setLikeCount(reactionsData.counts.heart || 0)
-          setLiked(reactionsData.userReactions?.includes('heart') || false)
+          // Get reactions from localStorage (no API call)
+          const savedReactions = localStorage.getItem(`reactions-${id}`)
+          if (savedReactions) {
+            const reactions = JSON.parse(savedReactions)
+            setLiked(reactions.includes('heart'))
+          }
+          setLikeCount(aidData.stats?.reaction_count || 0)
         }
 
         // Get filtered aid IDs from localStorage for navigation
@@ -85,6 +98,14 @@ export default function AidDetailPage() {
             const index = aidIds.indexOf(id)
             setCurrentIndex(index)
             setFilteredAidIds(aidIds)
+
+            // Prefetch next aid in background
+            const nextId = index < aidIds.length - 1 ? aidIds[index + 1] : null
+            if (nextId) {
+              fetch(`/api/aids/${nextId}`).then(res => res.json()).then(data => {
+                sessionStorage.setItem(`aid-${nextId}`, JSON.stringify(data))
+              }).catch(() => {})
+            }
           }
 
           // Load shuffle mode from localStorage
@@ -175,6 +196,21 @@ export default function AidDetailPage() {
     if (likingInProgress) return
 
     setLikingInProgress(true)
+
+    // Optimistic update
+    const newLiked = !liked
+    const newCount = newLiked ? likeCount + 1 : Math.max(0, likeCount - 1)
+    setLiked(newLiked)
+    setLikeCount(newCount)
+
+    // Update localStorage
+    const savedReactions = localStorage.getItem(`reactions-${id}`)
+    const reactions = savedReactions ? JSON.parse(savedReactions) : []
+    const newReactions = newLiked
+      ? [...reactions, 'heart']
+      : reactions.filter((r: string) => r !== 'heart')
+    localStorage.setItem(`reactions-${id}`, JSON.stringify(newReactions))
+
     try {
       const response = await fetch(`/api/aids/${id}/reactions`, {
         method: 'POST',
@@ -182,20 +218,22 @@ export default function AidDetailPage() {
         body: JSON.stringify({ reaction_type: 'heart' })
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        if (data.action === 'added') {
-          setLiked(true)
-          setLikeCount(likeCount + 1)
-        } else {
-          setLiked(false)
-          setLikeCount(Math.max(0, likeCount - 1))
+      if (!response.ok) {
+        // Revert on error
+        setLiked(liked)
+        setLikeCount(likeCount)
+        localStorage.setItem(`reactions-${id}`, JSON.stringify(reactions))
+
+        if (response.status === 401) {
+          window.location.href = '/auth/login'
         }
-      } else if (response.status === 401) {
-        window.location.href = '/auth/login'
       }
     } catch (error) {
       console.error('Error toggling like:', error)
+      // Revert on error
+      setLiked(liked)
+      setLikeCount(likeCount)
+      localStorage.setItem(`reactions-${id}`, JSON.stringify(reactions))
     } finally {
       setLikingInProgress(false)
     }
