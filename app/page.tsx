@@ -177,7 +177,7 @@ export default function FeedPage() {
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity">
-              <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermassociation</h1>
+              <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermasociations</h1>
               <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
             </Link>
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
