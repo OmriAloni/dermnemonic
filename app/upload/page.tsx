@@ -60,7 +60,7 @@ function UploadPageContent() {
       if (!editId) return
 
       try {
-        const response = await fetch(`/api/aids/${editId}`)
+        const response = await fetch(`/api/aids/${editId}?minimal=true`)
         if (!response.ok) {
           throw new Error('Failed to load learning aid')
         }

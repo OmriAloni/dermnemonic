@@ -24,6 +24,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+  const { searchParams } = new URL(request.url)
+  const minimal = searchParams.get('minimal') === 'true'
 
   if (USE_SUPABASE) {
     try {
@@ -56,7 +58,18 @@ export async function GET(
         return NextResponse.json({ error: 'Learning aid not found' }, { status: 404 })
       }
 
-      // Calculate real stats
+      // Transform tags
+      const transformedAid = {
+        ...aid,
+        tags: aid.tags?.map((t: any) => t.tag).filter(Boolean) || []
+      }
+
+      // Skip stats calculation if minimal mode (for edit page)
+      if (minimal) {
+        return NextResponse.json(transformedAid)
+      }
+
+      // Calculate real stats for detail page
       const { data: ratings } = await supabase
         .from('ratings')
         .select('stars')
@@ -81,17 +94,13 @@ export async function GET(
         .select('*', { count: 'exact', head: true })
         .eq('aid_id', id)
 
-      // Transform tags and add stats
-      const transformedAid = {
-        ...aid,
-        tags: aid.tags?.map((t: any) => t.tag).filter(Boolean) || [],
-        stats: {
-          rating_avg: Math.round(rating_avg * 10) / 10,
-          rating_count: ratings?.length || 0,
-          reaction_count: reaction_count || 0,
-          comment_count: comment_count || 0,
-          save_count: save_count || 0
-        }
+      // Add stats
+      transformedAid.stats = {
+        rating_avg: Math.round(rating_avg * 10) / 10,
+        rating_count: ratings?.length || 0,
+        reaction_count: reaction_count || 0,
+        comment_count: comment_count || 0,
+        save_count: save_count || 0
       }
 
       return NextResponse.json(transformedAid)
