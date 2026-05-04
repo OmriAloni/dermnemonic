@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check, Bold } from 'lucide-react'
+import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check, Bold, Italic, Underline } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -167,14 +167,14 @@ function UploadPageContent() {
     })
   }
 
-  const applyBoldFormatting = (fieldId: 'body' | 'explanation') => {
+  const applyFormatting = (fieldId: 'body' | 'explanation', command: 'bold' | 'italic' | 'underline') => {
     const editor = document.getElementById(fieldId)
     if (!editor) return
 
     editor.focus()
 
-    // Use document.execCommand to toggle bold
-    document.execCommand('bold', false)
+    // Use document.execCommand to toggle formatting
+    document.execCommand(command, false)
 
     // Update state with the new HTML content
     const content = editor.innerHTML
@@ -360,16 +360,38 @@ function UploadPageContent() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="body">תוכן *</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => applyBoldFormatting('body')}
-                      className="h-7 px-2"
-                      title="הדגש טקסט (בחר טקסט ולחץ)"
-                    >
-                      <Bold className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('body', 'bold')}
+                        className="h-7 px-2"
+                        title="הדגש טקסט (בחר טקסט ולחץ)"
+                      >
+                        <Bold className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('body', 'italic')}
+                        className="h-7 px-2"
+                        title="טקסט נטוי (בחר טקסט ולחץ)"
+                      >
+                        <Italic className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('body', 'underline')}
+                        className="h-7 px-2"
+                        title="טקסט מודגש בקו תחתון (בחר טקסט ולחץ)"
+                      >
+                        <Underline className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   <div
                     id="body"
@@ -389,23 +411,45 @@ function UploadPageContent() {
                     data-placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
                   />
                   <p className="text-xs text-muted-foreground">
-                    טיפ: בחר טקסט ולחץ על B להדגשה
+                    טיפ: בחר טקסט ולחץ על הכפתורים לעיצוב (מודגש, נטוי, קו תחתון)
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => applyBoldFormatting('explanation')}
-                      className="h-7 px-2"
-                      title="הדגש טקסט (בחר טקסט ולחץ)"
-                    >
-                      <Bold className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('explanation', 'bold')}
+                        className="h-7 px-2"
+                        title="הדגש טקסט (בחר טקסט ולחץ)"
+                      >
+                        <Bold className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('explanation', 'italic')}
+                        className="h-7 px-2"
+                        title="טקסט נטוי (בחר טקסט ולחץ)"
+                      >
+                        <Italic className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => applyFormatting('explanation', 'underline')}
+                        className="h-7 px-2"
+                        title="טקסט מודגש בקו תחתון (בחר טקסט ולחץ)"
+                      >
+                        <Underline className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   <div
                     id="explanation"
@@ -425,7 +469,7 @@ function UploadPageContent() {
                     data-placeholder="הסבר למה זה עובד, מתי להשתמש..."
                   />
                   <p className="text-xs text-muted-foreground">
-                    טיפ: בחר טקסט ולחץ על B להדגשה
+                    טיפ: בחר טקסט ולחץ על הכפתורים לעיצוב (מודגש, נטוי, קו תחתון)
                   </p>
                 </div>
               </div>
