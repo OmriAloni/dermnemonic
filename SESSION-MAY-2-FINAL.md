@@ -2,7 +2,7 @@
 
 **Duration**: Full day session  
 **Status**: ✅ All features complete, ready for content  
-**Production**: https://dermnemonic.vercel.app  
+**Production**: https://dermasociations.vercel.app  
 **Contest Deadline**: June 3, 2026
 
 ---

@@ -2,7 +2,7 @@
 
 **Duration**: ~2 hours  
 **Status**: ✅ All features completed and deployed  
-**Production URL**: https://dermnemonic.vercel.app
+**Production URL**: https://dermasociations.vercel.app
 
 ## 🎯 Session Goals Achieved
 
@@ -227,7 +227,7 @@ This session focused on UX improvements and completing the chapter taxonomy syst
 
 ## 🚀 Production Status
 
-**All Changes Deployed**: https://dermnemonic.vercel.app
+**All Changes Deployed**: https://dermasociations.vercel.app
 
 **App Status**: ✅ Production ready!
 

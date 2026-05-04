@@ -4,7 +4,7 @@
 
 **Status**: ✅ **SUCCESS - App Deployed to Production**
 
-**Production URL**: https://dermnemonic.vercel.app  
+**Production URL**: https://dermasociations.vercel.app  
 **GitHub Repository**: https://github.com/OmriAloni/dermnemonic
 
 ---
@@ -286,7 +286,7 @@
 - **Supabase Project**: pgzveeykjxpqwakazedc
 - **Vercel Account**: omrialon18-7959
 - **GitHub Repo**: OmriAloni/dermnemonic
-- **Production URL**: https://dermnemonic.vercel.app
+- **Production URL**: https://dermasociations.vercel.app
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Duration**: ~2 hours  
 **Status**: ✅ All polish tasks complete  
-**Production**: https://dermnemonic.vercel.app  
+**Production**: https://dermasociations.vercel.app  
 **Build**: ✅ Successful, zero errors
 
 ---

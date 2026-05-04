@@ -1,7 +1,7 @@
 # TODO - Next Session Priorities
 
 **Last Updated**: May 2, 2026 (Evening - All Bugs Fixed)  
-**Production URL**: https://dermnemonic.vercel.app  
+**Production URL**: https://dermasociations.vercel.app  
 **GitHub**: https://github.com/OmriAloni/dermnemonic  
 **Contest Deadline**: June 3, 2026
 
@@ -37,7 +37,7 @@ All critical features complete. All bugs fixed. App is fully functional and read
 7. **Autoimmune** - Lupus, Dermatomyositis associations
 
 **Upload process**:
-1. Go to `/upload` on https://dermnemonic.vercel.app
+1. Go to `/upload` on https://dermasociations.vercel.app
 2. Form auto-fills your name and hospital from profile
 3. Fill in title, body, explanation
 4. Select chapter and aid type
