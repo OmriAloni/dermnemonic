@@ -217,7 +217,7 @@ export default function QuizPage() {
                         htmlFor={`chapter-${chapter.value}`}
                         className="text-sm cursor-pointer flex-1 leading-tight"
                       >
-                        {chapter.label}
+                        <span dir="ltr">{chapter.number ? `${chapter.number}. ` : ''}{chapter.label_en}</span>
                       </label>
                     </div>
                   ))}

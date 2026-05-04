@@ -401,7 +401,7 @@ export default function UploadPage() {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
                             const text = chapter?.number ? `${chapter.number}. ${chapter.label_en}` : chapter?.label_en
                             return <span dir="ltr" className="block text-left break-words">{text}</span>
-                          })() : <span className="text-muted-foreground">ללא פרק (יופיע בראש הרשימה)</span>}
+                          })() : <span className="text-muted-foreground">ללא פרק</span>}
                         </span>
                         {formData.chapter && (
                           <button
