@@ -124,14 +124,14 @@ export default function UploadPage() {
     if (selectedText) {
       const beforeText = textarea.value.substring(0, start)
       const afterText = textarea.value.substring(end)
-      const newText = beforeText + '**' + selectedText + '**' + afterText
+      const newText = beforeText + '<strong>' + selectedText + '</strong>' + afterText
 
       setFormData({ ...formData, [fieldId]: newText })
 
       // Restore cursor position after bold
       setTimeout(() => {
         textarea.focus()
-        textarea.setSelectionRange(end + 4, end + 4)
+        textarea.setSelectionRange(end + 17, end + 17)
       }, 0)
     }
   }

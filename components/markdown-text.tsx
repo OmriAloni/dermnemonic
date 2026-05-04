@@ -6,23 +6,22 @@ interface MarkdownTextProps {
 }
 
 export function MarkdownText({ text, className = '' }: MarkdownTextProps) {
-  // Simple markdown parser for bold (**text** or __text__)
-  const renderMarkdown = (input: string) => {
+  // Render text with HTML support for bold (<strong> tags)
+  // No markdown ** support - use toolbar button instead
+  const renderText = (input: string) => {
     if (!input) return null
 
-    // Split by bold markers
-    const parts = input.split(/(\*\*.*?\*\*|__.*?__)/g)
-    
+    // Parse HTML safely - only allow <strong> tags
+    const parts = input.split(/(<strong>.*?<\/strong>)/g)
+
     return parts.map((part, index) => {
-      // Check if this part is bold
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index}>{part.slice(2, -2)}</strong>
-      } else if (part.startsWith('__') && part.endsWith('__')) {
-        return <strong key={index}>{part.slice(2, -2)}</strong>
+      if (part.startsWith('<strong>') && part.endsWith('</strong>')) {
+        const content = part.slice(8, -9) // Remove <strong></strong>
+        return <strong key={index}>{content}</strong>
       }
       return <span key={index}>{part}</span>
     })
   }
 
-  return <div className={className}>{renderMarkdown(text)}</div>
+  return <div className={className}>{renderText(text)}</div>
 }

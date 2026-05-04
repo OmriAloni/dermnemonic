@@ -12,6 +12,16 @@ import { Separator } from '@/components/ui/separator'
 import { RatingStars } from '@/components/rating-stars'
 import { CommentsSection } from '@/components/comments-section'
 import { AidDetailSkeleton } from '@/components/aid-detail-skeleton'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { MarkdownText } from '@/components/markdown-text'
 import {
   ArrowRight,
@@ -27,7 +37,9 @@ import {
   Share2,
   Clock,
   Shuffle,
-  Upload
+  Upload,
+  Trash2,
+  Edit
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
@@ -48,6 +60,9 @@ export default function AidDetailPage() {
   const [likingInProgress, setLikingInProgress] = useState(false)
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [shuffleMode, setShuffleMode] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [deletingInProgress, setDeletingInProgress] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -72,6 +87,16 @@ export default function AidDetailPage() {
 
         // Cache for instant loading next time
         sessionStorage.setItem(cacheKey, JSON.stringify(aidData))
+
+        // Get current user
+        try {
+          const { createClient } = await import('@/lib/supabase/client')
+          const supabase = createClient()
+          const { data: { user } } = await supabase.auth.getUser()
+          setCurrentUserId(user?.id || null)
+        } catch (error) {
+          console.error('Error getting user:', error)
+        }
 
         // Check if saved in localStorage
         if (typeof window !== 'undefined') {
@@ -236,6 +261,34 @@ export default function AidDetailPage() {
       localStorage.setItem(`reactions-${id}`, JSON.stringify(reactions))
     } finally {
       setLikingInProgress(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (deletingInProgress) return
+
+    setDeletingInProgress(true)
+    try {
+      const response = await fetch(`/api/aids/${id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        // Redirect to home after successful delete
+        router.push('/')
+      } else if (response.status === 401) {
+        window.location.href = '/auth/login'
+      } else if (response.status === 403) {
+        alert('אין לך הרשאה למחוק תוכן זה')
+      } else {
+        alert('שגיאה במחיקת התוכן')
+      }
+    } catch (error) {
+      console.error('Error deleting aid:', error)
+      alert('שגיאה במחיקת התוכן')
+    } finally {
+      setDeletingInProgress(false)
+      setShowDeleteDialog(false)
     }
   }
 
@@ -583,6 +636,29 @@ export default function AidDetailPage() {
           </Button>
         </div>
 
+        {/* Owner Actions - Edit/Delete */}
+        {currentUserId && aid.uploader_id === currentUserId && (
+          <div className="flex gap-3 mb-8 p-4 bg-muted/30 rounded-lg border-2 border-dashed">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => router.push(`/upload?edit=${aid.id}`)}
+            >
+              <Edit className="h-4 w-4 ms-1" />
+              ערוך
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={deletingInProgress}
+            >
+              <Trash2 className="h-4 w-4 ms-1" />
+              {deletingInProgress ? 'מוחק...' : 'מחק'}
+            </Button>
+          </div>
+        )}
+
         {/* Rating */}
         <div className="bg-muted/30 rounded-lg p-6 mb-8">
           <h3 className="text-lg font-semibold mb-3">דרג עזר למידה זה</h3>
@@ -602,6 +678,28 @@ export default function AidDetailPage() {
           })}
         </div>
       </main>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת עזר למידה</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם אתה בטוח שברצונך למחוק את עזר הלמידה "{aid.title}"?
+              פעולה זו לא ניתנת לביטול.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ביטול</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              מחק
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
