@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -19,7 +19,9 @@ import { AID_TYPES } from '@/lib/aid-types'
 import { createClient } from '@/lib/supabase/client'
 import { compressImage } from '@/lib/image-utils'
 
-export default function UploadPage() {
+export const dynamic = 'force-dynamic'
+
+function UploadPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
@@ -46,6 +48,11 @@ export default function UploadPage() {
   const [selectedAidTypes, setSelectedAidTypes] = useState<string[]>([])
   const [userRole, setUserRole] = useState<string>('')
   const [fileType, setFileType] = useState<'image' | 'document'>('image')
+  const [currentTag, setCurrentTag] = useState({
+    category: '',
+    value: '',
+    value_he: ''
+  })
 
   // Fetch existing aid data when in edit mode
   useEffect(() => {
@@ -131,12 +138,6 @@ export default function UploadPage() {
     loadUserProfile()
   }, [editId])
 
-  const [currentTag, setCurrentTag] = useState({
-    category: '',
-    value: '',
-    value_he: ''
-  })
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -181,7 +182,6 @@ export default function UploadPage() {
 
     // Trigger a custom event to ensure state sync
     editor.focus()
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -741,7 +741,7 @@ export default function UploadPage() {
                 >
                   {compressing ? 'מכווץ תמונה...' : uploading ? 'מעלה...' : 'פרסם עזר למידה'}
                 </Button>
-                <Link href="/">
+                <Link href={backUrl}>
                   <Button type="button" variant="outline">
                     ביטול
                   </Button>
@@ -754,3 +754,16 @@ export default function UploadPage() {
     </div>
   )
 }
+
+export default function UploadPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">טוען...</p>
+      </div>
+    }>
+      <UploadPageContent />
+    </Suspense>
+  )
+}
+
