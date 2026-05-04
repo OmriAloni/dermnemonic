@@ -274,8 +274,17 @@ export default function AidDetailPage() {
       })
 
       if (response.ok) {
-        // Redirect to home after successful delete
-        router.push('/')
+        // Clear any cached data
+        if (typeof window !== 'undefined') {
+          // Clear sessionStorage cache
+          Object.keys(sessionStorage).forEach(key => {
+            if (key.startsWith('aid_')) {
+              sessionStorage.removeItem(key)
+            }
+          })
+        }
+        // Redirect to home with cache-busting timestamp
+        router.push(`/?t=${Date.now()}`)
       } else if (response.status === 401) {
         window.location.href = '/auth/login'
       } else if (response.status === 403) {
