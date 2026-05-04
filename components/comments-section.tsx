@@ -250,7 +250,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
             <AlertDialogTitle>מחיקת תגובה</AlertDialogTitle>
             <AlertDialogDescription>

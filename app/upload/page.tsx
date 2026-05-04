@@ -310,7 +310,7 @@ function UploadPageContent() {
       {/* Form */}
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         {uploadSuccess && (
-          <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 border border-green-500 rounded-lg flex items-center gap-3">
+          <div dir="rtl" className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 border border-green-500 rounded-lg flex items-center gap-3">
             <div className="text-2xl">✅</div>
             <div>
               <p className="font-semibold text-green-800 dark:text-green-200">העזר למידה פורסם בהצלחה!</p>
@@ -320,7 +320,7 @@ function UploadPageContent() {
         )}
 
         {uploadError && (
-          <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 border border-red-500 rounded-lg flex items-center gap-3">
+          <div dir="rtl" className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 border border-red-500 rounded-lg flex items-center gap-3">
             <div className="text-2xl">❌</div>
             <div>
               <p className="font-semibold text-red-800 dark:text-red-200">שגיאה בהעלאה</p>
@@ -330,7 +330,7 @@ function UploadPageContent() {
         )}
 
         {loadingAid && (
-          <div className="mb-6 p-4 bg-muted rounded-lg">
+          <div dir="rtl" className="mb-6 p-4 bg-muted rounded-lg">
             <p className="text-center text-muted-foreground">טוען נתונים לעריכה...</p>
           </div>
         )}

@@ -681,7 +681,7 @@ export default function AidDetailPage() {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
             <AlertDialogTitle>מחיקת עזר למידה</AlertDialogTitle>
             <AlertDialogDescription>
