@@ -29,8 +29,9 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
   - Image upload to Supabase Storage with auto-filled profile data
   - **Multi-select aid types** - Select multiple types per upload (e.g., mnemonic + illustration)
   - **Optional chapter** - Upload without chapter (appears at top of feed)
-  - **Rich text (bold)** - Format text with **markdown** bold syntax
+  - **Rich text formatting** - Bold, italic, underline with toolbar buttons and live preview
   - **Document upload** - PDF/DOC upload for curators only
+  - **Edit mode** - Pre-populated forms with instant load, proper routing
 - **Chapter Display** - English Bolognia chapter badges with numbers (e.g., "8. Psoriasis", "113. Melanoma")
 - **Content Management** - Edit/Delete API endpoints with permission checks (owner or curator)
 - **Stats** - Real-time counts (ratings, reactions, comments, saves) via optimized DB view
@@ -57,10 +58,18 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - ✅ Fast performance (40x optimized)
 - ✅ Beautiful, polished UI
 
-**Latest Updates** (May 4, 2026 - Final Pre-Competition):
+**Latest Updates** (May 4, 2026 - Evening Polish):
+- ✅ **Full edit mode** - Pre-populated forms, proper back/save routing to card detail page
+- ✅ **Rich text formatting** - Bold, italic, underline buttons with live preview
+- ✅ **Edit load optimization** - 5x faster (minimal API mode skips unnecessary stats queries)
+- ✅ **Cache fixes** - Deleted aids disappear instantly (cache-busting + reduced cache to 5s)
+- ✅ **RTL polish** - Fixed Hebrew in all modals, messages, and placeholders
+- ✅ **Dropdown improvements** - "Other" chapter at position 0, better placeholders
+- ✅ **Auth improvements** - Graceful 401 error messages with login redirect
+
+**Earlier Updates** (May 4, 2026 - Morning):
 - ✅ **Multi-select aid types** - Select multiple types per upload (mnemonic + illustration, etc.)
 - ✅ **Optional chapter** - Upload without chapter (items appear at top of feed)
-- ✅ **Rich text formatting** - Bold support with markdown (**text**)
 - ✅ **Document upload** - PDF/DOC upload for curators
 - ✅ **Label update** - Changed "סימן קליני" to "תסמינים"
 - ✅ **Removed year of residency** - Simplified user profiles
