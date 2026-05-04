@@ -1,8 +1,8 @@
 /**
  * Compress an image file before uploading
- * Resizes to max 1920px width/height and compresses to ~85% quality
+ * Resizes to max 1200px width/height and compresses to ~75% quality for faster loading
  */
-export async function compressImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.85): Promise<File> {
+export async function compressImage(file: File, maxWidth = 1200, maxHeight = 1200, quality = 0.75): Promise<File> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
