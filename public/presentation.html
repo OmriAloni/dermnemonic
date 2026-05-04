@@ -149,39 +149,10 @@
             font-size: 1.2em;
         }
 
-        .why-win {
-            background: linear-gradient(135deg, #E97C7C 0%, #D66B6B 100%);
-            color: white;
-        }
-
-        .why-win h2 {
-            color: white;
-        }
-
-        .why-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-
-        .why-card {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 25px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .why-card h4 {
-            font-size: 1.4em;
-            margin-bottom: 15px;
-        }
-
         .cta {
             text-align: center;
             padding: 80px 40px;
-            background: #2D3748;
+            background: linear-gradient(135deg, #E97C7C 0%, #D66B6B 100%);
             color: white;
         }
 
@@ -201,30 +172,32 @@
         .btn {
             display: inline-block;
             padding: 18px 40px;
-            background: #E97C7C;
-            color: white;
+            background: white;
+            color: #E97C7C;
             text-decoration: none;
             border-radius: 50px;
             font-size: 1.2em;
             font-weight: bold;
             transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(233, 124, 124, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         }
 
         .btn:hover {
-            background: #D66B6B;
+            background: #FAF6F2;
+            color: #D66B6B;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(233, 124, 124, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
         .btn-secondary {
-            background: white;
-            color: #E97C7C;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
         }
 
         .btn-secondary:hover {
-            background: #FAF6F2;
-            color: #D66B6B;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
         }
 
         .tech-stack {
@@ -284,7 +257,7 @@
             <div class="hero-stats">
                 <div class="stat">
                     <span class="stat-number">18</span>
-                    <span class="stat-label">עזרי למידה איכוtiים</span>
+                    <span class="stat-label">עזרי למידה איכותיים</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">40×</span>
@@ -405,88 +378,6 @@
             </div>
         </section>
 
-        <!-- Why Should I Win -->
-        <section class="why-win">
-            <h2>🏆 למה אני צריך לזכות?</h2>
-
-            <div class="why-grid">
-                <div class="why-card">
-                    <h4>1️⃣ לא רק רעיון - מוצר אמיתי</h4>
-                    <p>
-                        זה לא מצגת או אב טיפוס. זו <strong>אפליקציה מלאה, עובדת ופרודקשן-ready</strong>
-                        עם 18 עזרי למידה אמיתיים, שהועלו ואושרו.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>2️⃣ טכנולוגיה מתקדמת</h4>
-                    <p>
-                        Next.js 16, TypeScript, Supabase, אופטימיזציה של 40×,
-                        Progressive Web App - <strong>טכנולוגיות שאפליקציות סטארט-אפ משתמשות בהן</strong>.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>3️⃣ חוויית משתמש מעולה</h4>
-                    <p>
-                        כל פיקסל תוכנן בקפידה: אנימציות חלקות, טעינה מהירה,
-                        <strong>ממשק אינטואיטיבי שקל ללמוד</strong>, navigation עם חיצי מקלדת.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>4️⃣ פתרון לבעיה אמיתית</h4>
-                    <p>
-                        מתמחים בדרמטולוגיה צריכים לזכור <strong>מאות מחלות, אלפי עובדות</strong>.
-                        Dermnemonic עוזר להם ללמוד ביעילות ולזכור יותר.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>5️⃣ יצירתי וייחודי</h4>
-                    <p>
-                        מולטי-סלקט של סוגי תוכן, פורמט bold במרקדאון,
-                        <strong>העלאת מסמכים לקיוראטורים</strong>, פריטים ללא פרק מופיעים למעלה - פיצ'רים שלא קיימים במקומות אחרים.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>6️⃣ מהנה ללמוד</h4>
-                    <p>
-                        תגובות בלב ו-👏, shuffle mode אקראי, ממשק יפהפה -
-                        <strong>למידה שלא מרגישה כמו עבודה</strong>.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>7️⃣ קוד פתוח ואיכותי</h4>
-                    <p>
-                        הקוד נכתב בצורה נקייה, מתועדת היטב,
-                        <strong>ניתן להרחבה ולתחזוקה</strong> - לא hack קצר, אלא מוצר אמיתי.
-                    </p>
-                </div>
-
-                <div class="why-card">
-                    <h4>8️⃣ מתאים לתחרות</h4>
-                    <p>
-                        מדויק מבחינה רפואית ✓<br>
-                        יצירתי ומקורי ✓<br>
-                        מהנה וחוויתי ללמידה ✓<br>
-                        <strong>עומד בכל הקריטריונים!</strong>
-                    </p>
-                </div>
-            </div>
-
-            <div style="margin-top: 60px; text-align: center; font-size: 1.3em;">
-                <p><strong>מול שיר, פוסטר, או TikTok:</strong></p>
-                <p style="margin-top: 20px;">
-                    ✅ <strong>יותר שימושי</strong> - כלי אמיתי שרופאים יכולים להשתמש בו כל יום<br>
-                    ✅ <strong>יותר יצירתי</strong> - פיצ'רים ייחודיים שלא קיימים במקומות אחרים<br>
-                    ✅ <strong>יותר מהנה</strong> - גיימיפיקציה, אנימציות, UX חלק
-                </p>
-            </div>
-        </section>
-
         <!-- Technical Excellence -->
         <section>
             <h2>⚙️ מצוינות טכנית</h2>
@@ -546,7 +437,7 @@
             </p>
 
             <div class="cta-buttons">
-                <a href="https://dermnemonic.vercel.app" target="_blank" class="btn">
+                <a href="https://dermasociations.vercel.app" target="_blank" class="btn">
                     🚀 פתח את האפליקציה
                 </a>
                 <a href="https://github.com/OmriAloni/dermnemonic" target="_blank" class="btn btn-secondary">
