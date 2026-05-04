@@ -1,5 +1,6 @@
 export const CHAPTERS = [
   { value: 'all', label: 'כל הפרקים', label_en: 'All Chapters', number: null },
+  { value: 'other', label: 'אחר', label_en: 'Other', number: 0 },
 
   // BOLOGNIA TEXTBOOK CHAPTERS (Complete List with Chapter Numbers)
   { value: 'anatomy-pathophysiology', label: 'אנטומיה ופתופיזיולוגיה', label_en: 'Anatomy and Pathophysiology', number: 1 },
@@ -162,7 +163,4 @@ export const CHAPTERS = [
   { value: 'hair-restoration', label: 'שיקום שיער', label_en: 'Hair Restoration', number: 157 },
   { value: 'fillers', label: 'הזרקת חומרי מילוי לרקמות רכות', label_en: 'Injectable Soft Tissue Augmentation', number: 158 },
   { value: 'botox', label: 'בוטולינום טוקסין', label_en: 'Botulinum Toxin', number: 159 },
-
-  // Other
-  { value: 'other', label: 'אחר', label_en: 'Other', number: null },
 ]
