@@ -114,25 +114,20 @@ export default function UploadPage() {
   }
 
   const applyBoldFormatting = (fieldId: 'body' | 'explanation') => {
-    const textarea = document.getElementById(fieldId) as HTMLTextAreaElement
-    if (!textarea) return
+    const editor = document.getElementById(fieldId)
+    if (!editor) return
 
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const selectedText = textarea.value.substring(start, end)
+    editor.focus()
 
-    if (selectedText) {
-      const beforeText = textarea.value.substring(0, start)
-      const afterText = textarea.value.substring(end)
-      const newText = beforeText + '<strong>' + selectedText + '</strong>' + afterText
+    // Use document.execCommand to toggle bold
+    document.execCommand('bold', false)
 
-      setFormData({ ...formData, [fieldId]: newText })
+    // Update state with the new HTML content
+    const content = editor.innerHTML
+    setFormData({ ...formData, [fieldId]: content })
 
-      // Restore cursor position after bold
-      setTimeout(() => {
-        textarea.focus()
-        textarea.setSelectionRange(end + 17, end + 17)
-      }, 0)
+    // Trigger a custom event to ensure state sync
+    editor.focus()
     }
   }
 
@@ -295,13 +290,22 @@ export default function UploadPage() {
                       <Bold className="h-4 w-4" />
                     </Button>
                   </div>
-                  <Textarea
+                  <div
                     id="body"
-                    value={formData.body}
-                    onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-                    placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
-                    rows={4}
-                    required
+                    contentEditable
+                    suppressContentEditableWarning
+                    onInput={(e) => {
+                      const content = e.currentTarget.innerHTML
+                      setFormData({ ...formData, body: content })
+                    }}
+                    onBlur={(e) => {
+                      const content = e.currentTarget.innerHTML
+                      setFormData({ ...formData, body: content })
+                    }}
+                    dangerouslySetInnerHTML={{ __html: formData.body }}
+                    className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ minHeight: '100px' }}
+                    data-placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
                   />
                   <p className="text-xs text-muted-foreground">
                     טיפ: בחר טקסט ולחץ על B להדגשה
@@ -322,12 +326,22 @@ export default function UploadPage() {
                       <Bold className="h-4 w-4" />
                     </Button>
                   </div>
-                  <Textarea
+                  <div
                     id="explanation"
-                    value={formData.explanation}
-                    onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
-                    placeholder="הסבר למה זה עובד, מתי להשתמש..."
-                    rows={3}
+                    contentEditable
+                    suppressContentEditableWarning
+                    onInput={(e) => {
+                      const content = e.currentTarget.innerHTML
+                      setFormData({ ...formData, explanation: content })
+                    }}
+                    onBlur={(e) => {
+                      const content = e.currentTarget.innerHTML
+                      setFormData({ ...formData, explanation: content })
+                    }}
+                    dangerouslySetInnerHTML={{ __html: formData.explanation }}
+                    className="min-h-[75px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ minHeight: '75px' }}
+                    data-placeholder="הסבר למה זה עובד, מתי להשתמש..."
                   />
                   <p className="text-xs text-muted-foreground">
                     טיפ: בחר טקסט ולחץ על B להדגשה
