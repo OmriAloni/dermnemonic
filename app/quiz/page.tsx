@@ -241,7 +241,7 @@ export default function QuizPage() {
     const chapterQuestionCounts = new Map<string, number>()
 
     // Helper function to map aid.chapter to chapter value
-    const getChapterValue = (aidChapter: string | null): string | null => {
+    const getChapterValue = (aidChapter: string | null | undefined): string | null => {
       if (!aidChapter) return null
 
       // Try to find matching chapter by value, label, or label_en
@@ -527,7 +527,7 @@ export default function QuizPage() {
                 <Image
                   src={
                     currentQuestion.type === 'aid'
-                      ? currentQuestion.aid.media_url
+                      ? currentQuestion.aid.media_url!
                       : currentQuestion.relatedImage!
                   }
                   alt={
