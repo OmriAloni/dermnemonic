@@ -10,19 +10,20 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import type { QuizQuestion as StandaloneQuestion } from '@/lib/quiz-questions'
+import { getQuizQuestions, filterQuestionsByChapters, shuffleArray } from '@/lib/quiz-questions'
 
-interface QuizQuestion {
-  aid: LearningAid
-  correctAnswer: string
-  options: string[]
-}
+// Union type for both question formats
+type QuizQuestion =
+  | { type: 'aid'; aid: LearningAid; correctAnswer: string; options: string[] }
+  | { type: 'standalone'; question: StandaloneQuestion; relatedImage?: string; relatedImageAlt?: string }
 
 export default function QuizPage() {
   const [aids, setAids] = useState<LearningAid[]>([])
+  const [standaloneQuestions, setStandaloneQuestions] = useState<StandaloneQuestion[]>([])
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
   const [score, setScore] = useState(0)
   const [answeredQuestions, setAnsweredQuestions] = useState(0)
@@ -34,11 +35,16 @@ export default function QuizPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/aids')
-        const data: LearningAid[] = await response.json()
-        setAids(data)
+        // Fetch learning aids
+        const aidsResponse = await fetch('/api/aids')
+        const aidsData: LearningAid[] = await aidsResponse.json()
+        setAids(aidsData)
+
+        // Fetch standalone quiz questions
+        const quizQuestionsData = await getQuizQuestions()
+        setStandaloneQuestions(quizQuestionsData)
       } catch (error) {
-        console.error('Error fetching aids:', error)
+        console.error('Error fetching data:', error)
       } finally {
         setLoading(false)
       }
@@ -47,7 +53,10 @@ export default function QuizPage() {
   }, [])
 
   const prepareQuiz = () => {
-    // Filter aids by selected chapters
+    // Filter standalone questions by chapter
+    const filteredStandaloneQuestions = filterQuestionsByChapters(standaloneQuestions, selectedChapters)
+
+    // Filter learning aids by selected chapters
     let filteredAids = aids
 
     if (!selectedChapters.includes('all')) {
@@ -67,12 +76,7 @@ export default function QuizPage() {
       aid.tags?.some(tag => tag.category === 'diagnosis')
     )
 
-    if (quizableAids.length === 0) {
-      alert('אין מספיק עזרי למידה עם תמונות ואבחנות בפרקים שנבחרו')
-      return
-    }
-
-    // Get all unique diagnoses
+    // Get all unique diagnoses for aid-based questions
     const allDiagnoses = Array.from(
       new Set(
         aids
@@ -82,8 +86,8 @@ export default function QuizPage() {
       )
     )
 
-    // Create quiz questions
-    const preparedQuestions: QuizQuestion[] = quizableAids.map(aid => {
+    // Create aid-based quiz questions
+    const aidQuestions: QuizQuestion[] = quizableAids.map(aid => {
       const correctDiagnosis = aid.tags?.find(tag => tag.category === 'diagnosis')
       const correctAnswer = correctDiagnosis?.value_he || correctDiagnosis?.value || ''
 
@@ -97,26 +101,95 @@ export default function QuizPage() {
       const options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5)
 
       return {
+        type: 'aid' as const,
         aid,
         correctAnswer,
         options
       }
     })
 
-    // Shuffle questions
-    const shuffled = preparedQuestions.sort(() => Math.random() - 0.5)
-    setQuestions(shuffled)
+    // Create standalone questions with related images from the same chapter
+    const standaloneQs: QuizQuestion[] = filteredStandaloneQuestions.map(q => {
+      // Find learning aids in the same chapter with images
+      const relatedAids = aids.filter(aid => {
+        if (!aid.media_url) return false
+
+        // Check if aid belongs to the same chapter
+        const chapterInfo = CHAPTERS.find(c => c.value === q.chapter)
+        if (!chapterInfo) return false
+
+        return aid.chapter === q.chapter ||
+               aid.chapter === chapterInfo.label ||
+               aid.chapter === chapterInfo.label_en
+      })
+
+      // Pick a random related aid with image, or the first one
+      const relatedAid = relatedAids.length > 0
+        ? relatedAids[Math.floor(Math.random() * relatedAids.length)]
+        : null
+
+      // Shuffle options and update correct answer index
+      const correctAnswerText = q.options[q.correctAnswer]
+      const shuffledOptions = shuffleArray([...q.options])
+      const newCorrectAnswerIndex = shuffledOptions.indexOf(correctAnswerText)
+
+      return {
+        type: 'standalone' as const,
+        question: {
+          ...q,
+          options: shuffledOptions,
+          correctAnswer: newCorrectAnswerIndex
+        },
+        relatedImage: relatedAid?.media_url,
+        relatedImageAlt: relatedAid?.title
+      }
+    })
+
+    // Combine and shuffle all questions
+    const allQuestions = [...aidQuestions, ...standaloneQs]
+
+    if (allQuestions.length === 0) {
+      alert('אין מספיק שאלות בפרקים שנבחרו')
+      return
+    }
+
+    // Shuffle all questions - each question appears exactly once
+    const shuffled = shuffleArray(allQuestions)
+
+    // Safety check: Remove any duplicates (shouldn't happen, but just in case)
+    const uniqueQuestions = shuffled.filter((q, index, self) => {
+      if (q.type === 'aid') {
+        return index === self.findIndex(other =>
+          other.type === 'aid' && other.aid.id === q.aid.id
+        )
+      } else {
+        return index === self.findIndex(other =>
+          other.type === 'standalone' && other.question.id === q.question.id
+        )
+      }
+    })
+
+    setQuestions(uniqueQuestions)
     setQuizStarted(true)
   }
 
-  const handleAnswerSelect = (answer: string) => {
+  const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return // Already answered
 
-    setSelectedAnswer(answer)
+    setSelectedAnswer(answerIndex)
     setShowResult(true)
     setAnsweredQuestions(prev => prev + 1)
 
-    if (answer === currentQuestion.correctAnswer) {
+    const currentQ = questions[currentQuestionIndex]
+    let isCorrect = false
+
+    if (currentQ.type === 'aid') {
+      isCorrect = currentQ.options[answerIndex] === currentQ.correctAnswer
+    } else {
+      isCorrect = answerIndex === currentQ.question.correctAnswer
+    }
+
+    if (isCorrect) {
       setScore(prev => prev + 1)
     }
   }
@@ -132,7 +205,6 @@ export default function QuizPage() {
   }
 
   const handleRestart = () => {
-    // Reset to chapter selection
     setQuizStarted(false)
     setQuestions([])
     setCurrentQuestionIndex(0)
@@ -165,6 +237,38 @@ export default function QuizPage() {
 
   // Chapter Selection Screen
   if (!quizStarted) {
+    // Calculate available questions per chapter
+    const chapterQuestionCounts = new Map<string, number>()
+
+    // Helper function to map aid.chapter to chapter value
+    const getChapterValue = (aidChapter: string | null): string | null => {
+      if (!aidChapter) return null
+
+      // Try to find matching chapter by value, label, or label_en
+      const matchingChapter = CHAPTERS.find(c =>
+        c.value === aidChapter ||
+        c.label === aidChapter ||
+        c.label_en === aidChapter
+      )
+
+      return matchingChapter?.value || null
+    }
+
+    // Count standalone questions
+    standaloneQuestions.forEach(q => {
+      chapterQuestionCounts.set(q.chapter, (chapterQuestionCounts.get(q.chapter) || 0) + 1)
+    })
+
+    // Count aid-based questions
+    aids.forEach(aid => {
+      if (aid.media_url && aid.tags?.some(tag => tag.category === 'diagnosis')) {
+        const chapterValue = getChapterValue(aid.chapter)
+        if (chapterValue) {
+          chapterQuestionCounts.set(chapterValue, (chapterQuestionCounts.get(chapterValue) || 0) + 1)
+        }
+      }
+    })
+
     return (
       <div id="chapter-selection" className="min-h-screen bg-background">
         <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
@@ -204,23 +308,32 @@ export default function QuizPage() {
 
                 {/* Individual Chapters */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto p-2">
-                  {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => (
-                    <div key={chapter.value} className="flex items-start gap-2">
-                      <Checkbox
-                        id={`chapter-${chapter.value}`}
-                        checked={selectedChapters.includes(chapter.value)}
-                        onCheckedChange={() => toggleChapter(chapter.value)}
-                        disabled={selectedChapters.includes('all')}
-                        className="mt-1"
-                      />
-                      <label
-                        htmlFor={`chapter-${chapter.value}`}
-                        className="text-sm cursor-pointer flex-1 leading-tight"
-                      >
-                        <span dir="ltr">{chapter.number ? `${chapter.number}. ` : ''}{chapter.label_en}</span>
-                      </label>
-                    </div>
-                  ))}
+                  {CHAPTERS.filter(c => c.value !== 'all').map((chapter) => {
+                    const questionCount = chapterQuestionCounts.get(chapter.value) || 0
+
+                    return (
+                      <div key={chapter.value} className="flex items-start gap-2">
+                        <Checkbox
+                          id={`chapter-${chapter.value}`}
+                          checked={selectedChapters.includes(chapter.value)}
+                          onCheckedChange={() => toggleChapter(chapter.value)}
+                          disabled={selectedChapters.includes('all')}
+                          className="mt-1"
+                        />
+                        <label
+                          htmlFor={`chapter-${chapter.value}`}
+                          className="text-sm cursor-pointer flex-1 leading-tight"
+                        >
+                          <span dir="ltr">
+                            {chapter.number ? `${chapter.number}. ` : ''}{chapter.label_en}
+                            {questionCount > 0 && (
+                              <span className="text-muted-foreground ms-1">({questionCount})</span>
+                            )}
+                          </span>
+                        </label>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
@@ -249,14 +362,25 @@ export default function QuizPage() {
   if (questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-        <p className="text-lg">אין מספיק עזרי למידה עם תמונות ואבחנות בפרקים שנבחרו</p>
+        <p className="text-lg">אין מספיק שאלות בפרקים שנבחרו</p>
         <Button onClick={() => setQuizStarted(false)}>חזרה לבחירת פרקים</Button>
       </div>
     )
   }
 
   const currentQuestion = questions[currentQuestionIndex]
-  const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+
+  // Determine if answer is correct
+  let isCorrect = false
+  let correctAnswerIndex = -1
+
+  if (currentQuestion.type === 'aid') {
+    isCorrect = selectedAnswer !== null && currentQuestion.options[selectedAnswer] === currentQuestion.correctAnswer
+    correctAnswerIndex = currentQuestion.options.indexOf(currentQuestion.correctAnswer)
+  } else {
+    isCorrect = selectedAnswer === currentQuestion.question.correctAnswer
+    correctAnswerIndex = currentQuestion.question.correctAnswer
+  }
 
   if (quizComplete) {
     const percentage = Math.round((score / answeredQuestions) * 100)
@@ -332,14 +456,22 @@ export default function QuizPage() {
               <span className="text-sm">חזרה לפיד</span>
             </Link>
 
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="text-base px-4 py-2">
-                <Trophy className="h-4 w-4 ml-2" />
-                {score}/{answeredQuestions}
+            <div className="flex items-center gap-2 md:gap-4">
+              <Badge variant="secondary" className="text-sm md:text-base px-2 md:px-3 py-1">
+                <Trophy className="h-4 w-4 ml-1 md:ml-2" />
+                <span>{score}/{answeredQuestions}</span>
               </Badge>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs md:text-sm text-muted-foreground">
                 שאלה {currentQuestionIndex + 1} מתוך {questions.length}
               </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setQuizComplete(true)}
+                className="text-xs md:text-sm"
+              >
+                סיים עכשיו
+              </Button>
             </div>
           </div>
         </div>
@@ -349,34 +481,72 @@ export default function QuizPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="overflow-hidden shadow-2xl">
           <CardContent className="p-8 space-y-6">
-            {/* Question */}
-            <div className="text-center space-y-4">
-              <h2 className="text-2xl font-bold">?מה האבחנה</h2>
-
-              {currentQuestion.aid.chapter && (
-                <Badge variant="secondary">
-                  פרק {currentQuestion.aid.chapter}
-                </Badge>
+            {/* Question Type Badge */}
+            <div className="flex items-center justify-center gap-2">
+              {currentQuestion.type === 'aid' ? (
+                <>
+                  <Badge variant="secondary">שאלה על סמך תמונה</Badge>
+                  {currentQuestion.aid.chapter && (
+                    <Badge variant="outline">
+                      פרק {currentQuestion.aid.chapter}
+                    </Badge>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Badge variant="secondary">שאלה אמריקאית</Badge>
+                  {(() => {
+                    const chapterInfo = CHAPTERS.find(c => c.value === currentQuestion.question.chapter)
+                    return chapterInfo && (
+                      <Badge variant="outline" dir="ltr">
+                        {chapterInfo.number ? `${chapterInfo.number}. ` : ''}{chapterInfo.label_en}
+                      </Badge>
+                    )
+                  })()}
+                </>
               )}
             </div>
 
-            {/* Image */}
-            {currentQuestion.aid.media_url && (
+            {/* Question Text */}
+            <div className="text-center space-y-4">
+              {currentQuestion.type === 'aid' ? (
+                <h2 className="text-2xl font-bold">?מה האבחנה</h2>
+              ) : (
+                <div className="text-right">
+                  <p className="text-lg leading-relaxed whitespace-pre-wrap">
+                    {currentQuestion.question.question}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Image (for aid-based questions and standalone questions with related images) */}
+            {((currentQuestion.type === 'aid' && currentQuestion.aid.media_url) ||
+              (currentQuestion.type === 'standalone' && currentQuestion.relatedImage)) && (
               <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
                 <Image
-                  src={currentQuestion.aid.media_url}
-                  alt="תמונה לשאלה"
+                  src={
+                    currentQuestion.type === 'aid'
+                      ? currentQuestion.aid.media_url
+                      : currentQuestion.relatedImage!
+                  }
+                  alt={
+                    currentQuestion.type === 'aid'
+                      ? 'תמונה לשאלה'
+                      : currentQuestion.relatedImageAlt || 'תמונת הדגמה מהפרק'
+                  }
                   fill
                   className="object-contain"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 />
               </div>
             )}
 
             {/* Options */}
             <div className="grid grid-cols-1 gap-3 pt-4">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = selectedAnswer === option
-                const isCorrectOption = option === currentQuestion.correctAnswer
+              {(currentQuestion.type === 'aid' ? currentQuestion.options : currentQuestion.question.options).map((option, index) => {
+                const isSelected = selectedAnswer === index
+                const isCorrectOption = index === correctAnswerIndex
 
                 let buttonVariant: 'default' | 'outline' | 'destructive' = 'outline'
                 let extraClasses = ''
@@ -396,18 +566,22 @@ export default function QuizPage() {
                     id={`quiz-option-${index}`}
                     variant={buttonVariant}
                     size="lg"
-                    onClick={() => handleAnswerSelect(option)}
+                    onClick={() => handleAnswerSelect(index)}
                     disabled={showResult}
-                    className={`text-lg h-auto py-4 justify-start ${extraClasses}`}
+                    className={`h-auto min-h-[56px] py-3 px-4 text-right ${extraClasses}`}
                   >
-                    <span className="font-semibold ml-3">{String.fromCharCode(65 + index)}.</span>
-                    {option}
-                    {showResult && isCorrectOption && (
-                      <CheckCircle2 className="h-5 w-5 mr-auto" />
-                    )}
-                    {showResult && isSelected && !isCorrectOption && (
-                      <XCircle className="h-5 w-5 mr-auto" />
-                    )}
+                    <div className="flex items-center gap-3 w-full">
+                      <span className="font-bold text-base shrink-0">{String.fromCharCode(65 + index)}.</span>
+                      <span className="flex-1 text-sm md:text-base leading-relaxed text-right whitespace-normal">
+                        {option}
+                      </span>
+                      {showResult && isCorrectOption && (
+                        <CheckCircle2 className="h-5 w-5 shrink-0" />
+                      )}
+                      {showResult && isSelected && !isCorrectOption && (
+                        <XCircle className="h-5 w-5 shrink-0" />
+                      )}
+                    </div>
                   </Button>
                 )
               })}
@@ -425,23 +599,35 @@ export default function QuizPage() {
                   ) : (
                     <>
                       <XCircle className="h-6 w-6 text-destructive" />
-                      <p className="text-xl font-semibold text-destructive">
-                        לא נכון - התשובה הנכונה היא: {currentQuestion.correctAnswer}
-                      </p>
+                      <p className="text-xl font-semibold text-destructive">לא נכון</p>
                     </>
                   )}
                 </div>
 
-                {/* Show aid title and explanation */}
+                {/* Explanation */}
                 <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                  <h3 className="font-semibold text-lg">{currentQuestion.aid.title}</h3>
-                  {currentQuestion.aid.body && (
-                    <p className="text-sm whitespace-pre-wrap">{currentQuestion.aid.body}</p>
-                  )}
-                  {currentQuestion.aid.explanation && (
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                      {currentQuestion.aid.explanation}
-                    </p>
+                  {currentQuestion.type === 'aid' ? (
+                    <>
+                      <h3 className="font-semibold text-lg">התשובה הנכונה: {currentQuestion.correctAnswer}</h3>
+                      <h4 className="font-semibold">{currentQuestion.aid.title}</h4>
+                      {currentQuestion.aid.body && (
+                        <p className="text-sm whitespace-pre-wrap">{currentQuestion.aid.body}</p>
+                      )}
+                      {currentQuestion.aid.explanation && (
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                          {currentQuestion.aid.explanation}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="font-semibold text-lg">
+                        התשובה הנכונה: {String.fromCharCode(65 + currentQuestion.question.correctAnswer)}
+                      </h3>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {currentQuestion.question.explanation}
+                      </p>
+                    </>
                   )}
                 </div>
 

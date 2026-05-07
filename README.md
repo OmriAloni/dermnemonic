@@ -35,6 +35,18 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Chapter Display** - English Bolognia chapter badges with numbers (e.g., "8. Psoriasis", "113. Melanoma")
 - **Content Management** - Edit/Delete API endpoints with permission checks (owner or curator)
 - **Stats** - Real-time counts (ratings, reactions, comments, saves) via optimized DB view
+- **Quiz Mode** - Interactive quiz system with:
+  - **American-style MCQ questions** - 4-option multiple choice with explanations
+  - **Image-based diagnosis questions** - Generated from learning aids with images
+  - **Mixed question types** - Text questions and image questions in same quiz
+  - **Randomized answers** - Answer order shuffles each session (can't memorize by position)
+  - **No repeats** - Each question appears exactly once per session
+  - **Chapter correlation** - Shows relevant chapter and related images
+  - **Auto-image matching** - American questions display related learning aid images
+  - **End anytime** - "End Now" button to finish quiz and see results mid-way
+  - **Chapter filtering** - Select specific chapters or all chapters
+  - **Mobile-optimized** - Large touch targets (56px), responsive text, proper wrapping
+  - **Score tracking** - Real-time score display with trophy icon
 - **Loading States** - Skeleton loaders, button loading text, double-click prevention
 - **Empty States** - Helpful messages for no results, login required, etc.
 - **Verified Badges** - Shows which content is curator-verified
@@ -52,13 +64,25 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 **App Status**: ✅ **READY FOR SUBMISSION**
 
 - ✅ **18 learning aids** uploaded and live
+- ✅ **13 American-style quiz questions** across multiple chapters
 - ✅ All core features working flawlessly
+- ✅ Interactive quiz system with mixed question types
 - ✅ Mobile-optimized and responsive
 - ✅ Hebrew RTL throughout
 - ✅ Fast performance (40x optimized)
 - ✅ Beautiful, polished UI
 
-**Latest Updates** (May 4, 2026 - Evening Polish):
+**Latest Updates** (May 7, 2026 - Quiz System):
+- ✅ **American-style MCQ questions** - 13 questions across 10 chapters with full explanations
+- ✅ **Auto-image correlation** - Quiz questions automatically show relevant chapter images
+- ✅ **Randomized answers** - Answer order shuffles each quiz (prevents memorization)
+- ✅ **No question repeats** - Each question appears exactly once per session
+- ✅ **End anytime** - "End Now" button to finish quiz mid-way and see results
+- ✅ **Chapter badges** - Shows chapter number and name for each question
+- ✅ **Mobile-optimized quiz** - Large touch targets, responsive text, proper wrapping
+- ✅ **Mixed question types** - Text-based American questions + image-based diagnosis questions
+
+**Previous Updates** (May 4, 2026 - Evening Polish):
 - ✅ **Full edit mode** - Pre-populated forms, proper back/save routing to card detail page
 - ✅ **Rich text formatting** - Bold, italic, underline buttons with live preview
 - ✅ **Edit load optimization** - 5x faster (minimal API mode skips unnecessary stats queries)
@@ -88,8 +112,8 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - User profiles (`/profile/[username]`)
 - Study sets with spaced repetition (SM-2 algorithm)
 - Live conference mode (`/live` + `/live/projector`)
-- AI quiz generator (Anthropic API)
 - Curator dashboard
+- Additional quiz questions (expand from current 13 to 50+)
 
 ## 🛠️ Tech Stack
 
