@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { QuizQuestion as StandaloneQuestion } from '@/lib/quiz-questions'
-import { getQuizQuestions, filterQuestionsByChapters, shuffleArray } from '@/lib/quiz-questions'
+import { getQuizQuestions, filterQuestionsByChapters, filterQuestionsByTestAndYear, getQuestionMetadata, shuffleArray } from '@/lib/quiz-questions'
 
 // Union type for both question formats
 type QuizQuestion =
@@ -33,6 +33,8 @@ export default function QuizPage() {
   const [quizComplete, setQuizComplete] = useState(false)
   const [quizStarted, setQuizStarted] = useState(false)
   const [selectedChapters, setSelectedChapters] = useState<string[]>(['all'])
+  const [selectedTests, setSelectedTests] = useState<string[]>(['שלב א\' הרי"י'])
+  const [selectedYears, setSelectedYears] = useState<number[]>([2022])
   const [hasSavedState, setHasSavedState] = useState(false)
 
   // Load saved quiz state on mount
@@ -73,11 +75,13 @@ export default function QuizPage() {
         score,
         answeredQuestions,
         selectedChapters,
+        selectedTests,
+        selectedYears,
         timestamp: Date.now()
       }
       localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(state))
     }
-  }, [quizStarted, questions, currentQuestionIndex, selectedAnswer, showResult, score, answeredQuestions, selectedChapters, quizComplete])
+  }, [quizStarted, questions, currentQuestionIndex, selectedAnswer, showResult, score, answeredQuestions, selectedChapters, selectedTests, selectedYears, quizComplete])
 
   const loadSavedState = () => {
     const savedState = localStorage.getItem(QUIZ_STATE_KEY)
@@ -90,6 +94,8 @@ export default function QuizPage() {
       setScore(state.score)
       setAnsweredQuestions(state.answeredQuestions)
       setSelectedChapters(state.selectedChapters)
+      setSelectedTests(state.selectedTests || ['שלב א\' הרי"י'])
+      setSelectedYears(state.selectedYears || [2022])
       setQuizStarted(true)
       setHasSavedState(false)
     }
@@ -102,8 +108,10 @@ export default function QuizPage() {
 
   const prepareQuiz = () => {
     clearSavedState()
-    // Filter standalone questions by chapter
-    const filteredStandaloneQuestions = filterQuestionsByChapters(standaloneQuestions, selectedChapters)
+    // Filter standalone questions by test and year first
+    const testFilteredQuestions = filterQuestionsByTestAndYear(standaloneQuestions, selectedTests, selectedYears)
+    // Then filter by chapter
+    const filteredStandaloneQuestions = filterQuestionsByChapters(testFilteredQuestions, selectedChapters)
 
     // Filter learning aids by selected chapters
     let filteredAids = aids
@@ -358,10 +366,72 @@ export default function QuizPage() {
           <Card>
             <CardContent className="p-8 space-y-6">
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold">בחר פרקים ללמידה</h2>
+                <h2 className="text-2xl font-bold">בחר בחינות ופרקים ללמידה</h2>
                 <p className="text-muted-foreground">
-                  בחר פרק אחד או יותר, או לחץ "כל הפרקים" ללמידה מלאה
+                  בחר בחינה ושנה, ולאחר מכן פרקים ללמידה
                 </p>
+              </div>
+
+              {/* Test and Year Selection */}
+              <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold">בחר בחינה</h3>
+                  <div className="flex items-center gap-3 p-3 border rounded-lg bg-background">
+                    <Checkbox
+                      id="test-israeli-board"
+                      checked={selectedTests.includes('שלב א\' הרי"י')}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedTests(['שלב א\' הרי"י'])
+                        } else {
+                          setSelectedTests([])
+                        }
+                      }}
+                    />
+                    <label htmlFor="test-israeli-board" className="font-medium cursor-pointer flex-1">
+                      שלב א' הרי"י (בחינת הסמכה ישראלית)
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold">בחר שנה</h3>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {[2020, 2021, 2022, 2023, 2024, 2025].map(year => {
+                      const isAvailable = year === 2022
+                      const isSelected = selectedYears.includes(year)
+
+                      return (
+                        <button
+                          key={year}
+                          onClick={() => {
+                            if (!isAvailable) return
+                            if (isSelected) {
+                              setSelectedYears(selectedYears.filter(y => y !== year))
+                            } else {
+                              setSelectedYears([...selectedYears, year])
+                            }
+                          }}
+                          disabled={!isAvailable}
+                          className={`
+                            px-4 py-3 rounded-lg border-2 font-medium transition-all
+                            ${isAvailable
+                              ? isSelected
+                                ? 'border-primary bg-primary text-primary-foreground'
+                                : 'border-input bg-background hover:bg-accent hover:border-primary/50'
+                              : 'border-input bg-muted text-muted-foreground cursor-not-allowed opacity-50'
+                            }
+                          `}
+                        >
+                          {year}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    * רק 2022 זמין כרגע - שנים נוספות יתווספו בעתיד
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -413,14 +483,16 @@ export default function QuizPage() {
                   onClick={prepareQuiz}
                   size="lg"
                   className="w-full"
-                  disabled={selectedChapters.length === 0}
+                  disabled={selectedChapters.length === 0 || selectedTests.length === 0 || selectedYears.length === 0}
                 >
                   התחל למידה
-                  {selectedChapters.includes('all')
-                    ? ' (כל הפרקים)'
-                    : selectedChapters.length > 0
-                      ? ` (${selectedChapters.length} פרקים)`
-                      : ''}
+                  {selectedTests.length > 0 && selectedYears.length > 0 && (
+                    selectedChapters.includes('all')
+                      ? ` (${selectedYears.join(', ')}, כל הפרקים)`
+                      : selectedChapters.length > 0
+                        ? ` (${selectedYears.join(', ')}, ${selectedChapters.length} פרקים)`
+                        : ''
+                  )}
                 </Button>
               </div>
             </CardContent>

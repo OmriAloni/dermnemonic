@@ -6,6 +6,19 @@ export interface QuizQuestion {
   correctAnswer: number // Index of correct answer (0-3)
   explanation: string
   imageUrl?: string // Optional: e.g., "/quiz-images/american-board-001.png"
+  testName?: string // e.g., "שלב א' הרי"י", "American Board"
+  year?: number // e.g., 2022
+}
+
+// Detect test metadata from question ID
+export function getQuestionMetadata(question: QuizQuestion): { testName: string; year: number | null } {
+  // Israeli Board exam questions (2022)
+  if (question.id.startsWith('american-board-')) {
+    return { testName: 'שלב א\' הרי"י', year: 2022 }
+  }
+
+  // Hebrew mnemonic questions (no specific year)
+  return { testName: 'שאלות מקוריות', year: null }
 }
 
 export interface QuizQuestionsData {
@@ -33,6 +46,45 @@ export function filterQuestionsByChapters(
     return questions
   }
   return questions.filter(q => selectedChapters.includes(q.chapter))
+}
+
+// Filter questions by test and year
+export function filterQuestionsByTestAndYear(
+  questions: QuizQuestion[],
+  selectedTests: string[],
+  selectedYears: number[]
+): QuizQuestion[] {
+  if (selectedTests.includes('all')) {
+    return questions
+  }
+
+  return questions.filter(q => {
+    const metadata = getQuestionMetadata(q)
+
+    // Check if test matches
+    const testMatches = selectedTests.includes(metadata.testName)
+
+    // Check if year matches (if year filter is applied)
+    const yearMatches = selectedYears.length === 0 ||
+                       metadata.year === null ||
+                       selectedYears.includes(metadata.year)
+
+    return testMatches && yearMatches
+  })
+}
+
+// Get available years for a specific test
+export function getAvailableYearsForTest(questions: QuizQuestion[], testName: string): number[] {
+  const years = new Set<number>()
+
+  questions.forEach(q => {
+    const metadata = getQuestionMetadata(q)
+    if (metadata.testName === testName && metadata.year !== null) {
+      years.add(metadata.year)
+    }
+  })
+
+  return Array.from(years).sort((a, b) => b - a) // Sort descending
 }
 
 // Shuffle array
