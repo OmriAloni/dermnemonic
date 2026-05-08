@@ -12,6 +12,10 @@ npm run dev                              # Start dev server (http://localhost:30
 npm run build                            # Build for production
 npm run lint                             # Run linter
 
+# Quiz management
+npx tsx scripts/extract-pdf-questions.ts    # Extract questions from PDFs
+npx tsx scripts/attach-quiz-images.ts       # Attach images to questions
+
 # Supabase verification
 npx tsx verify-supabase.ts              # Check connection
 npx tsx scripts/seed-supabase.ts        # Seed 8 sample learning aids
@@ -21,6 +25,37 @@ npx tsx verify-full-setup.ts            # Full system check (auth, storage, RLS)
 npx tsx check-storage.ts                # Fix storage bucket issues
 rm -rf .next && npm run dev             # Clear cache and restart
 ```
+
+## Quiz System (158 Questions)
+
+The quiz system uses static JSON files for questions and images:
+
+**File locations:**
+- `public/quiz-questions.json` - 158 questions (145 Israeli Board + 13 Hebrew)
+- `public/quiz-images/` - 39 clinical images from board exam
+- `lib/quiz-questions.ts` - QuizQuestion interface and utilities
+
+**Question structure:**
+```typescript
+interface QuizQuestion {
+  id: string              // e.g., "american-board-001"
+  chapter: string         // Bolognia chapter (e.g., "psoriasis")
+  question: string        // Question text (Hebrew)
+  options: string[]       // 4 options
+  correctAnswer: number   // Index 0-3
+  explanation: string     // Answer explanation (can be empty)
+  imageUrl?: string       // Optional: "/quiz-images/american-board-001.png"
+}
+```
+
+**Adding new questions:**
+1. Edit `public/quiz-questions.json` directly, or
+2. Use extraction scripts for PDF sources
+
+**Adding images:**
+1. Place images in `public/quiz-images/`
+2. Add `imageUrl` field to corresponding question in JSON
+3. Format: `/quiz-images/question-id.png`
 
 ## Quick Start
 
