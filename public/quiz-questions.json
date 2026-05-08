@@ -2,7 +2,7 @@
   "questions": [
     {
       "id": "prp-001",
-      "chapter": "papulosquamous",
+      "chapter": "psoriasis",
       "question": "מטופל צעיר מגיע למרפאה עם רבדים בצבע כתום-אדום, \"איים של עור בריא\" (islands of sparing) וקרטודרמה שעוותית בכפות הידיים והרגליים. בבדיקה גנטית נמצאה מוטציית gain-of-function בגן CARD14. לאיזה סוג של PRP המקרה מתאים ביותר?",
       "options": [
         "סוג 1 (Classic adult)",
@@ -28,7 +28,7 @@
     },
     {
       "id": "drug-reactions-001",
-      "chapter": "drug-reactions",
+      "chapter": "papulosquamous",
       "question": "מטופל מפתח תפרחת הדומה ל-Pityriasis Rosea. איזו מהתרופות הבאות היא גורם פוטנציאלי לתופעה זו על פי המקורות?",
       "options": [
         "אומפרזול (Omeprazole)",
@@ -106,7 +106,7 @@
     },
     {
       "id": "scleroderma-001",
-      "chapter": "scleroderma",
+      "chapter": "drug-reactions",
       "question": "אילו מהגורמים הבאים אינו מזוהה כגורם אפשרי לתופעת רנו (Raynaud phenomenon) על פי המקורות והמנמוניקה שהוצגה?",
       "options": [
         "חשיפה תעסוקתית לוויניל כלוריד (Vinyl chloride)",
@@ -158,7 +158,7 @@
     },
     {
       "id": "sti-001",
-      "chapter": "sti",
+      "chapter": "drug-reactions",
       "question": "תינוק בן 3 חודשים מובא למרפאה עם נזלת דמית (\"snuffles\"), פיסורות סביב הפה, הגדלת טחול וקושי בתנועת הגפיים עקב כאב (pseudoparalysis). על פי המנמוניקה \"השפן הקטן\", באיזה מצב מדובר?",
       "options": [
         "עגבת מולדת מוקדמת (Early congenital syphilis)",
@@ -185,7 +185,7 @@
     },
     {
       "id": "american-board-002",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "איזה מהממצאים בבדיקה הגופנית הוא המתאים ביותר ל : SCLEROMYXEDEMA לעומת מוצינוזות אחרות?",
       "options": [
         "פיזור לינארי.",
@@ -198,7 +198,7 @@
     },
     {
       "id": "american-board-003",
-      "chapter": "other",
+      "chapter": "drug-reactions",
       "question": "אי זה מהאמצעים הבאים נועדו למנוע WOUND CONTRACTION אחרי פעולה כירורגית עמוקה בעור?",
       "options": [
         "PARTIAL THICKNESS GRAFT.",
@@ -211,7 +211,7 @@
     },
     {
       "id": "american-board-004",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "גבר בן 60 , חקלאי. ברקע בריא ולא נוטל תרופות. סובל מפריחה מגרדת מזה כ - 15 שנים. בביופסיה: SPONGIOSIS, ACANTHOSIS, LYMPHOSYTIC EXOCYTOSIS. SUPERFICIAL AND DEEP PERIVASCULAR LYMPHOHISTYOCYTIC INFILTRATE WITH EOSINOPHILS AND PALSMA CELLS. MOST OF THE LYMPHOCYTES ARE CD8 POSITIVE . לאיזה אלרגן מטופל זה נחשף בסבירות הגבוהה ביותר?",
       "options": [
         "PROPYLENE GLYCOL",
@@ -225,7 +225,7 @@
     },
     {
       "id": "american-board-005",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בת 70 , ללא פרטים באנמנזה מתייצגת עם הממצאים בתמונות להלן : מה הממצא הסביר ביותר בבירור?",
       "options": [
         "בביופסיה שקיעת קרטין.",
@@ -252,7 +252,7 @@
     },
     {
       "id": "american-board-007",
-      "chapter": "other",
+      "chapter": "psoriasis",
       "question": "בת 20 , לפני שבועיים פנתה בשל פריחה מפושטת שאובחנה קלינית כ - PITYRIASIS ROSEA וטופלה ב - CLOBETASOL למשך עשרה ימים. בימים האחרונים חום ג וף גבוה ופריחה פוסטולרית מפושטת )רא ו תמונה( : ביום קבלתה נטלה כדור אקמול להורדת החום. מהי האבחנה הקלינית הסבירה?",
       "options": [
         "ACUTE GENERALISED EXANTHEMATOUS PUSTULOSIS",
@@ -266,7 +266,7 @@
     },
     {
       "id": "american-board-008",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "מהו הטיפול שלא מקובל בעצירת דימום שלאחר ביופסי י ת גילוח SHAVE BIOPSY ?",
       "options": [
         ") MONSEL SOLUTION (FERRIC SUBSULFATE",
@@ -292,7 +292,7 @@
     },
     {
       "id": "american-board-010",
-      "chapter": "other",
+      "chapter": "drug-reactions",
       "question": "לאיזו תרופה אין אינטראקציה עם ITRACONAZOLE ?",
       "options": [
         "CYCLOSPORINE",
@@ -357,7 +357,7 @@
     },
     {
       "id": "american-board-015",
-      "chapter": "other",
+      "chapter": "vitiligo",
       "question": "איזה מהממצאים הבאים אינו מהווה ביטוי אופייני של חוסר תזונתי?",
       "options": [
         "PERIFOLLICULAR HEMORRHAGE",
@@ -409,7 +409,7 @@
     },
     {
       "id": "american-board-019",
-      "chapter": "other",
+      "chapter": "papulosquamous",
       "question": "איזה מהביטויים הקליניים הבאים פחות מתאים ל - CHRONIC GRAFT VERSUS HOST DISEASE ?",
       "options": [
         "BULLOUS LICHEN PLANUS",
@@ -435,7 +435,7 @@
     },
     {
       "id": "american-board-021",
-      "chapter": "other",
+      "chapter": "melanoma",
       "question": "איזה ל בהקשר למצוא יותר אופייני הבאים מהממצאים - SCHNITZLER SYNDROME ?",
       "options": [
         "ADENOCARCINOMA OF STOMACH",
@@ -448,7 +448,7 @@
     },
     {
       "id": "american-board-022",
-      "chapter": "other",
+      "chapter": "atopic-dermatitis",
       "question": "באיזו מחלה תואר המצב שנראה בתמונה בשכיחות הנמוכה ביותר?",
       "options": [
         "ATOPIC DERMATITIS",
@@ -475,7 +475,7 @@
     },
     {
       "id": "american-board-024",
-      "chapter": "other",
+      "chapter": "acne",
       "question": "בת 20 עם אקנה ו - STRIAE קשים. איזו בדיקת מעבדה ת י מצא לא תקינה בשכיחות הגבוהה ביותר?",
       "options": [
         "URINE FREE CORTISOL",
@@ -581,7 +581,7 @@
     },
     {
       "id": "american-board-032",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "מה מהבאים אינו מהווה התוו י יה מקובלת לביצוע ניתוח ' MOHS ?",
       "options": [
         "SCC במיטת הציפורן.",
@@ -686,7 +686,7 @@
     },
     {
       "id": "american-board-040",
-      "chapter": "other",
+      "chapter": "dermatomyositis",
       "question": "בת 20 פנתה עקב נפיחות קבועה בשפה תחתונה וכאבי בטן. תבחין טלאי היה שלילי ו - CT חזה לא הדגים לימפאדנופתיה. בבדיקתה עשויים למצוא גם : -",
       "options": [
         "PERIANAL FISTULA.",
@@ -739,7 +739,7 @@
     },
     {
       "id": "american-board-044",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בן 5 שנים. הובא בשל ירידה במשקל, חום וחולשה כללית. בבדיקתו נודול תת עורי נוקשה מאוד בקרקפת. בביופסיה תסנין נרחב של לימפוציטים צעירים אטיפיים, חיוביים ל - CD20 ו - CD19 . מה האבחנה?",
       "options": [
         "PRIMARY CUTANEOUS FOLLICULAR CENTER B CELL LYMPHOMA.",
@@ -752,7 +752,7 @@
     },
     {
       "id": "american-board-045",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "לאישה בהירת עור בת 60 נגעי עור רבים בפיזור סימטרי על השוקיים, בקוטר של עד 1 ס\"מ. אחד הנגעים מודגם בתמונה : בהקשר זה, איזה מההיגדים הבאים נכון?",
       "options": [
         "יש להניח שהנגעים קיימים מילדותה.",
@@ -779,7 +779,7 @@
     },
     {
       "id": "american-board-047",
-      "chapter": "other",
+      "chapter": "psoriasis",
       "question": "מה נכון לגבי התסנין הדלקתי בפסוריאזיס פעילה?",
       "options": [
         "רוב תאי T באפידרמיס הם CD4.",
@@ -792,7 +792,7 @@
     },
     {
       "id": "american-board-048",
-      "chapter": "other",
+      "chapter": "papulosquamous",
       "question": "מה נכון לגבי PITYRIASIS ROSEA ?",
       "options": [
         "בדרך כלל חולפת תוך 6-8 שבועות.",
@@ -831,7 +831,7 @@
     },
     {
       "id": "american-board-051",
-      "chapter": "other",
+      "chapter": "rosacea",
       "question": "איזה מהטיפולים הבאים לא מתאים לנגע המצוין?",
       "options": [
         "ELECTRODESSICATION ל - SKIN TAG",
@@ -844,7 +844,7 @@
     },
     {
       "id": "american-board-052",
-      "chapter": "other",
+      "chapter": "melanoma",
       "question": "מה ה - AJCC STAGE של מטופל עם מלנומה בעובי 2.3 מ\"מ, מכוייבת, ללא מעורבות חוץ עורית?",
       "options": [
         "IIA",
@@ -857,7 +857,7 @@
     },
     {
       "id": "american-board-053",
-      "chapter": "other",
+      "chapter": "hair-nail-biology",
       "question": "תגובת גוף זר לקרטין עומדת בבסיס הפתוגנזה של הנ\"ל פרט ל : -",
       "options": [
         "INGROWN NAIL.",
@@ -896,7 +896,7 @@
     },
     {
       "id": "american-board-057",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "הלימפוציטים בתסנינים העוריים של חולי SCLERODERMA : -",
       "options": [
         "הם ברובם תאי B.",
@@ -909,7 +909,7 @@
     },
     {
       "id": "american-board-058",
-      "chapter": "other",
+      "chapter": "pregnancy",
       "question": "מהו גורם הסיכון המשמעותי ביותר להופעת מלנומה עורית בגב?",
       "options": [
         "הריון.",
@@ -935,7 +935,7 @@
     },
     {
       "id": "american-board-060",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "איזה מהמצבים הבאים מהווה אינדיקציה ל : DEFINITIVE RADIOTHERAPY בגבר בריא בן 50 ?",
       "options": [
         "BCC בקוטר 0.3 ס\"מ ברקה.",
@@ -961,7 +961,7 @@
     },
     {
       "id": "american-board-062",
-      "chapter": "other",
+      "chapter": "herpes",
       "question": "מה אינו נכון לגבי AQUIRED PERFORATING DERMATOSIS ?",
       "options": [
         "המיקום השכיח ביותר הינו אספקט פלקסורי של אמות הידיים.",
@@ -974,7 +974,7 @@
     },
     {
       "id": "american-board-063",
-      "chapter": "other",
+      "chapter": "allergic-contact",
       "question": "מהו אתר המטרה של FINASTERIDE ?",
       "options": [
         "ב. ג. ד. 64 . לאיזה חומר יש CROSS עם BALSAM OF PERU ? א. BENZOIC ACID",
@@ -987,7 +987,7 @@
     },
     {
       "id": "american-board-065",
-      "chapter": "other",
+      "chapter": "bacterial",
       "question": "משתמש בקוקאין פונה למיון בשל כאב ורגישות בעור האף , מלווה בטשטוש ראיה, פטוזיס ו - FACIALIS . ללא חום גוף גבוה, ספירת הדם תקינה. בבדיקת העור ללא ממצאים נוספים. מה הגורם הסביר?",
       "options": [
         "CLOSTRIDIUM BOTULINUM TYPE A",
@@ -1026,7 +1026,7 @@
     },
     {
       "id": "american-board-068",
-      "chapter": "other",
+      "chapter": "dermatomyositis",
       "question": "מטופלת עם DERMATOMYOSITIS פונה עם התמונה הקלינית שבתמונה : איזו הסתמנות קלינית לא אופיינית?",
       "options": [
         "כיבים בפה.",
@@ -1053,7 +1053,7 @@
     },
     {
       "id": "american-board-070",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בן 6 חודשים. מגיל חודשיים פריחה מפושטת המכסה את מרבית שטח עור הגוף. בביופסיה ריבוי תאי MAST . מה אופייני למצוא?",
       "options": [
         "מעורבות עצמות הגולגולת.",
@@ -1107,7 +1107,7 @@
     },
     {
       "id": "american-board-074",
-      "chapter": "other",
+      "chapter": "melanoma",
       "question": "מה נכון לגבי הנגע המופיע בתמונה?",
       "options": [
         "מתואר יותר בנשים.",
@@ -1148,7 +1148,7 @@
     },
     {
       "id": "american-board-077",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "גבר בן 53 מתייצג עם מאסה ניידת ורכה בירך אחורית, אשר הופיעה לפני 6 חודשים וגדלה בהדרגה. אובחן עם LIPOMA . איזה ממצא קליני יחייב ביצוע ביופסיה?",
       "options": [
         "פתח קומודונלי בעור מעל המאסה.",
@@ -1174,7 +1174,7 @@
     },
     {
       "id": "american-board-079",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "פיזור תפרחת צפלוקאודלי אופייני לתפרחות הבאות , פרט ל : -",
       "options": [
         "VARICELLA",
@@ -1240,7 +1240,7 @@
     },
     {
       "id": "american-board-084",
-      "chapter": "other",
+      "chapter": "drug-reactions",
       "question": "בן גבר 43 שהופיעה שבתמונה התפרחת עם מופיע 6 החל לאחר שבועות TERBINAFINE : איזה מהממצאים הבאים יעלה את החשד שמדובר במחלה סיסטמית שלא קשורה בתרופה?",
       "options": [
         "NEPHRITIS",
@@ -1254,7 +1254,7 @@
     },
     {
       "id": "american-board-085",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "מה אופייני ל - SUPERFICIAL BASAL CELL CARCINOMA ?",
       "options": [
         "ממוקם בצוואר.",
@@ -1307,7 +1307,7 @@
     },
     {
       "id": "american-board-089",
-      "chapter": "other",
+      "chapter": "acne",
       "question": "איזו תופעת לוואי עורית אופיינית ל - GEL MECHLORETHAMINE ?",
       "options": [
         "PHOTOSENSITIVITY",
@@ -1346,7 +1346,7 @@
     },
     {
       "id": "american-board-092",
-      "chapter": "other",
+      "chapter": "papulosquamous",
       "question": "מה נכון לגבי הצורה ההיפרטרופית של LICHEN PLANUS ?",
       "options": [
         "SQUAMOUS CELL CARCIMONA עשויה להופיע בנגעים כרוניים.",
@@ -1359,7 +1359,7 @@
     },
     {
       "id": "american-board-093",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בן 47 , נגר. פנה בשל ממצא כואב בכף היד, שהופיע לאחר תאונת עבודה עם חבלה חודרת מקומית. בבדיקתו פפולה כיפתית בגוון אדמדמם בכף היד המודגמת בתמונה. בביופסיה נגע מתוחם היטב במעטפת פיברוטית, המורכב מסיבים של תאי עצב בגדלים שונים, בתבנית אי רגולרית, וביניהם שקיעת מוצין. איזה בירור יש להשלים?",
       "options": [
         "אין צורך בבירור.",
@@ -1373,7 +1373,7 @@
     },
     {
       "id": "american-board-094",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בן 40 בריא בד\"כ, פנה עקב הממצא העורי שבתמונה : בביופסיה מהנגע נראה תסנין דרמלי מעורב בלימפוציטים, היסטיוציטים ותאי פלזמה. בתוך המאקרופאגים נראים גופיפים תוך תאיים עגולים. מה הצביעה המועדפת על מנת לתמוך באבחנה הסבירה ביותר?",
       "options": [
         "GIEMSA",
@@ -1387,7 +1387,7 @@
     },
     {
       "id": "american-board-095",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "איזו שקיעה צפויה להימצא ב - DIF בביופסיה מעור של חולה ב - DERMATITIS HERPETIFORMIS ?",
       "options": [
         "לינארית של IGG ב - BASMENT MEMBRANE.",
@@ -1414,7 +1414,7 @@
     },
     {
       "id": "american-board-097",
-      "chapter": "other",
+      "chapter": "vasculitis",
       "question": "למטופל עם VASCULITIS בוצעה ביופסיה. אילו ממצאים בביופסיה יתמכו בנוכחות נוגדנים בסרום נגד נויטרופילים ) ANCA ( ?",
       "options": [
         "נוכחות נויטרופילים מעטים ואימונופלורסנציה שלילית.",
@@ -1427,7 +1427,7 @@
     },
     {
       "id": "american-board-098",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "מה נכון לגבי טיפול ב - SYSTEMIC PUVA ?",
       "options": [
         "ב. ג. ד. 99 . מה לא נכון בטיפול בביופסיה לאחר לקיחתה להיסטולוגיה רגילה? א. הביופסיה תושם באופן מיידי במיכל המכיל פורמלין 4-10% .",
@@ -1440,7 +1440,7 @@
     },
     {
       "id": "american-board-100",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "חולה מציג תמונה המזכירה HIDRADENITIS SUPPURATIVA מלווה נגעים היפרפיגמנטרים בקפלים. נלקחה ביופסיה מנגע פיגמנטרי. מה התשובה הפתולוגית הסבירה ביותר?",
       "options": [
         "PIGMENTED SEBORRHEIC KERATOSIS",
@@ -1453,7 +1453,7 @@
     },
     {
       "id": "american-board-101",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "מה נכון לגבי הנגעים הבהירים ב - TUBEROUS SCLEROSIS ?",
       "options": [
         "הופעת הנגעים האלו בטוברוס סקלרוזיס מאוחרת.",
@@ -1480,7 +1480,7 @@
     },
     {
       "id": "american-board-103",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "מהו הממצא הפתולוגי המשותף ל - SYRINGOMA ו - SYRINGOMATOUS CARCINOMA ?",
       "options": [
         "סימטריה.",
@@ -1493,7 +1493,7 @@
     },
     {
       "id": "american-board-104",
-      "chapter": "other",
+      "chapter": "pemphigoid",
       "question": "מה נכון לגבי EPIDERMOLYSIS BULLOSA AQUISITA ?",
       "options": [
         "אנטיגן המטרה הוא PERIPLAKIN.",
@@ -1545,7 +1545,7 @@
     },
     {
       "id": "american-board-108",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "מטופל מתייצג עם הנגעים שבתמונה וההיסטולוגיה מנגע הבאים: איזו מחלת רקע יש למטופל?",
       "options": [
         "HEPATITIS C.",
@@ -1599,7 +1599,7 @@
     },
     {
       "id": "american-board-112",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "איזו צביעה תהיה חיובית בכלי דם ובכלי לימפה?",
       "options": [
         "VON WILLEBRAND FACTOR",
@@ -1625,7 +1625,7 @@
     },
     {
       "id": "american-board-114",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "בן 56 מתלונן על פריחה ארוזיבית חדשה, אשר הופיעה לאחרונה על פני פנים, גב עליון ובית החזה. חלק מהנגעים מכוסים בגלדים צהבהבים, זעירים. בביופסיה תאים אקנטוליטים. מהו הגורם הסביר ביותר לפריחה?",
       "options": [
         "VANCOMYCIN",
@@ -1680,7 +1680,7 @@
     },
     {
       "id": "american-board-118",
-      "chapter": "other",
+      "chapter": "pemphigoid",
       "question": "באיזו מהמחלות הבאות COLLAGEN XVII מעורב בפתוגנזה?",
       "options": [
         "RECESSIVE DYSTROPHIC EPIDERMOLYSIS BULLOSA.",
@@ -1707,7 +1707,7 @@
     },
     {
       "id": "american-board-120",
-      "chapter": "other",
+      "chapter": "psoriasis",
       "question": "באיזו מחלה מתווה רטינואיד סיסטמי שהוא RXR-SELECTIVE RETINOID ?",
       "options": [
         "MYCOSIS FUNGOIDES",
@@ -1720,7 +1720,7 @@
     },
     {
       "id": "american-board-121",
-      "chapter": "other",
+      "chapter": "urticaria",
       "question": "באיזו מחלה סביר למצוא תאי פלסמה בביופסיה?",
       "options": [
         "POLYMORPHOUS LIGHT ERUPTION",
@@ -1733,7 +1733,7 @@
     },
     {
       "id": "american-board-122",
-      "chapter": "other",
+      "chapter": "alopecias",
       "question": "לנער CALLUS כואבים בכפות הרגליים, עיבוי בציפורניים שבולט יותר בחלקן הרחיקני. מה תומך באבחנה של PACHYONYCHIA CONGENITA אצל הנער?",
       "options": [
         "מוטציות בגן ל - CONNEXIN 26.",
@@ -1746,7 +1746,7 @@
     },
     {
       "id": "american-board-123",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "גבר בן 48 פנה לייעוץ עקב רובד עורי יחיד , בקוטר 3 ס\"מ שהופיע באזור החזה, מספר ימים טרם פנייתו. מציין שלאחרונה סבל מכאבי גב ונטל ETODOLAC (ETOPAN) . בביופסיה נצפתה התמונה המוצגת : מה מהבאים נכון?",
       "options": [
         "על פי רוב התפרחת חולפת בתוך מספר ימים, ללא שנותר סימן לאחר מכן.",
@@ -1760,7 +1760,7 @@
     },
     {
       "id": "american-board-124",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "מטופלת בת 63 , המקבלת טיפול כימותרפי, מציגה את התמונה הקלינית שבתמונה : ביופסיה תסנין נויטרופילי סביב בלוטות זיעה. מה מחלת הרקע של החולה?",
       "options": [
         "ACUTE MYELOGENOUS LEUKEMIA.",
@@ -1800,7 +1800,7 @@
     },
     {
       "id": "american-board-127",
-      "chapter": "other",
+      "chapter": "hpv",
       "question": "מטופל מתייצג עם התפרחת המופיעה בתמונה על פני עור הגב, ובהיסטולוגיה הממצאים שבתמונה : איזו צביעה יש לבצע על מנת לאושש את האבחנה?",
       "options": [
         ") PERL’S STAIN (PRUSSIAN BLUE",
@@ -1854,7 +1854,7 @@
     },
     {
       "id": "american-board-131",
-      "chapter": "other",
+      "chapter": "ak-bcc-scc",
       "question": "מה מהבאים לא מלווה באופן אופייני HIDRADENITIS SUPPURATIVA ?",
       "options": [
         "HYPOPROTEINEMIA",
@@ -1867,7 +1867,7 @@
     },
     {
       "id": "american-board-132",
-      "chapter": "other",
+      "chapter": "acne",
       "question": "בן 14 , בריא, עם דלדול שיער בשנתיים האחרונות. מצורפת התמונה הקלינית, ההיסטולוגית והדרמוסקופית : איזה ממצא נוסף אופייני?",
       "options": [
         "ב. ג. ד. 133 . מה מבדיל בין NEONATAL ACNE ובין INFANTILE ACNE ? א. שתי צורות ACNE מופיעות באופן טיפוסי בחודש הראשון לחיים אך הצורה ה - INFANTILE נמשכת עד לגיל שנה, בעוד הצורה ה - NEONATAL נסוגה בגיל חודשיים.",
@@ -1880,7 +1880,7 @@
     },
     {
       "id": "american-board-134",
-      "chapter": "other",
+      "chapter": "nail-disorders",
       "question": "תינוק נולד עם עטיפה צמודה ומבריקה לעורו , הדומה לעטיפת ניילון. מה האבחנה הסבירה ביותר?",
       "options": [
         "LAMELLAR ICHTHYOSIS.",
@@ -1907,7 +1907,7 @@
     },
     {
       "id": "american-board-136",
-      "chapter": "other",
+      "chapter": "drug-reactions",
       "question": "מה נכון לגבי DRESS ?",
       "options": [
         "חום מעל 38.5 מעלות צלזיוס שולל את האבחנה.",
@@ -1960,7 +1960,7 @@
     },
     {
       "id": "american-board-140",
-      "chapter": "other",
+      "chapter": "biopsy-excisions",
       "question": "מטופלת בת 45 , בריאה בדרך כלל, מציגה תפרחת בת שנתיים באזור הפנים. שוללת שימוש בסטרואידים טופיקליים או כל טיפול מקומי לעור הפנים. בתמונה, הממצאים הקליניים : בביופסיה נמצאו גרנולומות. איזה סוג של גרנולומות שכיח למצוא בהקשר למחלה ממנה סובלת המטופלת?",
       "options": [
         "EPITHELOID NON-CASEATING",
@@ -1974,7 +1974,7 @@
     },
     {
       "id": "american-board-141",
-      "chapter": "other",
+      "chapter": "lupus",
       "question": "בן 22 שנים. פנה בשל הופעת כיבים על פני הסקרוטום. בבדיקתו נמצאו אפטות בלשון ופריחה פפולופוסטולרית בפנים ובירכיים. מה מאפיין את מחלתו?",
       "options": [
         "מעורבות נדירה של העיניים.",
@@ -1987,7 +1987,7 @@
     },
     {
       "id": "american-board-142",
-      "chapter": "other",
+      "chapter": "pregnancy",
       "question": "בת 62 , עם פריחה פפולרית ורבדית חומה וקרטוטית, מוגברת באזורי סבוראה, בקו השיער ובאוזניים. הרבדים מצרטיבים ומעלי ריח רע. בבדיקת הפה - פ פולות לבנות בחיך. בביופסיה - ACANTHOLYTIC DYSKERATOSIS . אילו שינויים צפויים בציפורניים?",
       "options": [
         "ב. ג. ד. 143 . בת 32 , שבוע 10 להריונה השני. ברקע אלרגיה לקרדית אבק הבית. פנתה בשל הופעת פריחה אקזמטוטית המלווה גרד בצוואר, קפלי מרפקים וברכיים , לראשונה בחייה. מה הפרוגנוזה? א. התופעה צפויה להישנות בהריונות הבאים.",
@@ -2000,7 +2000,7 @@
     },
     {
       "id": "american-board-144",
-      "chapter": "other",
+      "chapter": "erythema-multiforme",
       "question": "מה נכון לגבי ERYTHEMA MULTIFORME ?",
       "options": [
         "מעורבות גפיים תחתונות היא השכיחה ביותר.",
@@ -2013,7 +2013,7 @@
     },
     {
       "id": "american-board-145",
-      "chapter": "other",
+      "chapter": "bacterial",
       "question": "ילד בן 4 שנים, מופנה למיון עקב חום גבוה, ארתריטיס, תחושה כללית רעה ופריחה נודדת המודגמת בתמונה : באנמנזה מכוונת, האם מציינת דלקת גרון עם תרבית חיובית ל - STREP GROUP A כחודש לפני האירוע הנוכחי. מה נכון?",
       "options": [
         "המחלה שכיחה יותר בקרב בני 40 ומעלה.",
@@ -2027,7 +2027,7 @@
     },
     {
       "id": "american-board-146",
-      "chapter": "other",
+      "chapter": "drug-reactions",
       "question": "נגד איזה ציטוקין פועלת התרופה שגורמת ל - CONJUCTIVITIS כתופעת לוואי בשכיחות של כ - 10% ?",
       "options": [
         "IL-23",
@@ -2040,7 +2040,7 @@
     },
     {
       "id": "american-board-147",
-      "chapter": "other",
+      "chapter": "fungal",
       "question": "ילד התייצג עם התפרחת שבתמונה וחום : התפרחת התפשטה במהירות בגו. בבדיקתו נמצאה גם לשון אדומה תותית. בבדיקה נראו גם פטכיות פסיות סמוך לבתי השחי. מה קדם לתפרחת?",
       "options": [
         "זיהום הרפטי בשפתיים.",
@@ -2080,7 +2080,7 @@
     },
     {
       "id": "american-board-150",
-      "chapter": "sti",
+      "chapter": "fungal",
       "question": "בן 27 היה בטיול קיץ בקליפורניה )ארצות הברית(. לאחר חזרתו הופיע רובד אריתמי מסונן ביד מכוסה קשקש וגלדים. משטח ללישמניה היה שלילי ובדיקת HIV שלילית. בדיקת היסטולוגיה מהרובד מוצגת בתמונה : מה האבחנה?",
       "options": [
         "COCCIDIOIDOMYCOSIS",
@@ -2091,12 +2091,78 @@
       "correctAnswer": 0,
       "explanation": "",
       "imageUrl": "/quiz-images/american-board-150.png"
+    },
+    {
+      "id": "israeli-board-055",
+      "chapter": "hair-nail-biology",
+      "question": "לפניכם תמונת חתך היסטולוגיה של הציפורן. היכן ממקום ה-MATRIX?",
+      "options": [
+        "א",
+        "ב",
+        "ג",
+        "ד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-Matrix של הציפורן נמצא באזור א' בתמונה. זהו האזור שבו מתרחש הייצור העיקרי של תאי הציפורן.",
+      "imageUrl": "/quiz-images/israeli-board-055.png"
+    },
+    {
+      "id": "israeli-board-064",
+      "chapter": "allergic-contact",
+      "question": "לאיזה חומר יש CROSS-REACTIVITY עם BALSAM OF PERU?",
+      "options": [
+        "BENZOIC ACID",
+        "IMIDAZOLIDINYL UREA",
+        "METHYLISOTHIAZOLINONE",
+        "COCAMIDOPROPYL BETAINE"
+      ],
+      "correctAnswer": 0,
+      "explanation": "BENZOIC ACID מראה תגובת cross-reactivity עם Balsam of Peru. שני החומרים שייכים לאותה משפחה כימית ויכולים לגרום לתגובות דומות אצל אנשים רגישים."
+    },
+    {
+      "id": "israeli-board-099",
+      "chapter": "biopsy-excisions",
+      "question": "מה לא נכון בטיפול בביופסיה לאחר לקיחתה להיסטולוגיה רגילה?",
+      "options": [
+        "הביופסיה תושם באופן מיידי במיכל המכיל פורמלין 4%-10%",
+        "יש לוודא שהביופסיה לא נדבקה לדופן המיכל",
+        "יש לסגור בפקק מתאים שעליו פרטי המטופל",
+        "למיכל יצורף טופס המכיל פרטים קליניים כולל אבחנה מבדלת, ביופסיות קודמות במקום ובקשות מיוחדות מהפתולוג או המעבדה"
+      ],
+      "correctAnswer": 2,
+      "explanation": "לא נכון לסגור בפקק שעליו פרטי המטופל. פרטי המטופל צריכים להיות על התווית שעל המיכל עצמו, לא על הפקק, כדי למנוע אובדן מידע במקרה שהפקק יתחלף בטעות."
+    },
+    {
+      "id": "israeli-board-133",
+      "chapter": "acne",
+      "question": "מה מבדיל בין NEONATAL ACNE לבין INFANTILE ACNE?",
+      "options": [
+        "שתי צורות האקנה מופיעות באופן טיפוסי בחודש הראשון לחיים, אך הצורה ה-INFANTILE נמשכת עד גיל שנה, בעוד הצורה ה-NEONATAL נסוגה בגיל חודשיים",
+        "צלקות שקועות אופייניות לצורה ה-INFANTILE",
+        "הצורה ה-NEONATAL נובעת מזיהום ע\"י MALASSEZIA, בעוד הצורה ה-INFANTILE נובעת מהשפעת ANDROGENS",
+        "הצורה ה-NEONATAL מנבאת ביטוי אקנה קשה בגיל ההתבגרות"
+      ],
+      "correctAnswer": 1,
+      "explanation": "הבדל מרכזי הוא שצלקות שקועות (atrophic scars) אופייניות ל-Infantile Acne, בעוד ש-Neonatal Acne בדרך כלל אינה משאירה צלקות. Infantile Acne מופיעה בין 3-6 חודשים ויכולה להימשך עד גיל 5, ואילו Neonatal Acne מופיעה בלידה או זמן קצר לאחר מכן ונסוגה בד\"כ תוך 3-4 חודשים."
+    },
+    {
+      "id": "israeli-board-143",
+      "chapter": "pregnancy",
+      "question": "בת 32, שבוע 10 להריונה השני. ברקע אלרגיה לקרדית אבק הבית. פנתה בשל הופעת לראשונה בחייה פריחה אקזמטוטית המלווה בגרד בצוואר, קפלי מרפקים וברכיים. מה הפרוגנוזה?",
+      "options": [
+        "התופעה צפויה להישנות בהריונות הבאים",
+        "פריחה דומה עשויה להופיע ביילוד ולחלוף עצמונית לאחר מספר ימים",
+        "סיכון מוגבר ללידה מוקדמת",
+        "קיימת קורלציה בין חומרת המחלה לבין הפרוגנוזה של העובר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "מדובר ב-Atopic Eruption of Pregnancy (AEP), שהיא הדרמטוזה השכיחה ביותר בהריון (כ-50% מכלל הדרמטוזות). התופעה אכן צפויה להישנות בהריונות עתידיים. זו מחלה שפירה ללא השפעה על הפרוגנוזה של העובר, ואין סיכון מוגבר ללידה מוקדמת או מחלה ביילוד."
     }
   ],
   "metadata": {
-    "total": 158,
+    "total": 163,
     "extracted": 145,
     "existing": 812,
-    "extractedAt": "2026-05-08T11:43:06.810Z"
+    "extractedAt": "2026-05-08T16:22:52.523Z"
   }
 }
