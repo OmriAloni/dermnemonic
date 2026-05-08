@@ -45,6 +45,7 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           className="ps-10 pe-3"
+          dir="rtl"
         />
       {query && (
         <Button
