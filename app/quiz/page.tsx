@@ -565,7 +565,7 @@ export default function QuizPage() {
                 </>
               ) : (
                 <>
-                  <Badge variant="secondary">מבחן הרי"י 2022</Badge>
+                  <Badge variant="secondary">שלב א' הר"י</Badge>
                   {(() => {
                     const chapterInfo = CHAPTERS.find(c => c.value === currentQuestion.question.chapter)
                     return chapterInfo && (
