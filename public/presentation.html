@@ -307,6 +307,10 @@
                     <span class="stat-label">עזרי למידה איכותיים</span>
                 </div>
                 <div class="stat">
+                    <span class="stat-number" id="quiz-count">...</span>
+                    <span class="stat-label">שאלות מבחן הרי"י 2022</span>
+                </div>
+                <div class="stat">
                     <span class="stat-number">159</span>
                     <span class="stat-label">פרקים מ-Bolognia</span>
                 </div>
@@ -451,30 +455,46 @@
     </div>
 
     <script>
-        // Fetch the actual count of learning aids from the API
-        async function updateAidsCount() {
+        // Fetch the actual counts from the API
+        async function updateCounts() {
             try {
-                const response = await fetch('https://dermasociations.vercel.app/api/aids');
-                const aids = await response.json();
-                const count = aids.length;
+                // Fetch learning aids count
+                const aidsResponse = await fetch('https://dermasociations.vercel.app/api/aids');
+                const aids = await aidsResponse.json();
+                const aidsCount = aids.length;
 
-                // Update all places where the count appears
-                const countElements = document.querySelectorAll('#aids-count, #aids-count-text');
-                countElements.forEach(el => {
-                    el.textContent = count;
+                // Update learning aids count
+                const aidsCountElements = document.querySelectorAll('#aids-count, #aids-count-text');
+                aidsCountElements.forEach(el => {
+                    el.textContent = aidsCount;
+                });
+
+                // Fetch quiz questions count
+                const quizResponse = await fetch('https://dermasociations.vercel.app/quiz-questions.json');
+                const quizData = await quizResponse.json();
+                const quizCount = quizData.questions.length;
+
+                // Update quiz questions count
+                const quizCountElements = document.querySelectorAll('#quiz-count');
+                quizCountElements.forEach(el => {
+                    el.textContent = quizCount;
                 });
             } catch (error) {
-                console.error('Error fetching aids count:', error);
-                // Fallback to a reasonable number if API fails
-                const countElements = document.querySelectorAll('#aids-count, #aids-count-text');
-                countElements.forEach(el => {
+                console.error('Error fetching counts:', error);
+                // Fallback to reasonable numbers if API fails
+                const aidsCountElements = document.querySelectorAll('#aids-count, #aids-count-text');
+                aidsCountElements.forEach(el => {
                     el.textContent = '20+';
+                });
+                const quizCountElements = document.querySelectorAll('#quiz-count');
+                quizCountElements.forEach(el => {
+                    el.textContent = '150+';
                 });
             }
         }
 
         // Run on page load
-        updateAidsCount();
+        updateCounts();
     </script>
 </body>
 </html>
