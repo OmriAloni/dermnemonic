@@ -189,8 +189,8 @@ export default function QuizPage() {
           options: shuffledOptions,
           correctAnswer: newCorrectAnswerIndex
         },
-        relatedImage: relatedAid?.media_url,
-        relatedImageAlt: relatedAid?.title
+        relatedImage: q.imageUrl || relatedAid?.media_url,  // Prioritize question image
+        relatedImageAlt: q.imageUrl ? 'תמונה קלינית' : relatedAid?.title
       }
     })
 

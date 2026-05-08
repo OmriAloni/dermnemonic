@@ -5,6 +5,7 @@ export interface QuizQuestion {
   options: string[] // Always 4 options
   correctAnswer: number // Index of correct answer (0-3)
   explanation: string
+  imageUrl?: string // Optional: e.g., "/quiz-images/american-board-001.png"
 }
 
 export interface QuizQuestionsData {
