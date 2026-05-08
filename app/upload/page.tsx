@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check, Bold, Italic, Underline } from 'lucide-react'
+import { ArrowRight, Upload, X, Image as ImageIcon, ChevronsUpDown, Check } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -18,6 +18,7 @@ import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
 import { createClient } from '@/lib/supabase/client'
 import { compressImage } from '@/lib/image-utils'
+import { RichTextEditor } from '@/components/rich-text-editor'
 
 export const dynamic = 'force-dynamic'
 
@@ -358,119 +359,23 @@ function UploadPageContent() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="body">תוכן *</Label>
-                    <div className="flex gap-1">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('body', 'bold')}
-                        className="h-7 px-2"
-                        title="הדגש טקסט (בחר טקסט ולחץ)"
-                      >
-                        <Bold className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('body', 'italic')}
-                        className="h-7 px-2"
-                        title="טקסט נטוי (בחר טקסט ולחץ)"
-                      >
-                        <Italic className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('body', 'underline')}
-                        className="h-7 px-2"
-                        title="טקסט מודגש בקו תחתון (בחר טקסט ולחץ)"
-                      >
-                        <Underline className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div
-                    id="body"
-                    contentEditable
-                    suppressContentEditableWarning
-                    onInput={(e) => {
-                      const content = e.currentTarget.innerHTML
-                      setFormData({ ...formData, body: content })
-                    }}
-                    onBlur={(e) => {
-                      const content = e.currentTarget.innerHTML
-                      setFormData({ ...formData, body: content })
-                    }}
-                    dangerouslySetInnerHTML={{ __html: formData.body }}
-                    className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{ minHeight: '100px' }}
-                    data-placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
+                  <Label htmlFor="body">תוכן *</Label>
+                  <RichTextEditor
+                    content={formData.body}
+                    onChange={(content) => setFormData({ ...formData, body: content })}
+                    placeholder="Pruritic, Purple, Polygonal, Planar, Papules"
+                    minHeight="100px"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    טיפ: בחר טקסט ולחץ על הכפתורים לעיצוב (מודגש, נטוי, קו תחתון)
-                  </p>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
-                    <div className="flex gap-1">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('explanation', 'bold')}
-                        className="h-7 px-2"
-                        title="הדגש טקסט (בחר טקסט ולחץ)"
-                      >
-                        <Bold className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('explanation', 'italic')}
-                        className="h-7 px-2"
-                        title="טקסט נטוי (בחר טקסט ולחץ)"
-                      >
-                        <Italic className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => applyFormatting('explanation', 'underline')}
-                        className="h-7 px-2"
-                        title="טקסט מודגש בקו תחתון (בחר טקסט ולחץ)"
-                      >
-                        <Underline className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div
-                    id="explanation"
-                    contentEditable
-                    suppressContentEditableWarning
-                    onInput={(e) => {
-                      const content = e.currentTarget.innerHTML
-                      setFormData({ ...formData, explanation: content })
-                    }}
-                    onBlur={(e) => {
-                      const content = e.currentTarget.innerHTML
-                      setFormData({ ...formData, explanation: content })
-                    }}
-                    dangerouslySetInnerHTML={{ __html: formData.explanation }}
-                    className="min-h-[75px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{ minHeight: '75px' }}
-                    data-placeholder="הסבר למה זה עובד, מתי להשתמש..."
+                  <Label htmlFor="explanation">הסבר מפורט (אופציונלי)</Label>
+                  <RichTextEditor
+                    content={formData.explanation}
+                    onChange={(content) => setFormData({ ...formData, explanation: content })}
+                    placeholder="הסבר למה זה עובד, מתי להשתמש..."
+                    minHeight="75px"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    טיפ: בחר טקסט ולחץ על הכפתורים לעיצוב (מודגש, נטוי, קו תחתון)
-                  </p>
                 </div>
               </div>
 

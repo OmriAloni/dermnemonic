@@ -213,12 +213,19 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           </div>
           {aid.chapter && (() => {
             const chapterInfo = CHAPTERS.find(c => c.value === aid.chapter)
+            const chapterText = chapterInfo
+              ? chapterInfo.number
+                ? `${chapterInfo.number}. ${chapterInfo.label_en}`
+                : chapterInfo.label_en
+              : ''
             return chapterInfo && (
-              <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                <span dir="ltr">
-                  {chapterInfo.number
-                    ? `${chapterInfo.number}. ${chapterInfo.label_en}`
-                    : chapterInfo.label_en}
+              <Badge
+                variant="secondary"
+                className="text-xs px-2 py-0.5 max-w-[100px] sm:max-w-[140px] flex-shrink-0"
+                title={chapterText}
+              >
+                <span dir="ltr" className="truncate block">
+                  {chapterText}
                 </span>
               </Badge>
             )
@@ -243,11 +250,19 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
 
         {aid.tags && aid.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {aid.tags.slice(0, 5).map((tag, index) => (
-              <Badge key={`${tag.category}-${tag.value}-${index}`} variant="outline" className="text-xs">
-                {locale === 'he' && tag.value_he ? tag.value_he : tag.value}
-              </Badge>
-            ))}
+            {aid.tags.slice(0, 5).map((tag, index) => {
+              const tagText = locale === 'he' && tag.value_he ? tag.value_he : tag.value
+              return (
+                <Badge
+                  key={`${tag.category}-${tag.value}-${index}`}
+                  variant="outline"
+                  className="text-xs max-w-[150px]"
+                  title={tagText}
+                >
+                  <span className="truncate block">{tagText}</span>
+                </Badge>
+              )
+            })}
           </div>
         )}
       </CardHeader>
