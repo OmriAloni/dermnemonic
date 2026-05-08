@@ -76,6 +76,15 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     updateFilters({ chapters: allChapterValues })
   }
 
+  const selectAllAidTypes = () => {
+    updateFilters({ aidTypes: AID_TYPES.map(t => t.value) })
+  }
+
+  const clearAllAidTypes = () => {
+    // Select only the first aid type (can't have 0 selected)
+    updateFilters({ aidTypes: [AID_TYPES[0].value] })
+  }
+
   return (
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
       {/* Chapter Filter - Multi-select with Search */}
@@ -192,7 +201,23 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
 
       {/* Aid Type Filter */}
       <div className="space-y-3">
-        <div className="text-sm font-medium">סוג עזר למידה</div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-medium">סוג עזר למידה</div>
+          <div className="flex gap-3">
+            <button
+              onClick={selectAllAidTypes}
+              className="text-sm text-primary hover:underline"
+            >
+              בחר הכל
+            </button>
+            <button
+              onClick={clearAllAidTypes}
+              className="text-sm text-primary hover:underline"
+            >
+              נקה הכל
+            </button>
+          </div>
+        </div>
         <div className="space-y-2">
           {AID_TYPES.map((type) => (
             <div key={type.value} className="flex items-center gap-3">
