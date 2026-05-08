@@ -12,6 +12,7 @@ import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
+import { AID_TYPES } from '@/lib/aid-types'
 
 // Mock data removed - now fetching from API
 
@@ -61,10 +62,10 @@ export default function FeedPage() {
     fetchAids()
   }, [])
 
-  // Filter state
+  // Filter state - default: all aid types selected
   const [currentFilters, setCurrentFilters] = useState<SimpleFilterState>({
     chapters: [],
-    aidTypes: [],
+    aidTypes: ['mnemonic', 'illustration', 'table', 'flowchart', 'other'],
     sort: 'newest',
     showSavedOnly: false
   })
@@ -101,10 +102,18 @@ export default function FeedPage() {
     }
 
     // Filter by aid types (OR logic - show aids that match ANY selected type)
-    if (currentFilters.aidTypes.length > 0) {
+    // Only filter if NOT all types are selected
+    const allTypesSelected = AID_TYPES.every(type => currentFilters.aidTypes.includes(type.value))
+
+    if (!allTypesSelected) {
       filtered = filtered.filter(aid => {
         // Check if aid has any tags with category 'aid_type'
         const aidTypeTags = aid.tags?.filter(tag => tag.category === 'aid_type') || []
+
+        // If aid has no aid_type tags, include it by default
+        if (aidTypeTags.length === 0) {
+          return true
+        }
 
         // Return true if ANY of the selected aid types match ANY of the aid's aid_type tags
         return currentFilters.aidTypes.some(selectedType => {

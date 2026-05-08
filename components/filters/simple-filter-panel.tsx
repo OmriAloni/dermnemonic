@@ -24,9 +24,10 @@ interface SimpleFilterPanelProps {
 }
 
 export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilterPanelProps) {
+  // Default: all aid types selected
   const [filters, setFilters] = useState<SimpleFilterState>({
     chapters: [],
-    aidTypes: [],
+    aidTypes: AID_TYPES.map(t => t.value),
     sort: 'newest',
     showSavedOnly: false
   })
@@ -43,6 +44,12 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     const newTypes = filters.aidTypes.includes(type)
       ? filters.aidTypes.filter(t => t !== type)
       : [...filters.aidTypes, type]
+
+    // Prevent deselecting all types (must have at least 1)
+    if (newTypes.length === 0) {
+      return
+    }
+
     updateFilters({ aidTypes: newTypes })
   }
 
@@ -243,7 +250,7 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
               פילטרים פעילים
             </span>
             <button
-              onClick={() => updateFilters({ chapters: [], aidTypes: [], showSavedOnly: false })}
+              onClick={() => updateFilters({ chapters: [], aidTypes: AID_TYPES.map(t => t.value), showSavedOnly: false })}
               className="text-sm text-primary hover:underline"
             >
               נקה הכל
