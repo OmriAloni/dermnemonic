@@ -1,7 +1,7 @@
 # TODO - Next Session Priorities
 
 **Last Updated**: May 7, 2026 (Quiz System Complete)  
-**Production URL**: https://dermasociations.vercel.app  
+**Production URL**: https://dermassociations.vercel.app  
 **GitHub**: https://github.com/OmriAloni/dermnemonic  
 **Contest Deadline**: June 3, 2026
 
@@ -41,7 +41,7 @@ All critical features complete. Quiz system fully implemented with 13 American-s
 7. **Autoimmune** - Lupus, Dermatomyositis associations
 
 **Upload process**:
-1. Go to `/upload` on https://dermasociations.vercel.app
+1. Go to `/upload` on https://dermassociations.vercel.app
 2. Form auto-fills your name and hospital from profile
 3. Fill in title, body, explanation
 4. Select chapter and aid type

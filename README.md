@@ -6,7 +6,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 
 ## 🌐 Live Demo
 
-**Production**: https://dermasociations.vercel.app  
+**Production**: https://dermassociations.vercel.app  
 **GitHub**: https://github.com/OmriAloni/dermnemonic
 
 ## ✨ Features

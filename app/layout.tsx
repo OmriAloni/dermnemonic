@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Dermasociations - פלטפורמת עזרי למידה לרופאי עור",
+  title: "Dermassociations - פלטפורמת עזרי למידה לרופאי עור",
   description: "פלטפורמה שיתופית לעזרי למידה בדרמטולוגיה",
 };
 

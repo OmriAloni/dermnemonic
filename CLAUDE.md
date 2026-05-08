@@ -116,7 +116,7 @@ supabase/migrations/
 
 ## Current Implementation Status
 
-**Production URL**: https://dermasociations.vercel.app  
+**Production URL**: https://dermassociations.vercel.app  
 **Status**: ✅ Feature-complete, zero bugs, ready for content upload
 
 ### Working Features

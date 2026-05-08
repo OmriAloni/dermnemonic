@@ -18,6 +18,8 @@ type QuizQuestion =
   | { type: 'aid'; aid: LearningAid; correctAnswer: string; options: string[] }
   | { type: 'standalone'; question: StandaloneQuestion; relatedImage?: string; relatedImageAlt?: string }
 
+const QUIZ_STATE_KEY = 'quiz_state'
+
 export default function QuizPage() {
   const [aids, setAids] = useState<LearningAid[]>([])
   const [standaloneQuestions, setStandaloneQuestions] = useState<StandaloneQuestion[]>([])
@@ -31,7 +33,9 @@ export default function QuizPage() {
   const [quizComplete, setQuizComplete] = useState(false)
   const [quizStarted, setQuizStarted] = useState(false)
   const [selectedChapters, setSelectedChapters] = useState<string[]>(['all'])
+  const [hasSavedState, setHasSavedState] = useState(false)
 
+  // Load saved quiz state on mount
   useEffect(() => {
     async function fetchData() {
       try {
@@ -43,6 +47,12 @@ export default function QuizPage() {
         // Fetch standalone quiz questions
         const quizQuestionsData = await getQuizQuestions()
         setStandaloneQuestions(quizQuestionsData)
+
+        // Check for saved quiz state
+        const savedState = localStorage.getItem(QUIZ_STATE_KEY)
+        if (savedState) {
+          setHasSavedState(true)
+        }
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -52,7 +62,46 @@ export default function QuizPage() {
     fetchData()
   }, [])
 
+  // Save quiz state whenever it changes
+  useEffect(() => {
+    if (quizStarted && !quizComplete) {
+      const state = {
+        questions,
+        currentQuestionIndex,
+        selectedAnswer,
+        showResult,
+        score,
+        answeredQuestions,
+        selectedChapters,
+        timestamp: Date.now()
+      }
+      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(state))
+    }
+  }, [quizStarted, questions, currentQuestionIndex, selectedAnswer, showResult, score, answeredQuestions, selectedChapters, quizComplete])
+
+  const loadSavedState = () => {
+    const savedState = localStorage.getItem(QUIZ_STATE_KEY)
+    if (savedState) {
+      const state = JSON.parse(savedState)
+      setQuestions(state.questions)
+      setCurrentQuestionIndex(state.currentQuestionIndex)
+      setSelectedAnswer(state.selectedAnswer)
+      setShowResult(state.showResult)
+      setScore(state.score)
+      setAnsweredQuestions(state.answeredQuestions)
+      setSelectedChapters(state.selectedChapters)
+      setQuizStarted(true)
+      setHasSavedState(false)
+    }
+  }
+
+  const clearSavedState = () => {
+    localStorage.removeItem(QUIZ_STATE_KEY)
+    setHasSavedState(false)
+  }
+
   const prepareQuiz = () => {
+    clearSavedState()
     // Filter standalone questions by chapter
     const filteredStandaloneQuestions = filterQuestionsByChapters(standaloneQuestions, selectedChapters)
 
@@ -201,10 +250,12 @@ export default function QuizPage() {
       setShowResult(false)
     } else {
       setQuizComplete(true)
+      clearSavedState()
     }
   }
 
   const handleRestart = () => {
+    clearSavedState()
     setQuizStarted(false)
     setQuestions([])
     setCurrentQuestionIndex(0)
@@ -284,6 +335,26 @@ export default function QuizPage() {
         </header>
 
         <main className="container mx-auto px-4 py-8 max-w-4xl">
+          {hasSavedState && (
+            <Card className="mb-6 border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">יש לך חידון בתהליך</h3>
+                    <p className="text-sm text-muted-foreground">המשך מהמקום שבו הפסקת</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button onClick={loadSavedState} className="bg-primary hover:bg-primary/90">
+                      המשך חידון
+                    </Button>
+                    <Button onClick={clearSavedState} variant="outline">
+                      התחל מחדש
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           <Card>
             <CardContent className="p-8 space-y-6">
               <div className="text-center space-y-2">

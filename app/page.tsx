@@ -10,6 +10,7 @@ import { UserMenu } from '@/components/user-menu'
 import { SearchBar, type SearchBarRef } from '@/components/search-bar'
 import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
+import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 
 // Mock data removed - now fetching from API
@@ -99,22 +100,15 @@ export default function FeedPage() {
       })
     }
 
-    // Filter by aid types
+    // Filter by aid types (OR logic - show aids that match ANY selected type)
     if (currentFilters.aidTypes.length > 0) {
       filtered = filtered.filter(aid => {
-        if (!aid.media_type) return false
+        // Check if aid has any tags with category 'aid_type'
+        const aidTypeTags = aid.tags?.filter(tag => tag.category === 'aid_type') || []
 
-        const typeMapping: Record<string, string[]> = {
-          'mnemonic': ['mnemonic', 'text-only'],
-          'illustration': ['illustration', 'character'],
-          'table': ['table', 'summary-table'],
-          'flowchart': ['flowchart'],
-          'other': ['other', 'photo', 'diagram', 'comparison']
-        }
-
+        // Return true if ANY of the selected aid types match ANY of the aid's aid_type tags
         return currentFilters.aidTypes.some(selectedType => {
-          const mappedTypes = typeMapping[selectedType] || [selectedType]
-          return aid.media_type && mappedTypes.includes(aid.media_type)
+          return aidTypeTags.some(tag => tag.value === selectedType)
         })
       })
     }
@@ -176,9 +170,12 @@ export default function FeedPage() {
       <header id="main-header" className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
-            <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity">
-              <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermasociations</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
+            <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity flex items-center gap-3">
+              <Image src="/logo.jpeg" alt="Dermassociations" width={56} height={56} className="rounded-xl shadow-md" />
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermassociations</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
+              </div>
             </Link>
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               <Link href="/uploaders" className="hidden md:block">
