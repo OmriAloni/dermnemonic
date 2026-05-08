@@ -262,20 +262,12 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
               {filters.showSavedOnly && '1 '}
               פילטרים פעילים
             </span>
-            <div className="flex gap-3">
-              <button
-                onClick={selectAllChapters}
-                className="text-sm text-primary hover:underline"
-              >
-                בחר הכל
-              </button>
-              <button
-                onClick={() => updateFilters({ chapters: [], aidTypes: AID_TYPES.map(t => t.value), showSavedOnly: false })}
-                className="text-sm text-primary hover:underline"
-              >
-                נקה הכל
-              </button>
-            </div>
+            <button
+              onClick={() => updateFilters({ chapters: [], aidTypes: AID_TYPES.map(t => t.value), showSavedOnly: false })}
+              className="text-sm text-primary hover:underline"
+            >
+              נקה הכל
+            </button>
           </div>
         </div>
       )}
