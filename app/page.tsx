@@ -110,9 +110,10 @@ export default function FeedPage() {
         // Check if aid has any tags with category 'aid_type'
         const aidTypeTags = aid.tags?.filter(tag => tag.category === 'aid_type') || []
 
-        // If aid has no aid_type tags, include it by default
+        // If aid has no aid_type tags, treat it as "other"
+        // Only show when "other" is selected
         if (aidTypeTags.length === 0) {
-          return true
+          return currentFilters.aidTypes.includes('other')
         }
 
         // Return true if ANY of the selected aid types match ANY of the aid's aid_type tags
