@@ -180,7 +180,7 @@ export default function FeedPage() {
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity flex items-center gap-3">
-              <Image src="/logo.jpeg" alt="Dermassociations" width={56} height={56} className="rounded-xl shadow-md" />
+              <Image src="/logosmall.jpeg" alt="Dermassociations" width={56} height={56} className="rounded-xl shadow-md" />
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermassociations</h1>
                 <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">פלטפורמת עזרי למידה לרופאי עור</p>
