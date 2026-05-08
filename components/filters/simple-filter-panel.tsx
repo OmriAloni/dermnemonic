@@ -71,6 +71,11 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
     updateFilters({ chapters: [] })
   }
 
+  const selectAllChapters = () => {
+    const allChapterValues = CHAPTERS.filter(c => c.value !== 'all').map(c => c.value)
+    updateFilters({ chapters: allChapterValues })
+  }
+
   return (
     <div id="filter-panel" className="bg-card rounded-lg border p-6 space-y-6">
       {/* Chapter Filter - Multi-select with Search */}
@@ -161,18 +166,26 @@ export function SimpleFilterPanel({ onFilterChange, locale = 'he' }: SimpleFilte
                 </CommandGroup>
               </CommandList>
             </Command>
-            {filters.chapters.length > 0 && (
-              <div className="p-2 border-t">
+            <div className="p-2 border-t flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={selectAllChapters}
+                className="flex-1"
+              >
+                בחר הכל
+              </Button>
+              {filters.chapters.length > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={clearAllChapters}
-                  className="w-full"
+                  className="flex-1"
                 >
                   נקה הכל ({filters.chapters.length})
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </PopoverContent>
         </Popover>
       </div>

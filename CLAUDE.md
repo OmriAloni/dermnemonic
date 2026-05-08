@@ -52,10 +52,21 @@ interface QuizQuestion {
 1. Edit `public/quiz-questions.json` directly, or
 2. Use extraction scripts for PDF sources
 
+**Quiz extraction pipeline:**
+- `scripts/extract-pdf-questions.ts` - Extract questions from PDF files
+- `scripts/attach-quiz-images.ts` - Automatically match and attach images to questions
+- `scripts/review-quiz-chapters.ts` - Review and assign chapters to extracted questions
+- `scripts/add-missing-questions.ts` - Manually add questions that failed extraction
+
 **Adding images:**
 1. Place images in `public/quiz-images/`
 2. Add `imageUrl` field to corresponding question in JSON
 3. Format: `/quiz-images/question-id.png`
+
+**Clinical images:**
+- Located in `public/quiz-images/`
+- Naming convention: `{source}-{number}.png` (e.g., `american-board-007.png`)
+- 38 diagnostic images from Israeli Board Exam (שלב א' הרי"י 2022)
 
 ## Quick Start
 
@@ -166,7 +177,10 @@ scripts/
 └── setup-storage.sql            # Storage bucket SQL
 
 supabase/migrations/
-└── 20260501000000_initial_schema.sql     # Full schema + RLS
+├── 20260501000000_initial_schema.sql          # Full schema + RLS
+├── 20260502000000_add_stats_view.sql          # Performance optimization
+├── 20260504000000_update_yuval_hospital.sql   # Update test user
+└── 20260504000001_clean_bold_formatting.sql   # Fix formatting artifacts
 ```
 
 ## Supabase Client Usage
@@ -301,19 +315,30 @@ export function BookmarksList({ initialBookmarks }: { initialBookmarks: Bookmark
 
 ## Current Implementation Status
 
-**Production URL**: https://dermassociations.vercel.app  
-**Status**: ✅ Feature-complete, zero bugs, ready for content upload
+**Production URL**: https://dermasociations.vercel.app  
+**GitHub**: https://github.com/OmriAloni/dermnemonic  
+**Contest Deadline**: June 3, 2026  
+**Status**: ✅ Ready for submission
+
+### Contest-Ready Features (May 8, 2026)
+
+- ✅ **18 learning aids** - Hebrew mnemonics and visual aids
+- ✅ **158 quiz questions** - 145 Israeli Board (שלב א' הרי"י) + 13 Hebrew mnemonics
+- ✅ **38 clinical images** - Diagnostic photos from actual board exam
+- ✅ **Rich text editor** - Tiptap with RTL support and formatting toolbar
+- ✅ **Presentation page** - Statistics overview at `/presentation.html`
 
 ### Working Features
 
 - ✅ **Authentication** - Magic link signup/login
-- ✅ **Upload** - Image upload to Supabase Storage with auto-filled profile data
+- ✅ **Upload** - Image upload to Supabase Storage with auto-filled profile data, rich text editor
 - ✅ **Feed** - Search, filters (chapter, aid type), sort, "saved only" mode
 - ✅ **Detail Pages** - Carousel navigation with keyboard shortcuts (←/→)
 - ✅ **Engagement** - Comments (add/view/delete with modal), 5-star ratings, reactions (❤️/👏/💡)
 - ✅ **WhatsApp Share** - Pre-filled Hebrew messages with deep links
 - ✅ **Chapter System** - 159 Bolognia chapters with English names and numbers
 - ✅ **Badges** - Verified (curator-approved), Recent (48 hours), chapter tags
+- ✅ **Quiz System** - 158 questions with clinical images, chapter filtering, progress tracking
 - ✅ **Performance** - 40x optimized (database stats view, 2 queries vs 41)
 - ✅ **Mobile UX** - 44px+ touch targets, responsive layouts, RTL throughout
 - ✅ **Loading States** - Skeletons, blur placeholders, button loading text
@@ -630,6 +655,35 @@ export default async function BookmarksPage() {
 - Error messages should be helpful: "משהו השתבש. נסה שוב" not just "שגיאה"
 - Numbers and dates: use Hebrew formatting (`new Intl.NumberFormat('he-IL')`)
 
+### Working with the Rich Text Editor
+
+**Component**: `components/rich-text-editor.tsx` (Tiptap-based)
+
+**Features:**
+- Bold, italic, underline formatting
+- RTL support for Hebrew
+- Toolbar with visible formatting buttons
+- Live preview as you type
+- Placeholder text support
+
+**Usage in upload/edit forms:**
+```typescript
+import { RichTextEditor } from '@/components/rich-text-editor'
+
+<RichTextEditor
+  value={content}
+  onChange={setContent}
+  placeholder="תיאור עזר הלמידה..."
+/>
+```
+
+**Available marks:**
+- Bold: `**text**` or Ctrl/Cmd+B
+- Italic: `*text*` or Ctrl/Cmd+I
+- Underline: Toolbar button
+
+**Storage:** Saved as HTML string in `body` field
+
 ### Making database changes
 
 **Step-by-step workflow:**
@@ -719,6 +773,22 @@ const { data, error } = await supabase
    ```
    **Important**: Paste JWT tokens as single line (no newlines)
 5. **Supabase config**: Add Vercel URL to Auth redirect URLs (`https://your-app.vercel.app/**`)
+
+### Contest Presentation
+
+**File**: `public/presentation.html`  
+**URL**: https://dermasociations.vercel.app/presentation.html
+
+Static HTML file showing project statistics and overview for the Israeli Dermatology Conference contest (June 3, 2026).
+
+**To update statistics:**
+1. Edit `public/presentation.html` directly
+2. Update numbers for:
+   - Total learning aids uploaded
+   - Quiz questions available
+   - Clinical images
+   - Active users (if tracking)
+3. Deploy - no build step needed (static file)
 
 ## Common gotchas and debugging
 
@@ -949,16 +1019,36 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom
 - `scripts/seed-supabase.ts` - Seed 8 sample learning aids
 - `check-storage.ts` - Verify Storage bucket
 
-**Other scripts**:
+**Quiz-related scripts**:
+- `scripts/extract-pdf-questions.ts` - Extract questions from PDF files (97% success rate)
+- `scripts/attach-quiz-images.ts` - Match and attach images to questions
+- `scripts/review-quiz-chapters.ts` - Review and assign Bolognia chapters
+- `scripts/add-missing-questions.ts` - Manually add missing questions
+
+**Content scripts**:
+- `scripts/seed-supabase.ts` - Seed 8 sample learning aids
+- `scripts/quick-seed.ts` - Fast seed for testing (minimal data)
+
+**Database scripts**:
 - `verify-full-setup.ts` - Comprehensive check (auth, storage, RLS)
 - `update-test-user.ts` - Reset test user credentials
 - `update-chapters.ts` - Update chapter taxonomy
 - `check-uploads.ts` - List uploaded files
 - `run-migration.ts` / `apply-migration.ts` - Apply migrations programmatically
-- `scripts/quick-seed.ts` - Fast seed for testing
 - `scripts/setup-storage.sql` - Create storage buckets
 
 **Run any script**: `npx tsx <script-name>.ts`
+
+## Known Limitations
+
+Based on TODO.md (May 8, 2026):
+
+**Quiz System:**
+- 5 questions failed PDF extraction (Q55, Q64, Q99, Q133, Q143) - 97% success rate
+- 138 questions in "other" chapter - need manual categorization
+- Board questions have no explanations yet (can be added by curators)
+
+**These are acceptable for contest submission and can be improved post-launch.**
 
 ## Out of Scope
 
