@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/client'
+import { translateAuthError } from '@/lib/auth-errors'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -29,7 +30,7 @@ export default function LoginPage() {
       })
 
       if (error) {
-        setError(error.message)
+        setError(translateAuthError(error.message))
       } else {
         router.push('/')
         router.refresh()

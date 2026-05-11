@@ -13,10 +13,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
+import { getMessages } from '@/lib/i18n'
 
 // Mock data removed - now fetching from API
 
 export default function FeedPage() {
+  const t = getMessages('he')
   const [aids, setAids] = useState<LearningAid[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
@@ -238,7 +240,7 @@ export default function FeedPage() {
               setSearchQuery(query)
               // Trigger filter update - needs to be in useEffect
             }}
-            placeholder="חיפוש לפי כותרת, תוכן או תגיות..."
+            placeholder={t.search.placeholder}
           />
         </div>
 

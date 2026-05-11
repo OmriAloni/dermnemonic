@@ -112,8 +112,11 @@ export default function QuizPage() {
     setPreparingQuiz(true)
     setQuizPrepError(null)
     clearSavedState()
-    // Filter standalone questions by test and year first
-    const testFilteredQuestions = filterQuestionsByTestAndYear(standaloneQuestions, selectedTests, selectedYears)
+
+    // Defer work to allow loading state to render
+    setTimeout(() => {
+      // Filter standalone questions by test and year first
+      const testFilteredQuestions = filterQuestionsByTestAndYear(standaloneQuestions, selectedTests, selectedYears)
     // Then filter by chapter
     const filteredStandaloneQuestions = filterQuestionsByChapters(testFilteredQuestions, selectedChapters)
 
@@ -231,9 +234,10 @@ export default function QuizPage() {
       }
     })
 
-    setQuestions(uniqueQuestions)
-    setQuizStarted(true)
-    setPreparingQuiz(false)
+      setQuestions(uniqueQuestions)
+      setQuizStarted(true)
+      setPreparingQuiz(false)
+    }, 0)
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -395,7 +399,7 @@ export default function QuizPage() {
                       }}
                     />
                     <label htmlFor="test-israeli-board" className="font-medium cursor-pointer flex-1">
-                      שלב א' הרי"י (בחינת הסמכה ישראלית)
+                      שלב א׳ הר״י (בחינת הסמכה ישראלית)
                     </label>
                   </div>
                 </div>

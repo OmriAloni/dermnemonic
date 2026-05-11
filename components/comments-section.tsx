@@ -175,8 +175,19 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
             className="resize-none"
           />
           {submitError && (
-            <div className="p-2 text-sm text-destructive bg-destructive/10 rounded">
-              {submitError}
+            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded flex items-center justify-between gap-3">
+              <span className="flex-1">{submitError}</span>
+              {!submitError.includes('להתחבר') && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSubmitError(null)}
+                  className="flex-shrink-0 h-8"
+                >
+                  סגור
+                </Button>
+              )}
             </div>
           )}
           <div className="flex justify-end">

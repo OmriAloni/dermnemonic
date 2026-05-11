@@ -1,4 +1,4 @@
-# Dermnemonic - פלטפורמת עזרי למידה לרופאי עור
+# Dermassociations - פלטפורמת עזרי למידה לרופאי עור
 
 Mobile-first collaborative platform for Israeli dermatology residents to share and study learning aids.
 
@@ -24,7 +24,7 @@ Built for the Israeli Dermatology Conference contest (June 3, 2026).
 - **Reaction Buttons** - Heart/👏 clapping/lightbulb with optimistic updates
 - **WhatsApp Share** - Pre-filled Hebrew messages with deep links
 - **Like & Save** - Both require login, consistent UX
-- **Authentication** - Magic link signup/login with Supabase Auth
+- **Authentication** - Password-based signup/login with Supabase Auth
 - **Upload Features**:
   - Image upload to Supabase Storage with auto-filled profile data
   - **Multi-select aid types** - Select multiple types per upload (e.g., mnemonic + illustration)

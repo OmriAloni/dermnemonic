@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Dermnemonic",
+    "name": "Dermassociations",
     "tagline": "Learning Platform for Dermatology Residents"
   },
   "nav": {
@@ -37,6 +37,9 @@
       "description": "Real content coming soon, starting May 15",
       "cta": "Want to be the first to upload?"
     }
+  },
+  "search": {
+    "placeholder": "Search by title, content, or tags..."
   },
   "card": {
     "verified": "Verified by doctor",

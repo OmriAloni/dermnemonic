@@ -318,11 +318,11 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
 
       <CardFooter className="flex flex-col gap-3">
         {/* Reaction Buttons */}
-        <div className="flex items-center justify-center gap-1 w-full">
+        <div className="flex items-center justify-center gap-0.5 sm:gap-1 w-full">
           <button
             onClick={(e) => handleReaction('heart', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
+            className={`flex items-center gap-1 px-2 py-2 sm:px-3 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('heart')
                 ? 'bg-red-100 dark:bg-red-900/20 border-red-500'
                 : 'hover:bg-muted border-transparent'
@@ -344,7 +344,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <button
             onClick={(e) => handleReaction('brain', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
+            className={`flex items-center gap-1 px-2 py-2 sm:px-3 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('brain')
                 ? 'bg-blue-100 dark:bg-blue-900/20 border-blue-500'
                 : 'hover:bg-muted border-transparent'
@@ -366,7 +366,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <button
             onClick={(e) => handleReaction('lightbulb', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
+            className={`flex items-center gap-1 px-2 py-2 sm:px-3 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('lightbulb')
                 ? 'bg-yellow-100 dark:bg-yellow-900/20 border-yellow-500'
                 : 'hover:bg-muted border-transparent'
