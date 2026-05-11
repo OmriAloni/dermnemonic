@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CHAPTERS } from '@/lib/chapters'
 import { MarkdownText } from '@/components/markdown-text'
+import { cn } from '@/lib/utils'
 
 interface LearningAidCardProps {
   aid: LearningAid
@@ -196,7 +197,12 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
   return (
     <Card
       id={`aid-card-${aid.id}`}
-      className="overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+      className={cn(
+        "overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col",
+        aid.media_url
+          ? "h-[640px] md:h-[580px]"  // With image: taller on mobile
+          : "h-[520px] md:h-[480px]"   // Text-only: shorter
+      )}
       onClick={handleCardClick}
     >
       <CardHeader className="space-y-2">
@@ -233,7 +239,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         </div>
 
         <div className="flex items-start gap-2">
-          <h3 className="text-lg font-semibold leading-tight hover:text-primary transition-colors flex-1">
+          <h3 className="text-lg font-semibold leading-tight hover:text-primary transition-colors flex-1 line-clamp-2">
             {aid.title}
           </h3>
           <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -267,7 +273,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         )}
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 flex-1 overflow-hidden">
         {aid.media_url && (
           <div className="relative aspect-video rounded-md overflow-hidden bg-muted">
             <Image
@@ -285,11 +291,17 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         )}
 
         {aid.body && (
-          <MarkdownText text={aid.body} className="text-sm leading-relaxed" />
+          <MarkdownText
+            text={aid.body}
+            className={cn(
+              "text-sm leading-relaxed",
+              aid.media_url ? "line-clamp-4" : "line-clamp-6"
+            )}
+          />
         )}
 
         {aid.caption && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground line-clamp-2">
             {aid.caption}
           </p>
         )}
