@@ -180,7 +180,7 @@ export default function FeedPage() {
       <header id="main-header" className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
-            <Link href="/" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity flex items-center gap-3">
+            <Link href="https://dermassociation.vercel.app/presentation.html" target="_blank" rel="noopener noreferrer" className="min-w-0 flex-shrink hover:opacity-80 transition-opacity flex items-center gap-3">
               <Image src="/logosmall.jpeg" alt="Dermassociations" width={56} height={56} className="rounded-xl shadow-md" />
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Dermassociations</h1>
@@ -286,6 +286,30 @@ export default function FeedPage() {
         </div>
       </main>
 
+      {/* Footer */}
+      <footer className="border-t bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col items-center gap-4">
+            <Link
+              href="https://dermassociation.vercel.app/presentation.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src="/logosmall.jpeg"
+                alt="Dermassociations"
+                width={80}
+                height={80}
+                className="rounded-xl shadow-md"
+              />
+            </Link>
+            <p className="text-sm text-muted-foreground text-center">
+              פלטפורמת עזרי למידה לרופאי עור
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
