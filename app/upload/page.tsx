@@ -677,19 +677,26 @@ function UploadPageContent() {
               </div>
 
               {/* Submit */}
-              <div className="flex gap-3">
-                <Button
-                  type="submit"
-                  disabled={uploading || compressing || !formData.title || !formData.body || selectedAidTypes.length === 0}
-                  className="flex-1"
-                >
-                  {compressing ? 'מכווץ תמונה...' : uploading ? 'מעלה...' : 'פרסם עזר למידה'}
-                </Button>
-                <Link href={backUrl}>
-                  <Button type="button" variant="outline">
-                    ביטול
+              <div className="space-y-2">
+                {(!formData.title || !formData.body || selectedAidTypes.length === 0) && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    {!formData.title ? 'נא למלא כותרת' : !formData.body ? 'נא למלא תוכן' : 'נא לבחור לפחות סוג אחד של עזר למידה'}
+                  </p>
+                )}
+                <div className="flex gap-3">
+                  <Button
+                    type="submit"
+                    disabled={uploading || compressing || !formData.title || !formData.body || selectedAidTypes.length === 0}
+                    className="flex-1"
+                  >
+                    {compressing ? 'מכווץ תמונה...' : uploading ? 'מעלה...' : 'פרסם עזר למידה'}
                   </Button>
-                </Link>
+                  <Link href={backUrl}>
+                    <Button type="button" variant="outline">
+                      ביטול
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </form>
           </CardContent>

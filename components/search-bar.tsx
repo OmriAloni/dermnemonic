@@ -46,6 +46,7 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
           onChange={(e) => handleChange(e.target.value)}
           className="ps-10 pe-3"
           dir="rtl"
+          aria-label="חיפוש עזרי למידה"
         />
       {query && (
         <Button

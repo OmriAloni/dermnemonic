@@ -45,6 +45,8 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   async function getCurrentUser() {
     try {
@@ -80,6 +82,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
     if (!newComment.trim()) return
 
     setSubmitting(true)
+    setSubmitError(null)
     try {
       const response = await fetch(`/api/aids/${aidId}/comments`, {
         method: 'POST',
@@ -93,9 +96,14 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         const comment = await response.json()
         setComments([comment, ...comments])
         setNewComment('')
+      } else if (response.status === 401) {
+        setSubmitError('יש להתחבר כדי להגיב')
+      } else {
+        setSubmitError('שגיאה בפרסום התגובה. נסה שוב.')
       }
     } catch (error) {
       console.error('Error posting comment:', error)
+      setSubmitError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setSubmitting(false)
     }
@@ -110,6 +118,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
     if (!commentToDelete) return
 
     setDeletingId(commentToDelete)
+    setDeleteError(null)
     try {
       const response = await fetch(`/api/aids/${aidId}/comments/${commentToDelete}`, {
         method: 'DELETE'
@@ -117,18 +126,20 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
 
       if (response.ok) {
         setComments(comments.filter(c => c.id !== commentToDelete))
+        setDeleteDialogOpen(false)
+        setCommentToDelete(null)
       } else if (response.status === 401) {
-        alert('יש להתחבר כדי למחוק תגובות')
+        setDeleteError('יש להתחבר כדי למחוק תגובות')
       } else if (response.status === 403) {
-        alert('אין לך הרשאה למחוק תגובה זו')
+        setDeleteError('אין לך הרשאה למחוק תגובה זו')
+      } else {
+        setDeleteError('שגיאה במחיקת התגובה. נסה שוב.')
       }
     } catch (error) {
       console.error('Error deleting comment:', error)
-      alert('שגיאה במחיקת התגובה')
+      setDeleteError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setDeletingId(null)
-      setDeleteDialogOpen(false)
-      setCommentToDelete(null)
     }
   }
 
@@ -153,7 +164,9 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
       {/* Comment Form */}
       {currentUserId ? (
         <form onSubmit={handleSubmit} className="space-y-3">
+          <label htmlFor="comment-input" className="sr-only">כתוב תגובה</label>
           <Textarea
+            id="comment-input"
             placeholder="כתוב תגובה..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -161,6 +174,11 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
             rows={3}
             className="resize-none"
           />
+          {submitError && (
+            <div className="p-2 text-sm text-destructive bg-destructive/10 rounded">
+              {submitError}
+            </div>
+          )}
           <div className="flex justify-end">
             <Button type="submit" disabled={submitting || !newComment.trim()}>
               {submitting ? 'שולח...' : 'פרסם תגובה'}
@@ -170,7 +188,10 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         </form>
       ) : (
         <div className="p-6 bg-muted/30 rounded-lg text-center">
-          <p className="text-muted-foreground mb-3">יש להתחבר כדי לדרג ולהגיב</p>
+          <p className="text-muted-foreground mb-3">
+            {comments.length > 0 ? `יש ${comments.length} תגובות - ` : ''}
+            יש להתחבר כדי לדרג ולהגיב
+          </p>
           <Link href="/auth/login">
             <Button>התחבר</Button>
           </Link>
@@ -249,7 +270,13 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={(open) => {
+        setDeleteDialogOpen(open)
+        if (!open) {
+          setDeleteError(null)
+          setCommentToDelete(null)
+        }
+      }}>
         <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
             <AlertDialogTitle>מחיקת תגובה</AlertDialogTitle>
@@ -257,10 +284,15 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
               האם אתה בטוח שברצונך למחוק תגובה זו? פעולה זו לא ניתנת לביטול.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {deleteError && (
+            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded">
+              {deleteError}
+            </div>
+          )}
           <AlertDialogFooter>
-            <AlertDialogCancel>ביטול</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
-              מחק
+            <AlertDialogCancel disabled={!!deletingId}>ביטול</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} disabled={!!deletingId} className="bg-destructive hover:bg-destructive/90">
+              {deletingId ? 'מוחק...' : 'מחק'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

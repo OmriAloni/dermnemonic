@@ -36,6 +36,8 @@ export default function QuizPage() {
   const [selectedTests, setSelectedTests] = useState<string[]>(['שלב א\' הרי"י'])
   const [selectedYears, setSelectedYears] = useState<number[]>([2022])
   const [hasSavedState, setHasSavedState] = useState(false)
+  const [preparingQuiz, setPreparingQuiz] = useState(false)
+  const [quizPrepError, setQuizPrepError] = useState<string | null>(null)
 
   // Load saved quiz state on mount
   useEffect(() => {
@@ -107,6 +109,8 @@ export default function QuizPage() {
   }
 
   const prepareQuiz = () => {
+    setPreparingQuiz(true)
+    setQuizPrepError(null)
     clearSavedState()
     // Filter standalone questions by test and year first
     const testFilteredQuestions = filterQuestionsByTestAndYear(standaloneQuestions, selectedTests, selectedYears)
@@ -206,7 +210,8 @@ export default function QuizPage() {
     const allQuestions = [...aidQuestions, ...standaloneQs]
 
     if (allQuestions.length === 0) {
-      alert('אין מספיק שאלות בפרקים שנבחרו')
+      setQuizPrepError('אין מספיק שאלות בפרקים שנבחרו. נסה לבחור פרקים נוספים.')
+      setPreparingQuiz(false)
       return
     }
 
@@ -228,6 +233,7 @@ export default function QuizPage() {
 
     setQuestions(uniqueQuestions)
     setQuizStarted(true)
+    setPreparingQuiz(false)
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -477,14 +483,19 @@ export default function QuizPage() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t">
+              <div className="pt-6 border-t space-y-3">
+                {quizPrepError && (
+                  <div className="p-3 text-sm text-destructive bg-destructive/10 rounded">
+                    {quizPrepError}
+                  </div>
+                )}
                 <Button
                   onClick={prepareQuiz}
                   size="lg"
                   className="w-full"
-                  disabled={selectedChapters.length === 0 || selectedTests.length === 0 || selectedYears.length === 0}
+                  disabled={selectedChapters.length === 0 || selectedTests.length === 0 || selectedYears.length === 0 || preparingQuiz}
                 >
-                  התחל למידה
+                  {preparingQuiz ? 'מכין שאלות...' : 'התחל למידה'}
                   {selectedTests.length > 0 && selectedYears.length > 0 && (
                     selectedChapters.includes('all')
                       ? ` (${selectedYears.join(', ')}, כל הפרקים)`
@@ -636,7 +647,7 @@ export default function QuizPage() {
                 </>
               ) : (
                 <>
-                  <Badge variant="secondary">שלב א' הר"י</Badge>
+                  <Badge variant="secondary">שלב א' הרי"י</Badge>
                   {(() => {
                     const chapterInfo = CHAPTERS.find(c => c.value === currentQuestion.question.chapter)
                     return chapterInfo && (

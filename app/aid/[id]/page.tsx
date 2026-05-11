@@ -63,6 +63,7 @@ export default function AidDetailPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [deletingInProgress, setDeletingInProgress] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -268,6 +269,7 @@ export default function AidDetailPage() {
     if (deletingInProgress) return
 
     setDeletingInProgress(true)
+    setDeleteError(null)
     try {
       const response = await fetch(`/api/aids/${id}`, {
         method: 'DELETE'
@@ -288,40 +290,41 @@ export default function AidDetailPage() {
       } else if (response.status === 401) {
         window.location.href = '/auth/login'
       } else if (response.status === 403) {
-        alert('אין לך הרשאה למחוק תוכן זה')
+        setDeleteError('אין לך הרשאה למחוק תוכן זה')
       } else {
-        alert('שגיאה במחיקת התוכן')
+        setDeleteError('שגיאה במחיקת התוכן. נסה שוב.')
       }
     } catch (error) {
       console.error('Error deleting aid:', error)
-      alert('שגיאה במחיקת התוכן')
+      setDeleteError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setDeletingInProgress(false)
-      setShowDeleteDialog(false)
+      if (!deleteError) {
+        setShowDeleteDialog(false)
+      }
     }
   }
 
   const handleSave = async () => {
     if (typeof window === 'undefined' || savingInProgress) return
 
+    // Check if user is logged in
+    if (!currentUserId) {
+      window.location.href = '/auth/login'
+      return
+    }
+
     setSavingInProgress(true)
     try {
-      // Check if user is logged in
-      const response = await fetch('/api/aids')
-      if (response.status === 401) {
-        window.location.href = '/auth/login'
-        return
-      }
-
       const savedAids = localStorage.getItem('saved-aids')
-      const saved = savedAids ? JSON.parse(savedAids) : []
+      const savedList = savedAids ? JSON.parse(savedAids) : []
 
-      if (saved.includes(id)) {
-        const updated = saved.filter((aidId: string) => aidId !== id)
+      if (savedList.includes(id)) {
+        const updated = savedList.filter((aidId: string) => aidId !== id)
         localStorage.setItem('saved-aids', JSON.stringify(updated))
         setSaved(false)
       } else {
-        localStorage.setItem('saved-aids', JSON.stringify([...saved, id]))
+        localStorage.setItem('saved-aids', JSON.stringify([...savedList, id]))
         setSaved(true)
       }
     } catch (error) {
@@ -435,7 +438,9 @@ export default function AidDetailPage() {
                 size="sm"
                 onClick={toggleShuffleMode}
                 className="h-8 px-2 sm:px-3"
-                title={shuffleMode ? 'כרטיסים אקראיים פעיל' : 'לחץ לניווט אקראי'}
+                title={shuffleMode ? 'ניווט אקראי פעיל - כל חץ מעביר לכרטיס אקראי' : 'לחץ להפעיל ניווט אקראי'}
+                aria-pressed={shuffleMode}
+                aria-label={shuffleMode ? 'כבה מצב אקראי' : 'הפעל מצב אקראי'}
               >
                 <Shuffle className={`h-4 w-4 ${shuffleMode ? 'text-primary-foreground' : ''}`} />
                 <span className="hidden sm:inline sm:ms-1">{shuffleMode ? 'אקראי' : 'סדר'}</span>
@@ -689,7 +694,10 @@ export default function AidDetailPage() {
       </main>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog open={showDeleteDialog} onOpenChange={(open) => {
+        setShowDeleteDialog(open)
+        if (!open) setDeleteError(null)
+      }}>
         <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
             <AlertDialogTitle>מחיקת עזר למידה</AlertDialogTitle>
@@ -698,13 +706,19 @@ export default function AidDetailPage() {
               פעולה זו לא ניתנת לביטול.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {deleteError && (
+            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded">
+              {deleteError}
+            </div>
+          )}
           <AlertDialogFooter>
-            <AlertDialogCancel>ביטול</AlertDialogCancel>
+            <AlertDialogCancel disabled={deletingInProgress}>ביטול</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
+              disabled={deletingInProgress}
               className="bg-destructive hover:bg-destructive/90"
             >
-              מחק
+              {deletingInProgress ? 'מוחק...' : 'מחק'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

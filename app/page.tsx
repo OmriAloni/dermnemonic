@@ -47,14 +47,24 @@ export default function FeedPage() {
       try {
         const response = await fetch('/api/aids')
         if (!response.ok) {
-          throw new Error('שגיאה בטעינת עזרי הלמידה')
+          if (response.status === 404) {
+            throw new Error('עזרי למידה לא נמצאו')
+          } else if (response.status >= 500) {
+            throw new Error('שגיאת שרת. נסה שוב מאוחר יותר.')
+          } else {
+            throw new Error('שגיאה בטעינת עזרי הלמידה')
+          }
         }
         const data = await response.json()
         setAids(data)
         setError(null)
       } catch (error) {
         console.error('Error fetching aids:', error)
-        setError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
+        if (error instanceof Error) {
+          setError(error.message)
+        } else {
+          setError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
+        }
       } finally {
         setLoading(false)
       }
@@ -69,6 +79,14 @@ export default function FeedPage() {
     sort: 'newest',
     showSavedOnly: false
   })
+  const [shuffleSeed, setShuffleSeed] = useState(Date.now())
+
+  // Update shuffle seed when shuffle mode is selected
+  useEffect(() => {
+    if (currentFilters.sort === 'shuffle') {
+      setShuffleSeed(Date.now())
+    }
+  }, [currentFilters.sort])
 
   // Compute filtered aids using useMemo (derived state)
   const filteredAids = useMemo(() => {
@@ -142,13 +160,11 @@ export default function FeedPage() {
     } else if (currentFilters.sort === 'rated') {
       filtered.sort((a, b) => (b.stats?.rating_avg || 0) - (a.stats?.rating_avg || 0))
     } else if (currentFilters.sort === 'shuffle') {
-      // For shuffle, use a stable seed based on filtered length
-      // This makes it deterministic within a render cycle
-      const seed = filtered.length
+      // Use shuffle seed for randomness that changes when user wants
       filtered.sort((a, b) => {
         const hashA = a.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
         const hashB = b.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
-        return ((hashA * seed) % 100) - ((hashB * seed) % 100)
+        return ((hashA * shuffleSeed) % 100) - ((hashB * shuffleSeed) % 100)
       })
     }
 
@@ -160,7 +176,7 @@ export default function FeedPage() {
     })
 
     return filtered
-  }, [aids, searchQuery, currentFilters])
+  }, [aids, searchQuery, currentFilters, shuffleSeed])
 
   // Store filtered aids IDs in localStorage for detail page navigation
   useEffect(() => {

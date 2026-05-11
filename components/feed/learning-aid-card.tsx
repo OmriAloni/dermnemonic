@@ -41,6 +41,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
   })
   const [userReactions, setUserReactions] = useState<string[]>([])
   const [reactionsLoading, setReactionsLoading] = useState(false)
+  const [reactionError, setReactionError] = useState<string | null>(null)
 
   // Check if aid is recent (uploaded in last 48 hours)
   const isRecent = () => {
@@ -133,6 +134,9 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
 
     if (reactionsLoading) return
 
+    // Clear any previous errors
+    setReactionError(null)
+
     // Optimistic update - instant UI feedback
     const isActive = userReactions.includes(reactionType)
     const newUserReactions = isActive
@@ -173,6 +177,9 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
 
         if (response.status === 401) {
           window.location.href = '/auth/login'
+        } else {
+          setReactionError('לא ניתן לשמור תגובה. נסה שוב.')
+          setTimeout(() => setReactionError(null), 3000)
         }
       }
     } catch (error) {
@@ -183,6 +190,8 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
       if (typeof window !== 'undefined') {
         localStorage.setItem(`reactions-${aid.id}`, JSON.stringify(userReactions))
       }
+      setReactionError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
+      setTimeout(() => setReactionError(null), 3000)
     } finally {
       setReactionsLoading(false)
     }
@@ -200,8 +209,8 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
       className={cn(
         "overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col",
         aid.media_url
-          ? "h-[760px] md:h-[700px]"  // With image: taller on mobile
-          : "h-[640px] md:h-[600px]"   // Text-only: shorter
+          ? "h-[640px] md:h-[700px]"  // With image
+          : "h-[600px] md:h-[650px]"   // Text-only
       )}
       onClick={handleCardClick}
     >
@@ -379,6 +388,12 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           </button>
         </div>
 
+        {reactionError && (
+          <div className="w-full p-2 text-xs text-center text-destructive bg-destructive/10 rounded">
+            {reactionError}
+          </div>
+        )}
+
         <div className="flex items-center justify-between w-full text-sm text-muted-foreground pt-2 border-t">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
@@ -410,7 +425,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
                 id={`rate-${aid.id}-${star}`}
                 onClick={(e) => handleRating(star, e)}
                 onMouseEnter={() => setHoverRating(star)}
-                className="transition-transform hover:scale-110 p-2 -m-1"
+                className="transition-transform hover:scale-110 p-2 -m-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
                 aria-label={`דרג ${star} כוכבים`}
               >
                 <Star
