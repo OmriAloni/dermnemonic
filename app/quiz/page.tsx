@@ -453,12 +453,11 @@ export default function QuizPage() {
                     const questionCount = chapterQuestionCounts.get(chapter.value) || 0
 
                     return (
-                      <div key={chapter.value} className="flex items-start gap-2">
+                      <div key={chapter.value} className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors">
                         <Checkbox
                           id={`chapter-${chapter.value}`}
-                          checked={selectedChapters.includes(chapter.value)}
+                          checked={selectedChapters.includes(chapter.value) || selectedChapters.includes('all')}
                           onCheckedChange={() => toggleChapter(chapter.value)}
-                          disabled={selectedChapters.includes('all')}
                           className="mt-1"
                         />
                         <label
@@ -737,7 +736,7 @@ export default function QuizPage() {
                   {isCorrect ? (
                     <>
                       <CheckCircle2 className="h-6 w-6 text-green-600" />
-                      <p className="text-xl font-semibold text-green-600">!נכון</p>
+                      <p className="text-xl font-semibold text-green-600">נכון!</p>
                     </>
                   ) : (
                     <>
