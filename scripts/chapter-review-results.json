@@ -1,0 +1,533 @@
+{
+  "updates": [
+    {
+      "id": "prp-001",
+      "currentChapter": "papulosquamous",
+      "suggestedChapter": "psoriasis",
+      "confidence": "MEDIUM",
+      "reason": "Found: פסוריאזיס"
+    },
+    {
+      "id": "drug-reactions-001",
+      "currentChapter": "drug-reactions",
+      "suggestedChapter": "papulosquamous",
+      "confidence": "MEDIUM",
+      "reason": "Found: pityriasis rosea"
+    },
+    {
+      "id": "scleroderma-001",
+      "currentChapter": "scleroderma",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: תרופה"
+    },
+    {
+      "id": "darier-hailey-001",
+      "currentChapter": "darier-hailey",
+      "suggestedChapter": "other",
+      "confidence": "LOW",
+      "reason": "No clear chapter match - consider \"other\""
+    },
+    {
+      "id": "hyperpigmentation-001",
+      "currentChapter": "hyperpigmentation",
+      "suggestedChapter": "other",
+      "confidence": "LOW",
+      "reason": "No clear chapter match - consider \"other\""
+    },
+    {
+      "id": "hyperpigmentation-002",
+      "currentChapter": "hyperpigmentation",
+      "suggestedChapter": "other",
+      "confidence": "LOW",
+      "reason": "No clear chapter match - consider \"other\""
+    },
+    {
+      "id": "sti-001",
+      "currentChapter": "sti",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: TEN"
+    },
+    {
+      "id": "american-board-002",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: SCLE"
+    },
+    {
+      "id": "american-board-003",
+      "currentChapter": "other",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: TEN"
+    },
+    {
+      "id": "american-board-004",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-005",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-007",
+      "currentChapter": "other",
+      "suggestedChapter": "psoriasis",
+      "confidence": "HIGH",
+      "reason": "Found: psoriasis, pustular psoriasis"
+    },
+    {
+      "id": "american-board-008",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: biopsy"
+    },
+    {
+      "id": "american-board-010",
+      "currentChapter": "other",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: תרופה"
+    },
+    {
+      "id": "american-board-015",
+      "currentChapter": "other",
+      "suggestedChapter": "vitiligo",
+      "confidence": "MEDIUM",
+      "reason": "Found: vitiligo"
+    },
+    {
+      "id": "american-board-019",
+      "currentChapter": "other",
+      "suggestedChapter": "papulosquamous",
+      "confidence": "MEDIUM",
+      "reason": "Found: lichen planus"
+    },
+    {
+      "id": "american-board-021",
+      "currentChapter": "other",
+      "suggestedChapter": "melanoma",
+      "confidence": "MEDIUM",
+      "reason": "Found: melanoma"
+    },
+    {
+      "id": "american-board-022",
+      "currentChapter": "other",
+      "suggestedChapter": "atopic-dermatitis",
+      "confidence": "MEDIUM",
+      "reason": "Found: atopic"
+    },
+    {
+      "id": "american-board-024",
+      "currentChapter": "other",
+      "suggestedChapter": "acne",
+      "confidence": "MEDIUM",
+      "reason": "Found: אקנה"
+    },
+    {
+      "id": "american-board-032",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "HIGH",
+      "reason": "Found: BCC, SCC"
+    },
+    {
+      "id": "american-board-040",
+      "currentChapter": "other",
+      "suggestedChapter": "dermatomyositis",
+      "confidence": "MEDIUM",
+      "reason": "Found: heliotrope"
+    },
+    {
+      "id": "american-board-044",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-045",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-047",
+      "currentChapter": "other",
+      "suggestedChapter": "psoriasis",
+      "confidence": "MEDIUM",
+      "reason": "Found: פסוריאזיס"
+    },
+    {
+      "id": "american-board-048",
+      "currentChapter": "other",
+      "suggestedChapter": "papulosquamous",
+      "confidence": "MEDIUM",
+      "reason": "Found: pityriasis rosea"
+    },
+    {
+      "id": "american-board-051",
+      "currentChapter": "other",
+      "suggestedChapter": "rosacea",
+      "confidence": "MEDIUM",
+      "reason": "Found: rhinophyma"
+    },
+    {
+      "id": "american-board-052",
+      "currentChapter": "other",
+      "suggestedChapter": "melanoma",
+      "confidence": "MEDIUM",
+      "reason": "Found: מלנומה"
+    },
+    {
+      "id": "american-board-053",
+      "currentChapter": "other",
+      "suggestedChapter": "hair-nail-biology",
+      "confidence": "MEDIUM",
+      "reason": "Found: nail"
+    },
+    {
+      "id": "american-board-057",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: SCLE"
+    },
+    {
+      "id": "american-board-058",
+      "currentChapter": "other",
+      "suggestedChapter": "pregnancy",
+      "confidence": "MEDIUM",
+      "reason": "Found: הריון"
+    },
+    {
+      "id": "american-board-060",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "HIGH",
+      "reason": "Found: BCC, SCC"
+    },
+    {
+      "id": "american-board-062",
+      "currentChapter": "other",
+      "suggestedChapter": "herpes",
+      "confidence": "MEDIUM",
+      "reason": "Found: הרפס"
+    },
+    {
+      "id": "american-board-063",
+      "currentChapter": "other",
+      "suggestedChapter": "allergic-contact",
+      "confidence": "MEDIUM",
+      "reason": "Found: balsam of peru"
+    },
+    {
+      "id": "american-board-065",
+      "currentChapter": "other",
+      "suggestedChapter": "bacterial",
+      "confidence": "HIGH",
+      "reason": "Found: staph, strep"
+    },
+    {
+      "id": "american-board-068",
+      "currentChapter": "other",
+      "suggestedChapter": "dermatomyositis",
+      "confidence": "MEDIUM",
+      "reason": "Found: dermatomyositis, myositis"
+    },
+    {
+      "id": "american-board-069",
+      "currentChapter": "melanoma",
+      "suggestedChapter": "other",
+      "confidence": "LOW",
+      "reason": "No clear chapter match - consider \"other\""
+    },
+    {
+      "id": "american-board-070",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-074",
+      "currentChapter": "other",
+      "suggestedChapter": "melanoma",
+      "confidence": "MEDIUM",
+      "reason": "Found: מלנומה"
+    },
+    {
+      "id": "american-board-077",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-079",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: SLE"
+    },
+    {
+      "id": "american-board-084",
+      "currentChapter": "other",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: תרופה"
+    },
+    {
+      "id": "american-board-085",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "HIGH",
+      "reason": "Found: carcinoma, basal cell"
+    },
+    {
+      "id": "american-board-089",
+      "currentChapter": "other",
+      "suggestedChapter": "acne",
+      "confidence": "MEDIUM",
+      "reason": "Found: acne"
+    },
+    {
+      "id": "american-board-092",
+      "currentChapter": "other",
+      "suggestedChapter": "papulosquamous",
+      "confidence": "MEDIUM",
+      "reason": "Found: lichen planus"
+    },
+    {
+      "id": "american-board-093",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-094",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-095",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-097",
+      "currentChapter": "other",
+      "suggestedChapter": "vasculitis",
+      "confidence": "MEDIUM",
+      "reason": "Found: vasculitis"
+    },
+    {
+      "id": "american-board-098",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "HIGH",
+      "reason": "Found: ביופסיה, פורמלין, היסטולוגיה"
+    },
+    {
+      "id": "american-board-100",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-101",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: SCLE"
+    },
+    {
+      "id": "american-board-103",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "MEDIUM",
+      "reason": "Found: carcinoma"
+    },
+    {
+      "id": "american-board-104",
+      "currentChapter": "other",
+      "suggestedChapter": "pemphigoid",
+      "confidence": "HIGH",
+      "reason": "Found: pemphigoid, bullous pemphigoid"
+    },
+    {
+      "id": "american-board-108",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: היסטולוגיה"
+    },
+    {
+      "id": "american-board-112",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: SCLE"
+    },
+    {
+      "id": "american-board-114",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-118",
+      "currentChapter": "other",
+      "suggestedChapter": "pemphigoid",
+      "confidence": "MEDIUM",
+      "reason": "Found: pemphigoid"
+    },
+    {
+      "id": "american-board-120",
+      "currentChapter": "other",
+      "suggestedChapter": "psoriasis",
+      "confidence": "MEDIUM",
+      "reason": "Found: psoriasis"
+    },
+    {
+      "id": "american-board-121",
+      "currentChapter": "other",
+      "suggestedChapter": "urticaria",
+      "confidence": "MEDIUM",
+      "reason": "Found: urticaria"
+    },
+    {
+      "id": "american-board-122",
+      "currentChapter": "other",
+      "suggestedChapter": "alopecias",
+      "confidence": "MEDIUM",
+      "reason": "Found: alopecia"
+    },
+    {
+      "id": "american-board-123",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-124",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "MEDIUM",
+      "reason": "Found: carcinoma"
+    },
+    {
+      "id": "american-board-127",
+      "currentChapter": "other",
+      "suggestedChapter": "hpv",
+      "confidence": "MEDIUM",
+      "reason": "Found: wart"
+    },
+    {
+      "id": "american-board-131",
+      "currentChapter": "other",
+      "suggestedChapter": "ak-bcc-scc",
+      "confidence": "HIGH",
+      "reason": "Found: carcinoma, squamous cell"
+    },
+    {
+      "id": "american-board-132",
+      "currentChapter": "other",
+      "suggestedChapter": "acne",
+      "confidence": "HIGH",
+      "reason": "Found: אקנה, acne, neonatal, infantile"
+    },
+    {
+      "id": "american-board-134",
+      "currentChapter": "other",
+      "suggestedChapter": "nail-disorders",
+      "confidence": "MEDIUM",
+      "reason": "Found: נייל"
+    },
+    {
+      "id": "american-board-136",
+      "currentChapter": "other",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: DRESS"
+    },
+    {
+      "id": "american-board-140",
+      "currentChapter": "other",
+      "suggestedChapter": "biopsy-excisions",
+      "confidence": "MEDIUM",
+      "reason": "Found: ביופסיה"
+    },
+    {
+      "id": "american-board-141",
+      "currentChapter": "other",
+      "suggestedChapter": "lupus",
+      "confidence": "MEDIUM",
+      "reason": "Found: לופוס"
+    },
+    {
+      "id": "american-board-142",
+      "currentChapter": "other",
+      "suggestedChapter": "pregnancy",
+      "confidence": "MEDIUM",
+      "reason": "Found: יילוד"
+    },
+    {
+      "id": "american-board-144",
+      "currentChapter": "other",
+      "suggestedChapter": "erythema-multiforme",
+      "confidence": "MEDIUM",
+      "reason": "Found: erythema multiforme"
+    },
+    {
+      "id": "american-board-145",
+      "currentChapter": "other",
+      "suggestedChapter": "bacterial",
+      "confidence": "MEDIUM",
+      "reason": "Found: strep"
+    },
+    {
+      "id": "american-board-146",
+      "currentChapter": "other",
+      "suggestedChapter": "drug-reactions",
+      "confidence": "MEDIUM",
+      "reason": "Found: תרופה"
+    },
+    {
+      "id": "american-board-147",
+      "currentChapter": "other",
+      "suggestedChapter": "fungal",
+      "confidence": "MEDIUM",
+      "reason": "Found: פטרייתי"
+    },
+    {
+      "id": "american-board-150",
+      "currentChapter": "sti",
+      "suggestedChapter": "fungal",
+      "confidence": "MEDIUM",
+      "reason": "Found: candida"
+    }
+  ],
+  "summary": {
+    "total": 163,
+    "needsReview": 75
+  }
+}

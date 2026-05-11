@@ -1,0 +1,37 @@
+📄 Phase 1: Extracting text from test.pdf...
+   Extracted 37429 characters
+
+📄 Phase 1: Extracting text from answers.pdf...
+   Extracted 1072 characters
+
+🔍 Phase 2: Parsing questions...
+   Parsed 145 questions
+
+🔍 Phase 3: Parsing answers...
+   Parsed 150 answers
+
+🔗 Phase 4: Matching answers...
+   Matched 145 complete questions
+
+⚠️  Missing 5 questions: 55, 64, 99, 133, 143
+
+✓ Phase 5: Validating...
+✅ All questions passed validation
+
+💾 Phase 6: Generating quiz-questions.json...
+✅ Generated 158 total questions (145 new + 812 existing)
+
+✅ Extraction complete!
+📊 Summary:
+   - Questions extracted: 145
+   - Questions with answers: 145
+   - Output file: /Users/omrialon/Documents/yuval/dermnemonic/public/quiz-questions.json
+   - Log file: /Users/omrialon/Documents/yuval/dermnemonic/scripts/extraction-log.txt
+
+📚 Chapter distribution:
+   other: 138
+   urticaria: 2
+   drug-reactions: 2
+   melanoma: 1
+   vitiligo: 1
+   sti: 1

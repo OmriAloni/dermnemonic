@@ -28,12 +28,13 @@ rm -rf .next && npm run dev             # Clear cache and restart
 
 ## Quiz System (158 Questions)
 
-The quiz system uses static JSON files for questions and images:
+The quiz system uses static JSON files for questions and images, with test and year filtering:
 
 **File locations:**
 - `public/quiz-questions.json` - 158 questions (145 Israeli Board + 13 Hebrew)
 - `public/quiz-images/` - 39 clinical images from board exam
 - `lib/quiz-questions.ts` - QuizQuestion interface and utilities
+- `app/quiz/page.tsx` - Quiz UI with test/year/chapter filters
 
 **Question structure:**
 ```typescript
@@ -45,8 +46,17 @@ interface QuizQuestion {
   correctAnswer: number   // Index 0-3
   explanation: string     // Answer explanation (can be empty)
   imageUrl?: string       // Optional: "/quiz-images/american-board-001.png"
+  testName?: string       // Auto-detected from ID: "שלב א' הרי"י"
+  year?: number           // Auto-detected: 2022 for Israeli Board questions
 }
 ```
+
+**Test and year filtering:**
+- Questions are automatically tagged by test name and year based on their ID prefix
+- `american-board-*` questions → "שלב א' הרי"י" (2022)
+- Other questions → "שאלות מקוריות" (no year)
+- Quiz UI allows filtering by test (Israeli Board) and year (2020-2025, only 2022 enabled)
+- Functions: `getQuestionMetadata()`, `filterQuestionsByTestAndYear()`, `getAvailableYearsForTest()`
 
 **Adding new questions:**
 1. Edit `public/quiz-questions.json` directly, or
@@ -67,6 +77,11 @@ interface QuizQuestion {
 - Located in `public/quiz-images/`
 - Naming convention: `{source}-{number}.png` (e.g., `american-board-007.png`)
 - 38 diagnostic images from Israeli Board Exam (שלב א' הרי"י 2022)
+
+**Other public assets:**
+- `public/logosmall.jpeg` - Optimized logo (37KB, used in header)
+- `public/logo.jpeg` - Original logo (109KB)
+- `public/presentation.html` - Contest presentation page
 
 ## Quick Start
 
@@ -320,25 +335,28 @@ export function BookmarksList({ initialBookmarks }: { initialBookmarks: Bookmark
 **Contest Deadline**: June 3, 2026  
 **Status**: ✅ Ready for submission
 
-### Contest-Ready Features (May 8, 2026)
+### Contest-Ready Features (May 11, 2026)
 
 - ✅ **18 learning aids** - Hebrew mnemonics and visual aids
-- ✅ **158 quiz questions** - 145 Israeli Board (שלב א' הרי"י) + 13 Hebrew mnemonics
+- ✅ **158 quiz questions** - 145 Israeli Board (שלב א' הרי"י 2022) + 13 Hebrew mnemonics
 - ✅ **38 clinical images** - Diagnostic photos from actual board exam
 - ✅ **Rich text editor** - Tiptap with RTL support and formatting toolbar
 - ✅ **Presentation page** - Statistics overview at `/presentation.html`
+- ✅ **Quiz filters** - Test selection (Israeli Board) + year filter (2020-2025, only 2022 enabled)
+- ✅ **Optimized logo** - Using logosmall.jpeg (37KB) for faster page loads
 
 ### Working Features
 
 - ✅ **Authentication** - Magic link signup/login
 - ✅ **Upload** - Image upload to Supabase Storage with auto-filled profile data, rich text editor
-- ✅ **Feed** - Search, filters (chapter, aid type), sort, "saved only" mode
+- ✅ **Feed** - Search, filters (chapter, aid type with Select All/Clear All), sort, "saved only" mode
+- ✅ **Aid Type Filtering** - Cards without type auto-tagged as "other", only show when "other" selected
 - ✅ **Detail Pages** - Carousel navigation with keyboard shortcuts (←/→)
 - ✅ **Engagement** - Comments (add/view/delete with modal), 5-star ratings, reactions (❤️/👏/💡)
 - ✅ **WhatsApp Share** - Pre-filled Hebrew messages with deep links
 - ✅ **Chapter System** - 159 Bolognia chapters with English names and numbers
 - ✅ **Badges** - Verified (curator-approved), Recent (48 hours), chapter tags
-- ✅ **Quiz System** - 158 questions with clinical images, chapter filtering, progress tracking
+- ✅ **Quiz System** - 158 questions with test/year/chapter filters, clinical images, progress tracking
 - ✅ **Performance** - 40x optimized (database stats view, 2 queries vs 41)
 - ✅ **Mobile UX** - 44px+ touch targets, responsive layouts, RTL throughout
 - ✅ **Loading States** - Skeletons, blur placeholders, button loading text
@@ -509,6 +527,18 @@ export default async function BookmarksPage() {
 ### Modifying filters
 
 **Active filter component**: `components/filters/simple-filter-panel.tsx` (chapter + aid type only)
+
+**Aid type filtering behavior:**
+- Cards **with** a specific aid_type tag only show when that type is selected
+- Cards **without** any aid_type tags are automatically treated as "other"
+- Cards without aid_type only show when "other" is selected
+- Implementation in `app/page.tsx` lines 104-123:
+  ```typescript
+  if (aidTypeTags.length === 0) {
+    return currentFilters.aidTypes.includes('other')  // Only show if "other" selected
+  }
+  ```
+- The filter panel has "Select All" and "Clear All" buttons for aid types
 
 **To add a new filter category (e.g., "diagnosis"):**
 
