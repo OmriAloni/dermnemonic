@@ -200,8 +200,8 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
       className={cn(
         "overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col",
         aid.media_url
-          ? "h-[640px] md:h-[580px]"  // With image: taller on mobile
-          : "h-[520px] md:h-[480px]"   // Text-only: shorter
+          ? "h-[760px] md:h-[700px]"  // With image: taller on mobile
+          : "h-[640px] md:h-[600px]"   // Text-only: shorter
       )}
       onClick={handleCardClick}
     >
@@ -295,7 +295,7 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
             text={aid.body}
             className={cn(
               "text-sm leading-relaxed",
-              aid.media_url ? "line-clamp-4" : "line-clamp-6"
+              aid.media_url ? "line-clamp-6" : "line-clamp-8"
             )}
           />
         )}
