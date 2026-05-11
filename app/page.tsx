@@ -297,10 +297,10 @@ export default function FeedPage() {
               className="hover:opacity-80 transition-opacity"
             >
               <Image
-                src="/logosmall.jpeg"
+                src="/logo.jpeg"
                 alt="Dermassociations"
-                width={80}
-                height={80}
+                width={120}
+                height={120}
                 className="rounded-xl shadow-md"
               />
             </Link>
