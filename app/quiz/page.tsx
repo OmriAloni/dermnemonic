@@ -33,7 +33,7 @@ export default function QuizPage() {
   const [quizComplete, setQuizComplete] = useState(false)
   const [quizStarted, setQuizStarted] = useState(false)
   const [selectedChapters, setSelectedChapters] = useState<string[]>(['all'])
-  const [selectedTests, setSelectedTests] = useState<string[]>(['שלב א\' הרי"י'])
+  const [selectedTests, setSelectedTests] = useState<string[]>(['שלב א׳ הר״י'])
   const [selectedYears, setSelectedYears] = useState<number[]>([2022])
   const [hasSavedState, setHasSavedState] = useState(false)
   const [preparingQuiz, setPreparingQuiz] = useState(false)
@@ -96,7 +96,7 @@ export default function QuizPage() {
       setScore(state.score)
       setAnsweredQuestions(state.answeredQuestions)
       setSelectedChapters(state.selectedChapters)
-      setSelectedTests(state.selectedTests || ['שלב א\' הרי"י'])
+      setSelectedTests(state.selectedTests || ['שלב א׳ הר״י'])
       setSelectedYears(state.selectedYears || [2022])
       setQuizStarted(true)
       setHasSavedState(false)
@@ -385,10 +385,10 @@ export default function QuizPage() {
                   <div className="flex items-center gap-3 p-3 border rounded-lg bg-background">
                     <Checkbox
                       id="test-israeli-board"
-                      checked={selectedTests.includes('שלב א\' הרי"י')}
+                      checked={selectedTests.includes('שלב א׳ הר״י')}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          setSelectedTests(['שלב א\' הרי"י'])
+                          setSelectedTests(['שלב א׳ הר״י'])
                         } else {
                           setSelectedTests([])
                         }
@@ -647,7 +647,7 @@ export default function QuizPage() {
                 </>
               ) : (
                 <>
-                  <Badge variant="secondary">שלב א' הרי"י</Badge>
+                  <Badge variant="secondary">שלב א׳ הר״י</Badge>
                   {(() => {
                     const chapterInfo = CHAPTERS.find(c => c.value === currentQuestion.question.chapter)
                     return chapterInfo && (

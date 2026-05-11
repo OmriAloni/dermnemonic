@@ -6,7 +6,7 @@ export interface QuizQuestion {
   correctAnswer: number // Index of correct answer (0-3)
   explanation: string
   imageUrl?: string // Optional: e.g., "/quiz-images/american-board-001.png"
-  testName?: string // e.g., "שלב א' הרי"י", "American Board"
+  testName?: string // e.g., "שלב א׳ הר״י", "American Board"
   year?: number // e.g., 2022
 }
 
@@ -14,7 +14,7 @@ export interface QuizQuestion {
 export function getQuestionMetadata(question: QuizQuestion): { testName: string; year: number | null } {
   // Israeli Board exam questions (2022)
   if (question.id.startsWith('american-board-')) {
-    return { testName: 'שלב א\' הרי"י', year: 2022 }
+    return { testName: 'שלב א׳ הר״י', year: 2022 }
   }
 
   // Hebrew mnemonic questions (no specific year)
