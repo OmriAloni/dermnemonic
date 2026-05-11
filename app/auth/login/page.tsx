@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { translateAuthError } from '@/lib/auth-errors'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
@@ -32,7 +33,8 @@ export default function LoginPage() {
       if (error) {
         setError(translateAuthError(error.message))
       } else {
-        router.push('/')
+        const returnUrl = searchParams.get('returnUrl') || '/'
+        router.push(returnUrl)
         router.refresh()
       }
     } catch (err) {

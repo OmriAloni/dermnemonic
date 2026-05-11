@@ -17,6 +17,7 @@ import {
 import { MessageCircle, Send, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface Comment {
   id: string
@@ -54,7 +55,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
       const { data: { user } } = await supabase.auth.getUser()
       setCurrentUserId(user?.id || null)
     } catch (error) {
-      console.error('Error getting current user:', error)
+      logger.error('Error getting current user:', error)
     }
   }
 
@@ -66,7 +67,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         setComments(data)
       }
     } catch (error) {
-      console.error('Error fetching comments:', error)
+      logger.error('Error fetching comments:', error)
     } finally {
       setLoading(false)
     }
@@ -102,7 +103,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         setSubmitError('שגיאה בפרסום התגובה. נסה שוב.')
       }
     } catch (error) {
-      console.error('Error posting comment:', error)
+      logger.error('Error posting comment:', error)
       setSubmitError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setSubmitting(false)
@@ -136,7 +137,7 @@ export function CommentsSection({ aidId }: CommentsSectionProps) {
         setDeleteError('שגיאה במחיקת התגובה. נסה שוב.')
       }
     } catch (error) {
-      console.error('Error deleting comment:', error)
+      logger.error('Error deleting comment:', error)
       setDeleteError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setDeletingId(null)

@@ -43,6 +43,7 @@ import {
 } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import { CHAPTERS } from '@/lib/chapters'
+import { logger } from '@/lib/logger'
 
 export default function AidDetailPage() {
   const params = useParams()
@@ -98,7 +99,7 @@ export default function AidDetailPage() {
           const { data: { user } } = await supabase.auth.getUser()
           setCurrentUserId(user?.id || null)
         } catch (error) {
-          console.error('Error getting user:', error)
+          logger.error('Error getting user:', error)
         }
 
         // Check if saved in localStorage
@@ -144,7 +145,7 @@ export default function AidDetailPage() {
         }
       } catch (err) {
         setError('שגיאה בטעינת עזר הלמידה')
-        console.error(err)
+        logger.error(err)
       } finally {
         setLoading(false)
       }
@@ -292,7 +293,7 @@ export default function AidDetailPage() {
         }
       }
     } catch (error) {
-      console.error('Error toggling like:', error)
+      logger.error('Error toggling like:', error)
       // Revert on error
       setLiked(liked)
       setLikeCount(likeCount)
@@ -332,7 +333,7 @@ export default function AidDetailPage() {
         setDeleteError('שגיאה במחיקת התוכן. נסה שוב.')
       }
     } catch (error) {
-      console.error('Error deleting aid:', error)
+      logger.error('Error deleting aid:', error)
       setDeleteError('בעיית חיבור. בדוק את האינטרנט ונסה שוב.')
     } finally {
       setDeletingInProgress(false)
@@ -365,7 +366,7 @@ export default function AidDetailPage() {
         setSaved(true)
       }
     } catch (error) {
-      console.error('Error toggling save:', error)
+      logger.error('Error toggling save:', error)
     } finally {
       setSavingInProgress(false)
     }

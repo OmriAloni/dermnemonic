@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Star, ArrowRight, Upload as UploadIcon, Trophy, Medal, Award } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface UploaderStats {
   id: string
@@ -77,7 +78,7 @@ export default function UploadersPage() {
           setRatings(JSON.parse(savedRatings))
         }
       } catch (error) {
-        console.error('Error fetching uploaders:', error)
+        logger.error('Error fetching uploaders:', error)
       } finally {
         setLoading(false)
       }

@@ -4,6 +4,16 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { CheckCircle2, XCircle, Trophy, ArrowRight, RotateCcw } from 'lucide-react'
 import type { LearningAid } from '@/lib/types'
 import Link from 'next/link'
@@ -12,6 +22,7 @@ import { CHAPTERS } from '@/lib/chapters'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { QuizQuestion as StandaloneQuestion } from '@/lib/quiz-questions'
 import { getQuizQuestions, filterQuestionsByChapters, filterQuestionsByTestAndYear, getQuestionMetadata, shuffleArray } from '@/lib/quiz-questions'
+import { logger } from '@/lib/logger'
 
 // Union type for both question formats
 type QuizQuestion =
@@ -31,6 +42,7 @@ export default function QuizPage() {
   const [answeredQuestions, setAnsweredQuestions] = useState(0)
   const [loading, setLoading] = useState(true)
   const [quizComplete, setQuizComplete] = useState(false)
+  const [endQuizDialogOpen, setEndQuizDialogOpen] = useState(false)
   const [quizStarted, setQuizStarted] = useState(false)
   const [selectedChapters, setSelectedChapters] = useState<string[]>(['all'])
   const [selectedTests, setSelectedTests] = useState<string[]>(['שלב א׳ הר״י'])
@@ -58,7 +70,7 @@ export default function QuizPage() {
           setHasSavedState(true)
         }
       } catch (error) {
-        console.error('Error fetching data:', error)
+        logger.error('Error fetching data:', error)
       } finally {
         setLoading(false)
       }
@@ -618,13 +630,13 @@ export default function QuizPage() {
                 <Trophy className="h-4 w-4 ml-1 md:ml-2" />
                 <span>{score}/{answeredQuestions}</span>
               </Badge>
-              <span className="text-xs md:text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 שאלה {currentQuestionIndex + 1} מתוך {questions.length}
               </span>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setQuizComplete(true)}
+                onClick={() => setEndQuizDialogOpen(true)}
                 className="text-xs md:text-sm"
               >
                 סיים עכשיו
@@ -801,6 +813,27 @@ export default function QuizPage() {
           </CardContent>
         </Card>
       </main>
+
+      {/* End Quiz Confirmation Dialog */}
+      <AlertDialog open={endQuizDialogOpen} onOpenChange={setEndQuizDialogOpen}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>סיום משחק</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם אתה בטוח שברצונך לסיים את המשחק עכשיו? עניתַ על {answeredQuestions} מתוך {questions.length} שאלות.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>המשך במשחק</AlertDialogCancel>
+            <AlertDialogAction onClick={() => {
+              setQuizComplete(true)
+              setEndQuizDialogOpen(false)
+            }}>
+              סיים עכשיו
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

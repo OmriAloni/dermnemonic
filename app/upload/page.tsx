@@ -19,6 +19,7 @@ import { AID_TYPES } from '@/lib/aid-types'
 import { createClient } from '@/lib/supabase/client'
 import { compressImage } from '@/lib/image-utils'
 import { RichTextEditor } from '@/components/rich-text-editor'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -92,7 +93,7 @@ function UploadPageContent() {
           }
         }
       } catch (error) {
-        console.error('Error loading aid data:', error)
+        logger.error('Error loading aid data:', error)
         setUploadError('שגיאה בטעינת העזר למידה לעריכה')
       } finally {
         setLoadingAid(false)
@@ -130,7 +131,7 @@ function UploadPageContent() {
           }
         }
       } catch (error) {
-        console.error('Error loading user profile:', error)
+        logger.error('Error loading user profile:', error)
       } finally {
         setLoadingProfile(false)
       }
@@ -276,7 +277,7 @@ function UploadPageContent() {
         setUploadError(errorData.error || 'שגיאה בשמירת העזר למידה. אנא נסה שוב.')
       }
     } catch (error) {
-      console.error('Error uploading:', error)
+      logger.error('Error uploading:', error)
       if (error instanceof Error) {
         setUploadError(error.message)
       } else if (typeof error === 'string') {
@@ -439,7 +440,7 @@ function UploadPageContent() {
                             const chapter = CHAPTERS.find(c => c.value === formData.chapter)
                             if (!chapter) return null
                             const text = chapter.number !== null ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
-                            return <span dir="ltr" className="block text-left break-words">{text}</span>
+                            return <span dir="ltr" className="block text-left break-words" title={text}>{text}</span>
                           })() : <span dir="ltr" className="text-muted-foreground">Other</span>}
                         </span>
                         {formData.chapter && (

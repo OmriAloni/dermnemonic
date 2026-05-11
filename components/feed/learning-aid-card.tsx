@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { CHAPTERS } from '@/lib/chapters'
 import { MarkdownText } from '@/components/markdown-text'
 import { cn } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 interface LearningAidCardProps {
   aid: LearningAid
@@ -176,14 +177,14 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
         }
 
         if (response.status === 401) {
-          window.location.href = '/auth/login'
+          window.location.href = `/auth/login?returnUrl=${encodeURIComponent(window.location.pathname)}`
         } else {
           setReactionError('לא ניתן לשמור תגובה. נסה שוב.')
           setTimeout(() => setReactionError(null), 3000)
         }
       }
     } catch (error) {
-      console.error('Error toggling reaction:', error)
+      logger.error('Error toggling reaction:', error)
       // Revert on error
       setUserReactions(userReactions)
       setReactionCounts(reactionCounts)

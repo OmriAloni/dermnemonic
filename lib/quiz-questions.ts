@@ -1,3 +1,5 @@
+import { logger } from './logger'
+
 export interface QuizQuestion {
   id: string
   chapter: string // matches CHAPTERS values (e.g., 'psoriasis', 'melanoma')
@@ -32,7 +34,7 @@ export async function getQuizQuestions(): Promise<QuizQuestion[]> {
     const data: QuizQuestionsData = await response.json()
     return data.questions
   } catch (error) {
-    console.error('Error loading quiz questions:', error)
+    logger.error('Error loading quiz questions:', error)
     return []
   }
 }

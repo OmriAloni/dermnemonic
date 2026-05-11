@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { createClient } from '@/lib/supabase/client'
 import { translateAuthError } from '@/lib/auth-errors'
+import { logger } from '@/lib/logger'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -54,7 +55,7 @@ export default function SignupPage() {
           })
 
         if (profileError) {
-          console.error('Profile creation error:', profileError)
+          logger.error('Profile creation error:', profileError)
           setError('נוצר חשבון אך הפרופיל לא נשמר. אנא פנה לתמיכה.')
           return
         }

@@ -5,6 +5,7 @@ import { Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface RatingStarsProps {
   aidId: string
@@ -36,7 +37,7 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
           }
         }
       } catch (error) {
-        console.error('Error fetching rating:', error)
+        logger.error('Error fetching rating:', error)
       }
     }
 
@@ -63,7 +64,7 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
         }
       }
     } catch (error) {
-      console.error('Error saving rating:', error)
+      logger.error('Error saving rating:', error)
     } finally {
       setLoading(false)
     }
@@ -83,7 +84,7 @@ export function RatingStars({ aidId, initialRating = 0, onChange }: RatingStarsP
           onMouseEnter={() => setHoverRating(star)}
           onMouseLeave={() => setHoverRating(0)}
           disabled={loading}
-          className="transition-transform hover:scale-110 disabled:opacity-50"
+          className="transition-transform hover:scale-110 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:rounded-sm"
         >
           <Star
             className={`h-6 w-6 transition-colors ${

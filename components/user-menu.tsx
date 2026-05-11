@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { User, LogOut, Upload } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 export function UserMenu() {
   const router = useRouter()
@@ -77,7 +78,7 @@ export function UserMenu() {
       router.push('/')
       router.refresh()
     } catch (error) {
-      console.error('Logout error:', error)
+      logger.error('Logout error:', error)
     }
   }
 

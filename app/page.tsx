@@ -14,6 +14,7 @@ import Image from 'next/image'
 import { CHAPTERS } from '@/lib/chapters'
 import { AID_TYPES } from '@/lib/aid-types'
 import { getMessages } from '@/lib/i18n'
+import { logger } from '@/lib/logger'
 
 // Mock data removed - now fetching from API
 
@@ -61,7 +62,7 @@ export default function FeedPage() {
         setAids(data)
         setError(null)
       } catch (error) {
-        console.error('Error fetching aids:', error)
+        logger.error('Error fetching aids:', error)
         if (error instanceof Error) {
           setError(error.message)
         } else {
