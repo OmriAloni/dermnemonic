@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Heart, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star } from 'lucide-react'
+import { Heart, Lightbulb, Laugh, MessageCircle, Bookmark, Share2, CheckCircle2, Clock, Star, ThumbsUp } from 'lucide-react'
 import { LearningAid } from '@/lib/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -322,10 +322,10 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <button
             onClick={(e) => handleReaction('heart', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 ${
+            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('heart')
-                ? 'bg-red-100 dark:bg-red-900/20'
-                : 'hover:bg-muted'
+                ? 'bg-red-100 dark:bg-red-900/20 border-red-500'
+                : 'hover:bg-muted border-transparent'
             }`}
             aria-label="אהבתי"
           >
@@ -344,22 +344,20 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <button
             onClick={(e) => handleReaction('brain', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 ${
+            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('brain')
-                ? 'bg-blue-100 dark:bg-blue-900/20'
-                : 'hover:bg-muted'
+                ? 'bg-blue-100 dark:bg-blue-900/20 border-blue-500'
+                : 'hover:bg-muted border-transparent'
             }`}
             aria-label="כפיים"
           >
-            <span
-              className={`text-lg leading-none transition-all ${
+            <ThumbsUp
+              className={`h-5 w-5 ${
                 userReactions.includes('brain')
-                  ? 'scale-110'
-                  : 'grayscale opacity-60'
+                  ? 'fill-blue-500 text-blue-500'
+                  : 'text-muted-foreground'
               }`}
-            >
-              👏
-            </span>
+            />
             {reactionCounts.brain > 0 && (
               <span className="text-xs font-medium">{reactionCounts.brain}</span>
             )}
@@ -368,10 +366,10 @@ export function LearningAidCard({ aid, locale = 'he' }: LearningAidCardProps) {
           <button
             onClick={(e) => handleReaction('lightbulb', e)}
             disabled={reactionsLoading}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 ${
+            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all hover:scale-110 border-2 ${
               userReactions.includes('lightbulb')
-                ? 'bg-yellow-100 dark:bg-yellow-900/20'
-                : 'hover:bg-muted'
+                ? 'bg-yellow-100 dark:bg-yellow-900/20 border-yellow-500'
+                : 'hover:bg-muted border-transparent'
             }`}
             aria-label="אהה!"
           >

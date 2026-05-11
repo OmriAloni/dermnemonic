@@ -64,6 +64,8 @@ export default function AidDetailPage() {
   const [deletingInProgress, setDeletingInProgress] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -184,6 +186,41 @@ export default function AidDetailPage() {
     setShuffleMode(newMode)
     if (typeof window !== 'undefined') {
       localStorage.setItem('shuffle-mode', String(newMode))
+    }
+  }
+
+  // Touch swipe handlers for mobile navigation
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    // RTL: left swipe = next, right swipe = previous
+    if (isLeftSwipe) {
+      const nextId = getNextAidId()
+      if (nextId) {
+        router.push(`/aid/${nextId}`)
+      }
+    }
+
+    if (isRightSwipe) {
+      const prevId = getPreviousAidId()
+      if (prevId) {
+        router.push(`/aid/${prevId}`)
+      }
     }
   }
 
@@ -472,7 +509,12 @@ export default function AidDetailPage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main
+        className="container mx-auto px-4 py-8 max-w-4xl"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {aid.media_url && (
           aid.media_type === 'document' ? (
             <div className="rounded-lg overflow-hidden bg-muted mb-6 p-6">
