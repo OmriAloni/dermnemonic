@@ -46,7 +46,7 @@ interface QuizQuestion {
   correctAnswer: number   // Index 0-3
   explanation: string     // Answer explanation (can be empty)
   imageUrl?: string       // Optional: "/quiz-images/american-board-001.png"
-  testName?: string       // Auto-detected from ID: "שלב א' הרי"י"
+  testName?: string       // Auto-detected from ID: "שלב א׳ הר״י"
   year?: number           // Auto-detected: 2022 for Israeli Board questions
 }
 ```
@@ -333,7 +333,16 @@ export function BookmarksList({ initialBookmarks }: { initialBookmarks: Bookmark
 **Production URL**: https://dermasociations.vercel.app  
 **GitHub**: https://github.com/OmriAloni/dermnemonic  
 **Contest Deadline**: June 3, 2026  
-**Status**: ✅ Ready for submission
+**Status**: ✅ Production ready with comprehensive UX improvements (May 11, 2026)
+
+**Recent improvements (May 11, 2026):**
+- Fixed all UI issues (upload page, quiz page, main feed)
+- Comprehensive UX audit fixes (accessibility, error handling, mobile UX)
+- Added mobile swipe navigation for aid detail pages
+- Improved colorblind accessibility for reactions
+- Replaced browser alerts with inline error messages
+- Added loading states and helpful error feedback throughout
+- Fixed Hebrew punctuation (שלב א׳ הר״י)
 
 ### Contest-Ready Features (May 11, 2026)
 
