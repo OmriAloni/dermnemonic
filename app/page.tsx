@@ -222,7 +222,7 @@ export default function FeedPage() {
               setSearchQuery(query)
               // Trigger filter update - needs to be in useEffect
             }}
-            placeholder="חיפוש לפי כותרת, תוכן או תגיות... (לחץ / לפוקוס)"
+            placeholder="חיפוש לפי כותרת, תוכן או תגיות..."
           />
         </div>
 

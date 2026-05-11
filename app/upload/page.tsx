@@ -338,8 +338,8 @@ function UploadPageContent() {
 
         <Card>
           <CardHeader>
-            <CardTitle>פרטי עזר הלמידה</CardTitle>
-            <p className="text-sm text-muted-foreground mt-2">
+            <CardTitle className="text-center">פרטי עזר הלמידה</CardTitle>
+            <p className="text-sm text-muted-foreground mt-2 text-center">
               שדות המסומנים ב-<span className="text-destructive">*</span> הם שדות חובה
             </p>
           </CardHeader>
@@ -353,7 +353,7 @@ function UploadPageContent() {
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="למשל: 5 P's של Lichen Planus"
+                    placeholder="Example: 5 P's of Lichen Planus"
                     required
                   />
                 </div>
@@ -385,9 +385,6 @@ function UploadPageContent() {
                   <Label htmlFor="uploaderName" className="flex items-center gap-2">
                     שם מעלה
                     {loadingProfile && <span className="text-xs text-muted-foreground">(טוען...)</span>}
-                    {!loadingProfile && formData.uploaderName && (
-                      <span className="text-xs text-muted-foreground">(מתוך הפרופיל)</span>
-                    )}
                   </Label>
                   <Input
                     id="uploaderName"
@@ -400,9 +397,6 @@ function UploadPageContent() {
                 <div className="space-y-2">
                   <Label htmlFor="hospital" className="flex items-center gap-2">
                     בית חולים
-                    {!loadingProfile && formData.hospital && (
-                      <span className="text-xs text-muted-foreground">(מתוך הפרופיל)</span>
-                    )}
                   </Label>
                   <Select
                     value={formData.hospital}
@@ -446,7 +440,7 @@ function UploadPageContent() {
                             if (!chapter) return null
                             const text = chapter.number !== null ? `${chapter.number}. ${chapter.label_en}` : chapter.label_en
                             return <span dir="ltr" className="block text-left break-words">{text}</span>
-                          })() : <span dir="rtl" className="text-muted-foreground">אחר</span>}
+                          })() : <span dir="ltr" className="text-muted-foreground">Other</span>}
                         </span>
                         {formData.chapter && (
                           <button
@@ -637,7 +631,7 @@ function UploadPageContent() {
                         {!currentTag.category && 'קטגוריה'}
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-none">
                       <SelectItem value="diagnosis">אבחנה</SelectItem>
                       <SelectItem value="sign">תסמינים</SelectItem>
                       <SelectItem value="pathology">פתולוגיה</SelectItem>
@@ -646,13 +640,13 @@ function UploadPageContent() {
                     </SelectContent>
                   </Select>
                   <Input
-                    placeholder="ערך (באנגלית)"
+                    placeholder="English"
                     value={currentTag.value}
                     onChange={(e) => setCurrentTag({ ...currentTag, value: e.target.value })}
                     className="h-10"
                   />
                   <Input
-                    placeholder="ערך (בעברית)"
+                    placeholder="עברית"
                     value={currentTag.value_he}
                     onChange={(e) => setCurrentTag({ ...currentTag, value_he: e.target.value })}
                     className="h-10"
