@@ -84,7 +84,7 @@ export default function SignupPage() {
               <Label htmlFor="displayName">שם מלא *</Label>
               <Input
                 id="displayName"
-                dir="rtl"
+                className="placeholder-rtl"
                 placeholder="ד״ר שם משפחה"
                 value={formData.displayName}
                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
@@ -111,7 +111,8 @@ export default function SignupPage() {
               <Input
                 id="password"
                 type="password"
-                dir="rtl"
+                dir="ltr"
+                className="placeholder-rtl"
                 placeholder="לפחות 6 תווים"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
